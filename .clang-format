@@ -3,7 +3,7 @@ BasedOnStyle: WebKit
 NamespaceIndentation: None
 SpaceAfterTemplateKeyword: false
 AccessModifierOffset: -4
-SortIncludes: Never
+SortIncludes: false
 
 BreakConstructorInitializers: AfterColon
 AllowAllConstructorInitializersOnNextLine: true
