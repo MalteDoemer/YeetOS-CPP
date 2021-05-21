@@ -1,0 +1,17 @@
+Language: Cpp
+BasedOnStyle: WebKit
+NamespaceIndentation: None
+SpaceAfterTemplateKeyword: false
+AccessModifierOffset: -4
+SortIncludes: Never
+
+BreakConstructorInitializers: AfterColon
+AllowAllConstructorInitializersOnNextLine: true
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterFunction: true
+
+SpaceInEmptyBlock: false
+AllowShortFunctionsOnASingleLine: Inline

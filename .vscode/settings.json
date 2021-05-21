@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.config": "makefile",
+        "*.h": "c",
+        "*.asm": "nasm",
+        "*.Z80": "asm-collection",
+        "*.mxx": "cpp",
+        "*.mpp": "cpp",
+        "string": "cpp"
+    },
+    "cmake.configureOnOpen": false,
+
+    // "C_Cpp.default.systemIncludePath": [ "/" ]
+}
