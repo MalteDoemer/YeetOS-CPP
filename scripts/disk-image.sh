@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-
 DISK=/dev/loop0
 PART=/dev/loop1
 IMAGE=$YEETOS_DISK_IMAGE
