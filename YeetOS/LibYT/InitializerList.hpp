@@ -23,37 +23,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <string.h>
+#pragma once
 
 #include <LibYT/Types.hpp>
-#include <LibYT/Array.hpp>
 #include <LibYT/Verify.hpp>
-#include <LibYT/Ranges.hpp>
-#include <LibYT/Traits.hpp>
 
-#include <Kernel/Kernel.hpp>
+namespace std {
 
-using namespace YT;
+template<class T>
+class initializer_list {
+public:
+    using ValueType = T;
+    using ValueReference = T&;
+    using ValuePointer = T*;
+    using ConstValueReference = const T&;
+    using ConstValuePointer = const T*;
 
-template<WriteableRange Rng, typename T>
-void assign(Rng& range, const T& value)
-{
-    for (auto& elem : range) {
-        elem = value;
+    using Iterator = T*;
+    using ConstIterator = const T*;
+
+public:
+    constexpr initializer_list(ConstValuePointer data, YT::Size size) noexcept :
+        m_data(data), m_size(size) {}
+
+    constexpr initializer_list() noexcept :
+        m_data(nullptr), m_size(0) {}
+
+    constexpr YT::Size count() const noexcept { return m_size; }
+    constexpr bool is_empty() const noexcept { return count() == 0; }
+
+    constexpr ConstIterator begin() const noexcept { return m_data; }
+    constexpr ConstIterator end() const noexcept { return begin() + count(); }
+
+    constexpr ConstValuePointer data() const noexcept { return m_data; }
+
+    constexpr ConstValueReference operator[](YT::Size index) const noexcept 
+    { 
+        VERIFY(index < m_size);
+        return m_data[index]; 
     }
+
+private:
+    ConstValuePointer m_data;
+    YT::Size m_size;
+};
+
 }
 
-namespace Kernel {
+namespace YT {
 
-void kernel_main()
-{
-    Array<Uint8, 32> src;
-    Array<Uint8, 32> dest;
-
-
-    memcpy(dest.data(), src.data(), dest.count());
-
-    Arch::arch_init();
-}
+template<typename T>
+using InitializerList = std::initializer_list<T>;
 
 }

@@ -40,7 +40,7 @@ using Int32 = __INT32_TYPE__;
 using Int64 = __INT64_TYPE__;
 
 using Size = __SIZE_TYPE__;
-using PtrDiff = __PTRDIFF_TYPE__;
+using Diff = __PTRDIFF_TYPE__;
 
 using HashCode = __UINTPTR_TYPE__;
 

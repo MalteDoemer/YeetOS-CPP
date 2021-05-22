@@ -23,37 +23,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <string.h>
+#pragma once
 
-#include <LibYT/Types.hpp>
-#include <LibYT/Array.hpp>
-#include <LibYT/Verify.hpp>
-#include <LibYT/Ranges.hpp>
-#include <LibYT/Traits.hpp>
+#undef ALWAYS_INLINE
+#define ALWAYS_INLINE [[gnu::always_inline]] inline
 
-#include <Kernel/Kernel.hpp>
+#undef NEVER_INLINE
+#define NEVER_INLINE [[gnu::noinline]]
 
-using namespace YT;
+#undef FLATTEN
+#define FLATTEN [[gnu::flatten]]
 
-template<WriteableRange Rng, typename T>
-void assign(Rng& range, const T& value)
-{
-    for (auto& elem : range) {
-        elem = value;
-    }
-}
+#undef PACKED
+#define PACKED [[gnu::packed]]
 
-namespace Kernel {
+#undef ALGINED
+#define ALIGNED(x) [[gnu::aligned(x)]]
 
-void kernel_main()
-{
-    Array<Uint8, 32> src;
-    Array<Uint8, 32> dest;
+#undef SECTION
+#define SECTION(x) [[gnu::section(x)]]
 
+#ifdef __EXCEPTIONS
+#define YT_USE_EXCEPTIONS 1
+#else
+#define YT_USE_EXCEPTIONS 0
+#endif
 
-    memcpy(dest.data(), src.data(), dest.count());
-
-    Arch::arch_init();
-}
-
-}
+inline constexpr bool is_little_endian = __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__;
+inline constexpr bool is_bit_endian = __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__;
+inline constexpr bool use_exceptions = YT_USE_EXCEPTIONS;

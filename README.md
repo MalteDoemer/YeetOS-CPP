@@ -13,4 +13,4 @@ This project is licensed under a 2-clause BSD license - see [LICENSE](LICENSE) f
 ## Acknowledgments
 
 * [SerenityOS](https://github.com/SerenityOS/serenity) for inspiration and some code:
-    - [Atomic.hpp](Include/LibYT/Atomic.hpp)
+    - [Atomic.hpp](YeetOS/LibYT/Atomic.hpp)

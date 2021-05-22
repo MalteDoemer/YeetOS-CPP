@@ -6,7 +6,8 @@
         "*.Z80": "asm-collection",
         "*.mxx": "cpp",
         "*.mpp": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "array": "cpp"
     },
     "cmake.configureOnOpen": false,
 

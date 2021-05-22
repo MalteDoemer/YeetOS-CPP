@@ -19,6 +19,8 @@ set(YEETOS_KERNEL ${CMAKE_BINARY_DIR}/YeetOS/kernel)
 set(YEETOS_USER_ROOT ${CMAKE_SOURCE_DIR}/root)
 set(YEETOS_GRUB_CFG ${CMAKE_SOURCE_DIR}/grub.cfg)
 
+add_compile_options(-fcolor-diagnostics)
+
 add_custom_target(disk-image
     COMMAND ${CMAKE_COMMAND} -E env "YEETOS_KERNEL=" "YEETOS_GRUB_CFG=${YEETOS_GRUB_CFG}" "YEETOS_USER_ROOT=${YEETOS_USER_ROOT}" "YEETOS_KERNEL=${YEETOS_KERNEL}" "YEETOS_ARCH=${YEETOS_ARCH}" "YEETOS_DISK_IMAGE=${CMAKE_SOURCE_DIR}/disk.img" ${CMAKE_SOURCE_DIR}/scripts/disk-image.sh
 )
