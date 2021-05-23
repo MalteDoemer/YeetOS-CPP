@@ -50,18 +50,18 @@ typedef enum {
 
 typedef int _Unwind_Action;
 
-#define _UA_SEARCH_PHASE 1
+#define _UA_SEARCH_PHASE  1
 #define _UA_CLEANUP_PHASE 2
 #define _UA_HANDLER_FRAME 4
-#define _UA_FORCE_UNWIND 8
+#define _UA_FORCE_UNWIND  8
 
-struct _Unwind_Context; /* opaque data-structure */
+struct _Unwind_Context;   /* opaque data-structure */
 struct _Unwind_Exception; /* forward-declaration */
 
 typedef void (*_Unwind_Exception_Cleanup_Fn)(_Unwind_Reason_Code, struct _Unwind_Exception*);
 
-typedef _Unwind_Reason_Code (*_Unwind_Stop_Fn)(
-    int, _Unwind_Action, uint64_t, struct _Unwind_Exception*, struct _Unwind_Context*, void*);
+typedef _Unwind_Reason_Code (
+    *_Unwind_Stop_Fn)(int, _Unwind_Action, uint64_t, struct _Unwind_Exception*, struct _Unwind_Context*, void*);
 
 /* The C++ ABI requires exception_class, private_1, and private_2 to
    be of type uint64 and the entire structure to be
@@ -89,16 +89,15 @@ extern void _Unwind_SetIP(struct _Unwind_Context*, unsigned long);
 extern unsigned long _Unwind_GetLanguageSpecificData(struct _Unwind_Context*);
 extern unsigned long _Unwind_GetRegionStart(struct _Unwind_Context*);
 
-
 #ifdef _GNU_SOURCE
 
 /* Callback for _Unwind_Backtrace().  The backtrace stops immediately
    if the callback returns any value other than _URC_NO_REASON. */
 typedef _Unwind_Reason_Code (*_Unwind_Trace_Fn)(struct _Unwind_Context*, void*);
 
-/* See http://gcc.gnu.org/ml/gcc-patches/2001-09/msg00082.html for why
-   _UA_END_OF_STACK exists.  */
-#define _UA_END_OF_STACK 16
+    /* See http://gcc.gnu.org/ml/gcc-patches/2001-09/msg00082.html for why
+       _UA_END_OF_STACK exists.  */
+    #define _UA_END_OF_STACK 16
 
 /* If the unwind was initiated due to a forced unwind, resume that
    operation, else re-raise the exception.  This is used by
@@ -141,11 +140,17 @@ extern void* _Unwind_FindEnclosingFunction(void*);
 #endif /* _GNU_SOURCE */
 
 #define DECLARE_PERSONALITY_FUNCTION(name)                                                                             \
-    _Unwind_Reason_Code name(int version, _Unwind_Action actions, uint64_t exceptionClass,                             \
-        struct _Unwind_Exception* exceptionObject, struct _Unwind_Context* context);
+    _Unwind_Reason_Code name(int version,                                                                              \
+                             _Unwind_Action actions,                                                                   \
+                             uint64_t exceptionClass,                                                                  \
+                             struct _Unwind_Exception* exceptionObject,                                                \
+                             struct _Unwind_Context* context);
 #define BEGIN_PERSONALITY_FUNCTION(name)                                                                               \
-    _Unwind_Reason_Code name(int version, _Unwind_Action actions, uint64_t exceptionClass,                             \
-        struct _Unwind_Exception* exceptionObject, struct _Unwind_Context* context)                                    \
+    _Unwind_Reason_Code name(int version,                                                                              \
+                             _Unwind_Action actions,                                                                   \
+                             uint64_t exceptionClass,                                                                  \
+                             struct _Unwind_Exception* exceptionObject,                                                \
+                             struct _Unwind_Context* context)                                                          \
     {
 
 #define CALL_PERSONALITY_FUNCTION(name) name(version, actions, exceptionClass, exceptionObject, context)

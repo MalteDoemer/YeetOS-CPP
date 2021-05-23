@@ -76,18 +76,27 @@ static inline V* atomic_exchange(volatile T** var, std::nullptr_t, MemoryOrder o
 }
 
 template<typename T>
-[[nodiscard]] static inline bool atomic_compare_exchange_strong(
-    volatile T* var, T& expected, T desired, MemoryOrder order = MemoryOrder::seq_cst) noexcept
+[[nodiscard]] static inline bool atomic_compare_exchange_strong(volatile T* var,
+                                                                T& expected,
+                                                                T desired,
+                                                                MemoryOrder order = MemoryOrder::seq_cst) noexcept
 {
     if (order == MemoryOrder::acq_rel || order == MemoryOrder::release)
-        return __atomic_compare_exchange_n(var, &expected, desired, false, static_cast<int>(MemoryOrder::release), static_cast<int>(MemoryOrder::acquire));
+        return __atomic_compare_exchange_n(var,
+                                           &expected,
+                                           desired,
+                                           false,
+                                           static_cast<int>(MemoryOrder::release),
+                                           static_cast<int>(MemoryOrder::acquire));
     else
         return __atomic_compare_exchange_n(var, &expected, desired, false, order, order);
 }
 
 template<typename T, typename V = remove_volatile<T>>
-[[nodiscard]] static inline bool atomic_compare_exchange_strong(
-    volatile T** var, V*& expected, V* desired, MemoryOrder order = MemoryOrder::seq_cst) noexcept
+[[nodiscard]] static inline bool atomic_compare_exchange_strong(volatile T** var,
+                                                                V*& expected,
+                                                                V* desired,
+                                                                MemoryOrder order = MemoryOrder::seq_cst) noexcept
 {
     if (order == MemoryOrder::acq_rel || order == MemoryOrder::release)
         return __atomic_compare_exchange_n(var, &expected, desired, false, MemoryOrder::release, MemoryOrder::acquire);
@@ -96,12 +105,18 @@ template<typename T, typename V = remove_volatile<T>>
 }
 
 template<typename T, typename V = remove_volatile<T>>
-[[nodiscard]] static inline bool atomic_compare_exchange_strong(
-    volatile T** var, V*& expected, std::nullptr_t, MemoryOrder order = MemoryOrder::seq_cst) noexcept
+[[nodiscard]] static inline bool atomic_compare_exchange_strong(volatile T** var,
+                                                                V*& expected,
+                                                                std::nullptr_t,
+                                                                MemoryOrder order = MemoryOrder::seq_cst) noexcept
 {
     if (order == MemoryOrder::acq_rel || order == MemoryOrder::release)
-        return __atomic_compare_exchange_n(
-            const_cast<V**>(var), &expected, nullptr, false, MemoryOrder::release, MemoryOrder::acquire);
+        return __atomic_compare_exchange_n(const_cast<V**>(var),
+                                           &expected,
+                                           nullptr,
+                                           false,
+                                           MemoryOrder::release,
+                                           MemoryOrder::acquire);
     else
         return __atomic_compare_exchange_n(const_cast<V**>(var), &expected, nullptr, false, order, order);
 }
@@ -177,8 +192,7 @@ public:
     Atomic(const Atomic&) = delete;
     Atomic(Atomic&&) = delete;
 
-    Atomic(T val) noexcept :
-        m_value(val) {}
+    Atomic(T val) noexcept : m_value(val) {}
 
     volatile T* ptr() noexcept { return &m_value; }
 
@@ -187,11 +201,17 @@ public:
         return __atomic_exchange_n(&m_value, desired, order);
     }
 
-    [[nodiscard]] bool compare_exchange_strong(T& expected, T desired, MemoryOrder order = DefaultMemoryOrder) volatile noexcept
+    [[nodiscard]] bool compare_exchange_strong(T& expected,
+                                               T desired,
+                                               MemoryOrder order = DefaultMemoryOrder) volatile noexcept
     {
         if (order == MemoryOrder::acq_rel || order == MemoryOrder::release)
-            return __atomic_compare_exchange_n(
-                &m_value, &expected, desired, false, MemoryOrder::release, MemoryOrder::acquire);
+            return __atomic_compare_exchange_n(&m_value,
+                                               &expected,
+                                               desired,
+                                               false,
+                                               MemoryOrder::release,
+                                               MemoryOrder::acquire);
         else
             return __atomic_compare_exchange_n(&m_value, &expected, desired, false, order, order);
     }
@@ -274,8 +294,7 @@ public:
     Atomic(const Atomic&) = delete;
     Atomic(Atomic&&) = delete;
 
-    Atomic(T* val) noexcept :
-        m_value(val) {}
+    Atomic(T* val) noexcept : m_value(val) {}
 
     volatile T** ptr() noexcept { return &m_value; }
 
@@ -284,12 +303,17 @@ public:
         return __atomic_exchange_n(&m_value, desired, order);
     }
 
-    [[nodiscard]] bool compare_exchange_strong(
-        T*& expected, T* desired, MemoryOrder order = DefaultMemoryOrder) volatile noexcept
+    [[nodiscard]] bool compare_exchange_strong(T*& expected,
+                                               T* desired,
+                                               MemoryOrder order = DefaultMemoryOrder) volatile noexcept
     {
         if (order == MemoryOrder::acq_rel || order == MemoryOrder::release)
-            return __atomic_compare_exchange_n(
-                &m_value, &expected, desired, false, MemoryOrder::release, MemoryOrder::acquire);
+            return __atomic_compare_exchange_n(&m_value,
+                                               &expected,
+                                               desired,
+                                               false,
+                                               MemoryOrder::release,
+                                               MemoryOrder::acquire);
         else
             return __atomic_compare_exchange_n(&m_value, &expected, desired, false, order, order);
     }

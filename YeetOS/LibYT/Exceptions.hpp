@@ -42,7 +42,6 @@ public:
     virtual const char* what() const noexcept;
 };
 
-
 /**
  * Bad allocation exception. Thrown by ::operator new() when it fails.
  */
@@ -72,7 +71,6 @@ public:
 
     virtual const char* what() const noexcept override;
 };
-
 
 /**
  * Bad cast exception. Thrown by __cxa_bad_cast() helper function

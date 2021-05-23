@@ -36,7 +36,8 @@ NewFailHandler get_new_fail_handler() noexcept;
 
 }
 
-struct nothrow_t {};
+struct nothrow_t {
+};
 
 void* operator new(size_t size);
 void* operator new[](size_t size);

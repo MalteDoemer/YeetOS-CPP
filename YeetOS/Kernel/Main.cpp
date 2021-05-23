@@ -35,10 +35,10 @@
 
 #include <errno.h>
 
-
 using namespace YT;
 
-template<WriteableRange Rng, typename T> void assign(Rng& range, const T& value)
+template<WriteableRange Rng, typename T>
+void assign(Rng& range, const T& value)
 {
     for (auto& elem : range) {
         elem = value;
@@ -53,7 +53,6 @@ void kernel_main()
     Array<Uint8, 32> src;
     Array<Uint8, 32> dest;
 
-    
     memcpy(dest.data(), src.data(), dest.count());
 }
 

@@ -392,7 +392,8 @@ struct dwarf_eh_action {
  *
  * The action record is returned via the result parameter.
  */
-static bool dwarf_eh_find_callsite(struct _Unwind_Context* context, struct dwarf_eh_lsda* lsda,
+static bool dwarf_eh_find_callsite(struct _Unwind_Context* context,
+                                   struct dwarf_eh_lsda* lsda,
                                    struct dwarf_eh_action* result)
 {
     result->action_record = 0;

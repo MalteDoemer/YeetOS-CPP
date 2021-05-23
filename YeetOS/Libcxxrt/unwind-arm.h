@@ -51,10 +51,10 @@ static const _Unwind_State _US_UNWIND_FRAME_STARTING = 1;
 static const _Unwind_State _US_UNWIND_FRAME_RESUME = 2;
 static const _Unwind_State _US_ACTION_MASK = 3;
 #else // GCC fails at knowing what a constant expression is
-#define _US_VIRTUAL_UNWIND_FRAME 0
-#define _US_UNWIND_FRAME_STARTING 1
-#define _US_UNWIND_FRAME_RESUME 2
-#define _US_ACTION_MASK 3
+    #define _US_VIRTUAL_UNWIND_FRAME  0
+    #define _US_UNWIND_FRAME_STARTING 1
+    #define _US_UNWIND_FRAME_RESUME   2
+    #define _US_ACTION_MASK           3
 #endif
 
 typedef struct _Unwind_Context _Unwind_Context;
@@ -113,10 +113,16 @@ typedef enum {
     _UVRSD_DOUBLE = 5
 } _Unwind_VRS_DataRepresentation;
 
-_Unwind_VRS_Result _Unwind_VRS_Get(_Unwind_Context* context, _Unwind_VRS_RegClass regclass, uint32_t regno,
-    _Unwind_VRS_DataRepresentation representation, void* valuep);
-_Unwind_VRS_Result _Unwind_VRS_Set(_Unwind_Context* context, _Unwind_VRS_RegClass regclass, uint32_t regno,
-    _Unwind_VRS_DataRepresentation representation, void* valuep);
+_Unwind_VRS_Result _Unwind_VRS_Get(_Unwind_Context* context,
+                                   _Unwind_VRS_RegClass regclass,
+                                   uint32_t regno,
+                                   _Unwind_VRS_DataRepresentation representation,
+                                   void* valuep);
+_Unwind_VRS_Result _Unwind_VRS_Set(_Unwind_Context* context,
+                                   _Unwind_VRS_RegClass regclass,
+                                   uint32_t regno,
+                                   _Unwind_VRS_DataRepresentation representation,
+                                   void* valuep);
 
 /* Return the base-address for data references.  */
 extern unsigned long _Unwind_GetDataRelBase(struct _Unwind_Context*);
@@ -134,10 +140,10 @@ extern _Unwind_Reason_Code _Unwind_Resume_or_Rethrow(struct _Unwind_Exception*);
  * ABI functions on top of ARM ones.
  */
 
-#define _UA_SEARCH_PHASE 1
+#define _UA_SEARCH_PHASE  1
 #define _UA_CLEANUP_PHASE 2
 #define _UA_HANDLER_FRAME 4
-#define _UA_FORCE_UNWIND 8
+#define _UA_FORCE_UNWIND  8
 
 static inline unsigned long _Unwind_GetGR(struct _Unwind_Context* context, int reg)
 {
@@ -167,12 +173,14 @@ static inline void _Unwind_SetIP(_Unwind_Context* context, unsigned long val)
 _Unwind_Reason_Code __gnu_unwind_frame(struct _Unwind_Exception*, struct _Unwind_Context*);
 
 #define DECLARE_PERSONALITY_FUNCTION(name)                                                                             \
-    _Unwind_Reason_Code name(                                                                                          \
-        _Unwind_State state, struct _Unwind_Exception* exceptionObject, struct _Unwind_Context* context);
+    _Unwind_Reason_Code name(_Unwind_State state,                                                                      \
+                             struct _Unwind_Exception* exceptionObject,                                                \
+                             struct _Unwind_Context* context);
 
 #define BEGIN_PERSONALITY_FUNCTION(name)                                                                               \
-    _Unwind_Reason_Code name(                                                                                          \
-        _Unwind_State state, struct _Unwind_Exception* exceptionObject, struct _Unwind_Context* context)               \
+    _Unwind_Reason_Code name(_Unwind_State state,                                                                      \
+                             struct _Unwind_Exception* exceptionObject,                                                \
+                             struct _Unwind_Context* context)                                                          \
     {                                                                                                                  \
         int version = 1;                                                                                               \
         uint64_t exceptionClass = exceptionObject->exception_class;                                                    \

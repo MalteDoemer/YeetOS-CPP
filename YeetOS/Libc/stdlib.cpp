@@ -33,7 +33,8 @@
 extern "C" void abort()
 {
     // TODO: print error
-    while (1);
+    while (1)
+        ;
 }
 
 static Uint8 mem[1024 * 1024];
@@ -60,8 +61,6 @@ extern "C" void* realloc(void* ptr, size_t size)
     free(ptr);
     return malloc(size);
 }
-
-
 
 #else /* KERNEL */
 

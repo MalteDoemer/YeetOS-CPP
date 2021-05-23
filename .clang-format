@@ -8,6 +8,17 @@ SortIncludes: false
 ColumnLimit: 120
 IndentPPDirectives: BeforeHash
 
+AlwaysBreakTemplateDeclarations: Yes
+
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+
+PenaltyReturnTypeOnItsOwnLine: 120
+AlwaysBreakAfterReturnType: None
+
+BinPackArguments: false
+BinPackParameters: false
+
 AlignAfterOpenBracket: Align
 AlignConsecutiveMacros: Consecutive
 AlignTrailingComments: true

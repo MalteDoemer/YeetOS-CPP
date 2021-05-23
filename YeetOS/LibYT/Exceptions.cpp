@@ -64,7 +64,7 @@ BadArrayNewLength& BadArrayNewLength::operator=(const BadArrayNewLength&) noexce
     return *this;
 }
 
-const char* BadArrayNewLength::what() const noexcept 
+const char* BadArrayNewLength::what() const noexcept
 {
     return "BadArrayNewLength";
 }

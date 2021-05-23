@@ -36,7 +36,6 @@
     #include "unwind.h"
 #endif
 
-
 namespace std {
 class type_info;
 }

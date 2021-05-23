@@ -84,7 +84,7 @@ extern "C" char* __cxa_demangle(const char* mangled_name, char* buf, size_t* n, 
 
     *status = -1;
     return NULL;
-    
+
     /*
     // TODO: We should probably just be linking against libelf-tc, rather than
     // copying their code.  This requires them to do an actual release,

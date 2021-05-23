@@ -172,7 +172,9 @@ bool __vmi_class_type_info::__do_upcast(const __class_type_info* target, void** 
  * that src is not a public base of dst, and -3 that src is a multiple public
  * base type but never a virtual base type
  */
-extern "C" void* __dynamic_cast(const void* sub, const __class_type_info* src, const __class_type_info* dst,
+extern "C" void* __dynamic_cast(const void* sub,
+                                const __class_type_info* src,
+                                const __class_type_info* dst,
                                 ptrdiff_t src2dst_offset)
 {
     const char* vtable_location = *static_cast<const char* const*>(sub);
