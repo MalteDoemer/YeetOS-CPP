@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(YeetOS ASM CXX)
+project(YeetOS ASM C CXX)
 
 set(YEETOS_ARCH "x86")
 

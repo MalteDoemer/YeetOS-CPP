@@ -23,21 +23,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#pragma once
 
-namespace YT {
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/cdefs.h>
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
-{
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
-}
+__BEGIN_DECLS
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
-{
-    // TODO: print verfiy not reached failure
-    abort();
-}
-    
-}
+/* There is no __SSIZE_TYPE__ but we can trick the preprocessor into defining it for us anyway! */
+#define unsigned signed
+typedef __SIZE_TYPE__ ssize_t;
+#undef unsigned
+
+typedef int pthread_attr_t;       /* Used to identify a thread attribute object. */
+typedef int pthread_cond_t;       /* Used for condition variables. */
+typedef int pthread_condattr_t;   /* Used to identify a condition attribute object. */
+typedef int pthread_key_t;        /* Used for thread-specific data keys. */
+typedef int pthread_mutex_t;      /* Used for mutexes. */
+typedef int pthread_mutexattr_t;  /* Used to identify a mutex attribute object. */
+typedef int pthread_once_t;       /* Used for dynamic package initialisation. */
+typedef int pthread_rwlock_t;     /* Used for read-write locks. */
+typedef int pthread_rwlockattr_t; /* Used for read-write lock attributes. */
+typedef int pthread_t;            /* Used to identify a thread. */
+
+__END_DECLS

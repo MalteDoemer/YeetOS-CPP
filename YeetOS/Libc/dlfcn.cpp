@@ -23,21 +23,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#include <dlfcn.h>
 
-namespace YT {
-
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
+extern "C" int dladdr(const void* address, Dl_info* info)
 {
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
-}
-
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
-{
-    // TODO: print verfiy not reached failure
-    abort();
-}
-    
+    *info = { nullptr, nullptr, nullptr, nullptr };
+    return 0;
 }

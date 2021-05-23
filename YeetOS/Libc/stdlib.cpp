@@ -24,20 +24,49 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
-namespace YT {
+#include <LibYT/Types.hpp>
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
+using namespace YT;
+
+#ifdef KERNEL
+
+extern "C" void abort()
 {
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
+    // TODO: print error
+    while (1);
 }
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
+static Uint8 mem[1024 * 1024];
+static FlatPtr malloc_top = 0;
+
+extern "C" void* malloc(size_t size)
 {
-    // TODO: print verfiy not reached failure
-    abort();
+    FlatPtr temp = malloc_top;
+    malloc_top += size;
+    return &mem[temp];
 }
-    
+
+extern "C" void free(void* ptr) {}
+
+extern "C" void* calloc(size_t size, size_t count)
+{
+    void* mem = malloc(size * count);
+    memset(mem, 0, size * count);
+    return mem;
 }
+
+extern "C" void* realloc(void* ptr, size_t size)
+{
+    free(ptr);
+    return malloc(size);
+}
+
+
+
+#else /* KERNEL */
+
+    #error "stdlib not implemented"
+
+#endif /* KERNEL */

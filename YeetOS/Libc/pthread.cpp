@@ -23,21 +23,71 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#include <pthread.h>
+#include <assert.h>
 
-namespace YT {
+namespace {
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
-{
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
+void* thread_data_table[64];
+int free_entry = 0;
+
 }
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
+int pthread_key_create(pthread_key_t* key, void (*)(void*))
 {
-    // TODO: print verfiy not reached failure
-    abort();
+    assert(free_entry < 64);
+
+    *key = free_entry;
+    free_entry++;
+    return 0;
 }
-    
+
+int pthread_once(pthread_once_t* control, void (*init)(void))
+{
+    if (*control == 0) {
+        (*init)();
+        *control = 1;
+    }
+    return 0;
+}
+
+void* pthread_getspecific(pthread_key_t key)
+{
+    return thread_data_table[key];
+}
+
+int pthread_setspecific(pthread_key_t key, const void* data)
+{
+    thread_data_table[key] = (void*)data;
+    return 0;
+}
+
+int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t*)
+{
+    *mutex = 0;
+    return 0;
+}
+
+int pthread_mutex_lock(pthread_mutex_t* mutex)
+{
+    assert(*mutex == 0);
+    *mutex = 1;
+    return 0;
+}
+
+int pthread_mutex_unlock(pthread_mutex_t* mutex)
+{
+    assert(*mutex != 0);
+    *mutex = 0;
+    return 0;
+}
+
+int pthread_cond_wait(pthread_cond_t*, pthread_mutex_t*)
+{
+    return 0;
+}
+
+int pthread_cond_signal(pthread_cond_t*)
+{
+    return 0;
 }

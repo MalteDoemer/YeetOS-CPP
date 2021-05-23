@@ -25,17 +25,38 @@ set(KERNEL_SOURCES
     ${KERNEL_ARCH_SOURCES}
 )
 
-set(LIBC_SOURCES
+set(LIBCK_SOURCES
     Libc/string.cpp
+    Libc/stdlib.cpp
+    Libc/stdio.cpp
+    Libc/assert.cpp
+    Libc/pthread.cpp
+    Libc/sched.cpp
+    Libc/dlfcn.cpp
+)
+
+set(LIBC_SOURCES
+    ${LIBCK_SOURCES}
 )
 
 set(LIBYT_SOURCES
     LibYT/Verify.cpp
+    LibYT/Exceptions.cpp
+    LibYT/New.cpp
+)
+
+set(CXXRT_SOURCES
+    Libcxxrt/Guard.cpp
+    Libcxxrt/TypeInfo.cpp
+    Libcxxrt/AuxHelper.cpp
+    Libcxxrt/DynamicCast.cpp
+    Libcxxrt/Exception.cpp
 )
 
 set(KERNEL_INCLUDE_DIRECTORIES
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/Libc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LibYT
 )
 
 set(KERNEL_COMPILE_DEFINITIONS
@@ -45,12 +66,13 @@ set(KERNEL_COMPILE_DEFINITIONS
 set(KERNEL_COMPILE_OPTIONS
     --target=${KERNEL_TARGET}
     -Wall
-    -fno-rtti
-    -fno-exceptions
     -ffreestanding
     -O2
     ${KERNEL_ARCH_COMPILE_OPTIONS}
 )
+
+#-fno-rtti
+#-fno-exceptions    
 
 set(KERNEL_LINK_OPTIONS
     --target=${KERNEL_TARGET}
@@ -65,6 +87,7 @@ set(KERNEL_LINK_DIRECTORIES
 )
 
 set(KERNEL_LIBS
+    cxxrt_k
     gcc
     c_k
     yt_k
@@ -88,22 +111,27 @@ elseif(${CMAKE_BUILD_TYPE} MATCHES RELEASE)
 endif()
 
 
-add_library(c_k STATIC ${LIBC_SOURCES})
+add_library(c_k STATIC ${LIBCK_SOURCES})
 add_library(yt_k STATIC ${LIBYT_SOURCES})
+add_library(cxxrt_k STATIC ${CXXRT_SOURCES})
 
 add_executable(kernel ${KERNEL_SOURCES})
 
-target_include_directories(kernel PRIVATE ${KERNEL_INCLUDE_DIRECTORIES})
-target_compile_options(kernel PRIVATE ${KERNEL_COMPILE_OPTIONS})
-target_compile_definitions(kernel PRIVATE ${KERNEL_COMPILE_DEFINITIONS})
-target_link_options(kernel PRIVATE ${KERNEL_LINK_OPTIONS})
-target_link_directories(kernel PRIVATE ${KERNEL_LINK_DIRECTORIES})
-target_link_libraries(kernel PRIVATE ${KERNEL_LIBS})
+target_include_directories(kernel PUBLIC ${KERNEL_INCLUDE_DIRECTORIES})
+target_compile_options(kernel PUBLIC ${KERNEL_COMPILE_OPTIONS})
+target_compile_definitions(kernel PUBLIC ${KERNEL_COMPILE_DEFINITIONS})
+target_link_options(kernel PUBLIC ${KERNEL_LINK_OPTIONS})
+target_link_directories(kernel PUBLIC ${KERNEL_LINK_DIRECTORIES})
+target_link_libraries(kernel PUBLIC ${KERNEL_LIBS})
 
-target_include_directories(c_k PRIVATE ${KERNEL_INCLUDE_DIRECTORIES})
-target_compile_options(c_k PRIVATE ${KERNEL_COMPILE_OPTIONS})
-target_compile_definitions(c_k PRIVATE ${KERNEL_COMPILE_DEFINITIONS})
+target_include_directories(c_k PUBLIC ${KERNEL_INCLUDE_DIRECTORIES})
+target_compile_options(c_k PUBLIC ${KERNEL_COMPILE_OPTIONS})
+target_compile_definitions(c_k PUBLIC ${KERNEL_COMPILE_DEFINITIONS})
 
-target_include_directories(yt_k PRIVATE ${KERNEL_INCLUDE_DIRECTORIES})
-target_compile_options(yt_k PRIVATE ${KERNEL_COMPILE_OPTIONS})
-target_compile_definitions(yt_k PRIVATE ${KERNEL_COMPILE_DEFINITIONS})
+target_include_directories(yt_k PUBLIC ${KERNEL_INCLUDE_DIRECTORIES})
+target_compile_options(yt_k PUBLIC ${KERNEL_COMPILE_OPTIONS})
+target_compile_definitions(yt_k PUBLIC ${KERNEL_COMPILE_DEFINITIONS})
+
+target_include_directories(cxxrt_k PUBLIC ${KERNEL_INCLUDE_DIRECTORIES})
+target_compile_options(cxxrt_k PUBLIC ${KERNEL_COMPILE_OPTIONS})
+target_compile_definitions(cxxrt_k PUBLIC ${KERNEL_COMPILE_DEFINITIONS})

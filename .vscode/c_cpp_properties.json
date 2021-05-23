@@ -3,9 +3,14 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/YeetOS",
+                "${workspaceFolder}/YeetOS/Libc",
+                "${workspaceFolder}/YeetOS/LibYT"
             ],
-            "defines": [],
+            "defines": [
+                "KERNEL"
+            ],
+            "forcedInclude": [ "${workspaceFolder}/.vscode/pre.h" ],
             "compilerPath": "/usr/local/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++20",

@@ -23,21 +23,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#pragma once
 
-namespace YT {
+#include <sys/cdefs.h>
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
-{
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
-}
+__BEGIN_DECLS
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
-{
-    // TODO: print verfiy not reached failure
-    abort();
-}
-    
-}
+/* Structure containing information about object searched using
+   dladdr().  */
+typedef struct {
+    const char* dli_fname; /* File name of defining object.  */
+    void* dli_fbase;       /* Load address of that object.  */
+    const char* dli_sname; /* Name of nearest symbol.  */
+    void* dli_saddr;       /* Exact value of nearest symbol.  */
+} Dl_info;
+
+/*
+   This is a GNU extension.
+
+   Fill in *info with the according information about address.
+   Returns 0 iff no shared object's segments contain that address.  */
+int dladdr(const void* address, Dl_info* info);
+
+__END_DECLS

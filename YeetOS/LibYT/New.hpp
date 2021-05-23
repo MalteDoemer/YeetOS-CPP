@@ -23,21 +23,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#pragma once
+
+#include <stddef.h>
 
 namespace YT {
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
-{
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
+using NewFailHandler = void (*)();
+
+NewFailHandler set_new_fail_handler(NewFailHandler handler) noexcept;
+NewFailHandler get_new_fail_handler() noexcept;
+
 }
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
+struct nothrow_t {};
+
+void* operator new(size_t size);
+void* operator new[](size_t size);
+
+void* operator new(size_t size, nothrow_t) noexcept;
+void* operator new[](size_t size, nothrow_t) noexcept;
+
+void operator delete(void* ptr) noexcept;
+void operator delete[](void* ptr) noexcept;
+
+void operator delete(void* ptr, size_t size) noexcept;
+void operator delete[](void* ptr, size_t size) noexcept;
+
+inline void* operator new(size_t, void* ptr) noexcept
 {
-    // TODO: print verfiy not reached failure
-    abort();
+    return ptr;
 }
-    
+
+inline void* operator new[](size_t, void* ptr) noexcept
+{
+    return ptr;
 }
+
+inline void operator delete(void*, void*) noexcept {}
+inline void operator delete[](void*, void*) noexcept {}

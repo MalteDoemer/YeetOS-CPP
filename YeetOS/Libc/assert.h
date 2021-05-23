@@ -23,26 +23,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <sys/cdefs.h>
+
 #pragma once
 
 #ifndef NDEBUG
 
-namespace YT {
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func);
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func);
-}
+__BEGIN_DECLS
 
-    #define VERIFY(x)                                                                                                  \
-        do {                                                                                                           \
-            if (!static_cast<bool>(x)) [[unlikely]]                                                                    \
-                YT::verify_fail(#x, __FILE__, __LINE__, __func__);                                                     \
-        } while (0)
+void assert_fail(const char* expr, const char* file, int line, const char* fn) __attribute__((noreturn));
 
-    #define VERIFY_NOT_REACHED(x) YT::verify_not_reached_fail(__FILE__, __LINE__, __func__)
+__END_DECLS
+
+    #ifdef __cplusplus
+        #define assert(expr)                                                                                           \
+            do {                                                                                                       \
+                if (!(expr)) [[unlikely]]                                                                              \
+                    assert_fail(#expr, __FILE__, __LINE__, __func__);                                                  \
+            } while (0)
+    #else
+        #define assert(expr)                                                                                           \
+            do {                                                                                                       \
+                if (__builtin_expect(expr, 0))                                                                         \
+                    assert_fail(#expr, __FILE__, __LINE__, __func__);                                                  \
+            } while (0)
+    #endif
 
 #else
-
-    #define VERIFY(x) static_cast<void>(0)
-    #define VERIFY_NOT_REACHED(x)
+    #ifdef __cplusplus
+        #define assert(x) static_cast<void>(0)
+    #else
+        #define assert(x) (void)(0)
+    #endif
 
 #endif

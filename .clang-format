@@ -5,6 +5,13 @@ SpaceAfterTemplateKeyword: false
 AccessModifierOffset: -4
 SortIncludes: false
 
+ColumnLimit: 120
+IndentPPDirectives: BeforeHash
+
+AlignAfterOpenBracket: Align
+AlignConsecutiveMacros: Consecutive
+AlignTrailingComments: true
+
 BreakConstructorInitializers: AfterColon
 AllowAllConstructorInitializersOnNextLine: true
 ConstructorInitializerAllOnOneLineOrOnePerLine: true

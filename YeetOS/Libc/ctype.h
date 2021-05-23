@@ -23,21 +23,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#include <sys/cdefs.h>
 
-namespace YT {
+#pragma once
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
-{
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
-}
+__BEGIN_DECLS
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
-{
-    // TODO: print verfiy not reached failure
-    abort();
-}
-    
-}
+int isalnum(int);
+int isalpha(int);
+int isascii(int);
+int isblank(int);
+int iscntrl(int);
+int isdigit(int);
+int isgraph(int);
+int islower(int);
+int isprint(int);
+int ispunct(int);
+int isspace(int);
+int isupper(int);
+int isxdigit(int);
+int toascii(int);
+int tolower(int);
+int toupper(int);
+
+__END_DECLS

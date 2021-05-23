@@ -23,21 +23,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#pragma once
 
-namespace YT {
+#include <stddef.h>
+#include <sys/cdefs.h>
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
-{
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
-}
+__BEGIN_DECLS
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
-{
-    // TODO: print verfiy not reached failure
-    abort();
-}
-    
-}
+typedef struct FILE {
+    int id;
+} FILE;
+
+extern FILE* stderr_file;
+extern FILE* stdin_file;
+extern FILE* stdout_file;
+
+#define stderr stderr_file
+#define stdint stdin_file
+#define stdout stdout_file
+
+int printf(const char* __restrict fmt, ...);
+int fprintf(FILE* __restrict stream, const char* __restrict fmt, ...);
+int snprintf(char* __restrict buffer, size_t count, const char* __restrict fmt, ...);
+
+__END_DECLS

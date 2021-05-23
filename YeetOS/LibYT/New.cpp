@@ -25,19 +25,68 @@
 
 #include <stdlib.h>
 
+#include <New.hpp>
+#include <Atomic.hpp>
+#include <Exceptions.hpp>
+
 namespace YT {
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
+static Atomic<NewFailHandler> new_fail_handler;
+
+NewFailHandler set_new_fail_handler(NewFailHandler handler) noexcept
 {
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
+    return new_fail_handler.exchange(handler);
 }
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
+NewFailHandler get_new_fail_handler() noexcept
 {
-    // TODO: print verfiy not reached failure
-    abort();
+    return new_fail_handler.load();
 }
-    
+
+}
+
+void* operator new(size_t size)
+{
+    void* mem = malloc(size);
+
+    if (mem == nullptr){
+        throw YT::BadAllocation();
+    }
+
+    return mem;
+}
+
+void* operator new[](size_t size)
+{
+    return :: operator new(size);
+}
+
+void* operator new(size_t size, nothrow_t) noexcept
+{
+    return malloc(size);
+}
+
+void* operator new[](size_t size, nothrow_t) noexcept
+{
+    return :: operator new(size, nothrow_t());
+}
+
+void operator delete(void* ptr) noexcept
+{
+    free(ptr);
+}
+
+void operator delete[](void* ptr) noexcept
+{
+    free(ptr);
+}
+
+void operator delete(void* ptr, size_t size) noexcept
+{
+    free(ptr);
+}
+
+void operator delete[](void* ptr, size_t size) noexcept
+{
+    free(ptr);
 }

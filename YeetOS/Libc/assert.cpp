@@ -25,19 +25,8 @@
 
 #include <stdlib.h>
 
-namespace YT {
-
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
+extern "C" void assert_fail(const char* expr, const char* file, int line, const char* fn)
 {
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
+    // TODO: print assert failiure
     abort();
-}
-
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
-{
-    // TODO: print verfiy not reached failure
-    abort();
-}
-    
 }

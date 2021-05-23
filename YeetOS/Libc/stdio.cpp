@@ -23,21 +23,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#include <stdio.h>
 
-namespace YT {
+#ifdef KERNEL
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
+static FILE stderr_impl = { 1 };
+static FILE stdin_impl = { 2 };
+static FILE stdout_impl = { 3 };
+
+extern "C" FILE* stderr_file = &stderr_impl;
+extern "C" FILE* stdin_file = &stdin_impl;
+extern "C" FILE* stdout_file = &stdout_impl;
+
+int printf(const char* __restrict fmt, ...)
 {
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
-    abort();
+    // TODO: implement printf
+    return 0;
 }
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
+int fprintf(FILE* __restrict stream, const char* __restrict fmt, ...)
 {
-    // TODO: print verfiy not reached failure
-    abort();
+    // TODO: implement fprintf
+    return 0;
 }
-    
-}
+
+#else /* KERNEL */
+    #error "stdio not implemented"
+#endif /* KERNEL */
