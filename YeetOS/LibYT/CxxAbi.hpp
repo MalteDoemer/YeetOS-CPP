@@ -25,22 +25,31 @@
 #include <stddef.h>
 #include <stdint.h>
 
+
 // _GNU_SOURCE must be defined for unwind.h to expose some of the functions
 // that we want.  If it isn't, then we define it and undefine it to make sure
 // that it doesn't impact the rest of the program.
 #ifndef _GNU_SOURCE
     #define _GNU_SOURCE 1
-    #include "unwind.h"
+    #include <Libcxxrt/unwind.h>
     #undef _GNU_SOURCE
 #else
-    #include "unwind.h"
+    #include <Libcxxrt/unwind.h>
 #endif
+
+/**
+ * The namespace used for the ABI declarations.  This is currently defined to
+ * be the same as GNU libsupc++, however this may change in the future.
+ */
+#define ABI_NAMESPACE __cxxabiv1
+
 
 namespace std {
 class type_info;
 }
+
 /*
- * The Cxxabi.h header provides a set of public definitions for types and
+ * The CxxAbi.h header provides a set of public definitions for types and
  * functions defined by the Itanium C++ ABI specification.  For reference, see
  * the ABI specification here:
  *
@@ -51,7 +60,7 @@ class type_info;
  */
 
 #ifdef __cplusplus
-namespace __cxxabiv1 {
+namespace ABI_NAMESPACE {
 extern "C" {
 #endif
 /**
@@ -248,6 +257,6 @@ char* __cxa_demangle(const char* mangled_name, char* buf, size_t* n, int* status
 } // extern "C"
 } // namespace
 
-namespace abi = __cxxabiv1;
+namespace abi = ABI_NAMESPACE;
 
 #endif /* __cplusplus */

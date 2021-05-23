@@ -24,13 +24,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stddef.h>
+#pragma once
 
-/**
- * The namespace used for the ABI declarations.  This is currently defined to
- * be the same as GNU libsupc++, however this may change in the future.
- */
-#define ABI_NAMESPACE __cxxabiv1
+#include <stddef.h>
+#include <CxxAbi.hpp>
 
 namespace ABI_NAMESPACE {
 

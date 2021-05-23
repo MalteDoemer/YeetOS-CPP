@@ -31,10 +31,10 @@
 #include <stdint.h>
 #include <pthread.h>
 
+#include <CxxAbi.hpp>
 #include <Exceptions.hpp>
 
 #include <Libcxxrt/TypeInfo.hpp>
-#include <Libcxxrt/CxxAbi.hpp>
 #include <Libcxxrt/DwarfEh.hpp>
 #include <Libcxxrt/Atomic.hpp>
 
@@ -239,7 +239,7 @@ static const uint64_t dependent_exception_class = EXCEPTION_CLASS('G', 'N', 'U',
  * if we change our exception class, to allow this library and libsupc++ to be
  * linked to the same executable and both to interoperate.
  */
-static const uint32_t abi_exception_class = GENERIC_EXCEPTION_CLASS('C', '+', '+', '\0');
+[[maybe_unused]] static const uint32_t abi_exception_class = GENERIC_EXCEPTION_CLASS('C', '+', '+', '\0');
 
 static bool isCXXException(uint64_t cls)
 {
@@ -1290,7 +1290,7 @@ extern "C" void __cxa_call_unexpected(void* exception)
     // and `__cxa_end_catch` so that we correctly update exception counts if
     // the unexpected handler throws an exception.
     __cxa_begin_catch(exceptionObject);
-    __attribute__((cleanup(end_catch))) char unused;
+    [[maybe_unused]] __attribute__((cleanup(end_catch))) char unused;
     if (exceptionObject->exception_class == exception_class) {
         __cxa_exception* ex = exceptionFromPointer(exceptionObject);
         if (ex->unexpectedHandler) {

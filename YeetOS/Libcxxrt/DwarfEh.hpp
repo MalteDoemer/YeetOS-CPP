@@ -32,6 +32,9 @@
  * language-specific code.  It can be used in any personality function for the
  * Itanium ABI.
  */
+
+#pragma once
+
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -45,10 +48,10 @@
 // that it doesn't impact the rest of the program.
 #ifndef _GNU_SOURCE
     #define _GNU_SOURCE 1
-    #include "unwind.h"
+    #include <Libcxxrt/unwind.h>
     #undef _GNU_SOURCE
 #else
-    #include "unwind.h"
+    #include <Libcxxrt/unwind.h>
 #endif
 
 /// Type used for pointers into DWARF data

@@ -18,7 +18,7 @@ This project is licensed under a 2-clause BSD license - see [LICENSE](LICENSE) f
 * [libcxxrt](https://github.com/libcxxrt/libcxxrt) for exception handling:
     - [Atomic.hpp](YeetOS/Libcxxrt/Atomic.hpp)
     - [AuxHelper.cpp](YeetOS/Libcxxrt/AuxHelper.cpp)
-    - [CxxAbi.hpp](YeetOS/Libcxxrt/CxxAbi.hpp)
+    - [CxxAbi.hpp](YeetOS/LibYT/CxxAbi.hpp)
     - [DwarfEh.hpp](YeetOS/Libcxxrt/DwarfEh.hpp)
     - [DynamicCast.cpp](YeetOS/Libcxxrt/DynamicCast.cpp)
     - [Exception.cpp](YeetOS/Libcxxrt/Exception.cpp)
