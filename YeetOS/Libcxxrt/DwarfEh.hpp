@@ -23,6 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /**
  * dwarf_eh.h - Defines some helper functions for parsing DWARF exception
  * handling tables.

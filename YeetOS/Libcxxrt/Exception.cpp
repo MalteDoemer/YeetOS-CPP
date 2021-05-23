@@ -34,7 +34,7 @@
 #include <Exceptions.hpp>
 
 #include <Libcxxrt/TypeInfo.hpp>
-#include <Libcxxrt/Cxxabi.hpp>
+#include <Libcxxrt/CxxAbi.hpp>
 #include <Libcxxrt/DwarfEh.hpp>
 #include <Libcxxrt/Atomic.hpp>
 
@@ -1277,6 +1277,7 @@ static void end_catch(char*)
 {
     __cxa_end_catch();
 }
+
 /**
  * ABI function, called when an exception specification is violated.
  *
