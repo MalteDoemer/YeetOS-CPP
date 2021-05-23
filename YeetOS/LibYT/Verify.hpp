@@ -30,7 +30,7 @@
 namespace YT {
 [[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func);
 [[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func);
-}
+} /* namespace YT */
 
     #define VERIFY(x)                                                                                                  \
         do {                                                                                                           \

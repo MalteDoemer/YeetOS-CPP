@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "Types.hpp"
+#include <Types.hpp>
 
 namespace YT {
 
@@ -1287,7 +1287,7 @@ using TypeList = Detail::TypeList<T...>;
 template<Size size, typename List>
 using TypeSelect = typename Detail::TypeSelect<size, List>::Type;
 
-} // namespace YT
+} /* namespace YT */
 
 /*
 xxxx is_scoped_enum xxxx

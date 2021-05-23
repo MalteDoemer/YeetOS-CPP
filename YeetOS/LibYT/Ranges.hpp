@@ -25,16 +25,16 @@
 
 #pragma once
 
-#include "Types.hpp"
-#include "Traits.hpp"
-#include "Concepts.hpp"
-#include "TypeMagic.hpp"
+#include <Types.hpp>
+#include <Traits.hpp>
+#include <Concepts.hpp>
+#include <TypeMagic.hpp>
 
 
 namespace YT {
 
 /**
- * @brief Retrieves a pointer to the underlying data of T
+ * Retrieves a pointer to the underlying data of T.
  * @returns t.data()
  */
 template<typename T>
@@ -45,7 +45,7 @@ constexpr auto data(T& t) noexcept(noexcept(t.data()))
 }
 
 /**
- * @brief Retrieves a pointer to the underlying data of T
+ * Retrieves a pointer to the underlying data of T.
  * @returns t.data()
  */
 template<typename T>
@@ -56,29 +56,29 @@ constexpr auto data(const T& t) noexcept(noexcept(t.data()))
 }
 
 /**
- * @brief data() overload for pointers
+ * The data() overload for pointers.
  * @returns ptr
  */
 template<typename T>
-requires YT::is_pointer<T>
+requires is_pointer<T>
 constexpr auto data(T ptr) noexcept
 {
     return ptr;
 }
 
 /**
- * @brief data() overload for arrays
+ * The data() overload for arrays.
  * @returns arr
  */
 template<typename T>
-requires YT::is_array<T>
+requires is_array<T>
 constexpr auto data(T arr) noexcept
 {
     return arr;
 }
 
 /**
- * @brief Retrieves an iterator to the beginning of a range
+ * Retrieves an iterator to the beginning of a range.
  */
 template<typename Rng>
 requires requires (Rng& rng) { rng.begin(); }
@@ -88,7 +88,7 @@ constexpr auto begin(Rng& rng) noexcept(noexcept(rng.begin()))
 }
 
 /**
- * @brief Retrieves an iterator to the beginning of a range
+ * Retrieves an iterator to the beginning of a range.
  */
 template<typename Rng>
 requires requires (const Rng& rng) { rng.begin(); }
@@ -98,7 +98,7 @@ constexpr auto begin(const Rng& rng) noexcept(noexcept(rng.begin()))
 }
 
 /**
- * @brief Retrieves an iterator to the end of a range
+ * Retrieves an iterator to the end of a range.
  */
 template<typename Rng>
 requires requires (Rng& rng) { rng.end(); }
@@ -108,7 +108,7 @@ constexpr auto end(Rng& rng) noexcept(noexcept(rng.end()))
 }
 
 /**
- * @brief Retrieves an iterator to the end of a range
+ * Retrieves an iterator to the end of a range.
  */
 template<typename Rng>
 requires requires (const Rng& rng) { rng.end(); }
@@ -117,7 +117,7 @@ constexpr auto end(const Rng& rng) noexcept(noexcept(rng.end()))
     return rng.end();
 }
 
-}
+} /* namespace YT */
 
 
 namespace YT {
@@ -127,7 +127,7 @@ using YT::begin;
 using YT::end;
 
 /**
- * @brief Defines whether Iter is readable through operator*
+ * Defines whether Iter is readable through operator*.
  */
 template<typename Iter>
 concept Readable = requires (Iter iter){
@@ -136,7 +136,7 @@ concept Readable = requires (Iter iter){
 };
 
 /**
- * @brief Defines whether Iter is writable through operator*
+ * Defines whether Iter is writable through operator*.
  */
 template<typename Iter>
 concept Writeable = requires (Iter iter, ConstValueReference<Iter> val)
@@ -146,7 +146,7 @@ concept Writeable = requires (Iter iter, ConstValueReference<Iter> val)
 };
 
 /**
- * @brief Defines whether Iter can be pre- and post-incremented
+ * Defines whether Iter can be pre- and post-incremented.
  */
 template<typename Iter>
 concept Incrementable = requires (Iter iter)
@@ -156,7 +156,7 @@ concept Incrementable = requires (Iter iter)
 };
 
 /**
- * @brief Defines whether Iter can be pre- and post-dectremented
+ * Defines whether Iter can be pre- and post-dectremented.
  */
 template<typename Iter>
 concept Decrementable = requires (Iter iter)
@@ -166,7 +166,7 @@ concept Decrementable = requires (Iter iter)
 };
 
 /**
- * @brief Defines whether T and U are Compareable and whether operator- can be used to compute their difference
+ * Defines whether T and U are Compareable and whether operator- can be used to compute their difference.
  */
 template<typename T, typename U>
 concept PositionAwareWith = requires (T i, U j)
@@ -176,13 +176,13 @@ concept PositionAwareWith = requires (T i, U j)
 };
 
 /**
- * @brief Defines whether two T's are Compareable and whether operator- can be used to compute their difference
+ * Defines whether two T's are Compareable and whether operator- can be used to compute their difference.
  */
 template<typename T>
 concept PositionAware = PositionAwareWith<T, T>;
 
 /**
- * @brief Defines whether T has operators +=, -=, +, - and []
+ * Defines whether T has operators +=, -=, +, - and [].
  */
 template<typename T>
 concept RandomAccessable = requires (T i, const T j, Diff n)
@@ -197,7 +197,7 @@ concept RandomAccessable = requires (T i, const T j, Diff n)
 };
 
 /**
- * @brief Defines wether T is contiguous
+ * Defines wether T is contiguous.
  * @returns true if a call to data() returns a pointer to the underlying data of T
  */
 template<typename T>
@@ -208,7 +208,7 @@ concept HasContiguousData = requires (T t)
 };
 
 /**
- * @brief A basic iterator
+ * A basic iterator.
  */
 template<typename T>
 concept Iterator = requires {
@@ -218,13 +218,13 @@ concept Iterator = requires {
 };
 
 /**
- * @brief A Iterator which is Writable
+ * A Iterator which is Writable.
  */
 template<typename T>
 concept WriteableIterator = Iterator<T> && Writeable<T>;
 
 /**
- * @brief An Iterator which is Decrementable and PositionAware
+ * An Iterator which is Decrementable and PositionAware.
  */
 template<typename T>
 concept BidirectionalIterator = requires
@@ -235,13 +235,13 @@ concept BidirectionalIterator = requires
 };
 
 /**
- * @brief A BidirectionalIterator which is Writable
+ * A BidirectionalIterator which is Writable.
  */
 template<typename T>
 concept WriteableBidirectionalIterator = BidirectionalIterator<T> && Writeable<T>;
 
 /**
- * @brief A BidirectionalIterator which is RandomAccessable
+ * A BidirectionalIterator which is RandomAccessable.
  */
 template<typename T>
 concept RandomAccessIterator = requires {
@@ -251,13 +251,13 @@ concept RandomAccessIterator = requires {
 };
 
 /**
- * @brief A RandomAccessIterator which is Writable
+ * A RandomAccessIterator which is Writable.
  */
 template<typename T>
 concept WriteableRandomAccessIterator = RandomAccessIterator<T> && Writeable<T>;
 
 /**
- * @brief A RandomAccessIterator which satisfies HasContiguousData
+ * A RandomAccessIterator which satisfies HasContiguousData.
  */
 template<typename T>
 concept ContiguousIterator = requires {
@@ -266,32 +266,32 @@ concept ContiguousIterator = requires {
 };
 
 /**
- * @brief A ContiguousIterator which is Writable
+ * A ContiguousIterator which is Writable.
  */
 template<typename T>
 concept WriteableContiguousIterator = ContiguousIterator<T> && Writeable<T>;
 
 
 /**
- * @brief Defines whether S is a sentinel for the iterator It
+ * Defines whether S is a sentinel for the iterator It.
  */
 template<typename S, typename It>
 concept SentinelFor = Iterator<It> && Copyable<S> && EqualityCompareableWith<It, S>;
 
 /**
- * @brief Defines whether S is a PostitonAware sentinel for the iterator It
+ * Defines whether S is a PostitonAware sentinel for the iterator It.
  */
 template<typename S, typename It>
 concept SizedSentinelFor = Iterator<It> && Copyable<S> && PositionAwareWith<It, S>;
 
 /**
- * @brief Type alias for the associated iterator of a range
+ * Type alias for the associated iterator of a range.
  */
 template<typename Rng>
 using IteratorOf = decltype(begin(declval<Rng&>()));
 
 /**
- * @brief Type alias for the associated sentinel of a range
+ * Type alias for the associated sentinel of a range.
  */
 template<typename Rng>
 using SentinelOf = decltype(end(declval<Rng&>()));
@@ -352,4 +352,4 @@ concept WriteableContiguousRange = requires (T rng)
     { end(rng) } -> SizedSentinelFor<IteratorOf<T>>;
 };
 
-} // namespace YT
+} /* namespace YT */

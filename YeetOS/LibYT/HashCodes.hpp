@@ -25,14 +25,14 @@
 
 #pragma once
 
-#include "Types.hpp"
-#include "Utility.hpp"
-#include "Concepts.hpp"
+#include <Types.hpp>
+#include <Utility.hpp>
+#include <Concepts.hpp>
 
 namespace YT {
 
 /**
- * @brief calculates the hash code of a object 
+ * Calculates the hash code of a object.
  */
 template<typename T>
 requires requires (T& object) { { object.hash_code() } -> SameAs<HashCode>; }
@@ -42,7 +42,7 @@ constexpr HashCode hash_code(T& object) noexcept(noexcept(object.hash_code()))
 }
 
 /**
- * @brief calculates the hash code of a object 
+ * Calculates the hash code of a object.
  */
 template<typename T>
 requires requires (const T& object) { { object.hash_code() } -> SameAs<HashCode>; }
@@ -89,7 +89,7 @@ constexpr Uint32 combine_hash32(Uint32 key1, Uint32 key2) noexcept
 }
 
 /**
- * @brief calculates the hash code of an integer 
+ * Calculates the hash code of an integer.
  */
 template<IntegralType T>
 constexpr HashCode hash_code(T key) noexcept
@@ -116,7 +116,7 @@ constexpr HashCode hash_code(T key) noexcept
 }
 
 /**
- * @brief calculates the hash code of a pointer 
+ * Calculates the hash code of a pointer.
  */
 template<PointerType T>
 constexpr HashCode hash_code(T key) noexcept
@@ -126,7 +126,7 @@ constexpr HashCode hash_code(T key) noexcept
 }
 
 /**
- * @brief calculates the hash code of a floating point number 
+ * Calculates the hash code of a floating point number.
  */
 template<FloatingPointType T>
 constexpr HashCode hash_code(T key) noexcept
@@ -137,7 +137,7 @@ constexpr HashCode hash_code(T key) noexcept
 }
 
 /**
- * @brief calls hash_code() on all arguments and combines them into a single HashCode 
+ * Calls hash_code() on all arguments and combines them into a single HashCode.
  */
 template<typename T>
 constexpr HashCode combined_hash(T to_hash) noexcept(noexcept(hash_code(to_hash)))
@@ -146,7 +146,7 @@ constexpr HashCode combined_hash(T to_hash) noexcept(noexcept(hash_code(to_hash)
 }
 
 /**
- * @brief calls hash_code() on all arguments and combines them into a single HashCode 
+ * Calls hash_code() on all arguments and combines them into a single HashCode.
  */
 template<typename T, typename... Vargs>
 constexpr HashCode combined_hash(T to_hash, Vargs... vargs) noexcept(noexcept(hash_code(to_hash)) && (... && noexcept(hash_code(vargs))))
@@ -158,7 +158,7 @@ constexpr HashCode combined_hash(T to_hash, Vargs... vargs) noexcept(noexcept(ha
 using YT::hash_code;
 
 /**
- * @brief a concept wich defines if a type is hashable 
+ * A concept wich defines if a type is hashable.
  */
 template<typename T>
 concept Hashable = requires(T a)
@@ -166,4 +166,4 @@ concept Hashable = requires(T a)
     { hash_code(a) } -> SameAs<HashCode>;
 };
 
-}
+} /* namespace YT */

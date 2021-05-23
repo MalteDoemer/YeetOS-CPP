@@ -25,9 +25,9 @@
 
 #pragma once
 
-#include "Types.hpp"
-#include "Concepts.hpp"
-#include "TypeMagic.hpp"
+#include <Types.hpp>
+#include <Concepts.hpp>
+#include <TypeMagic.hpp>
 
 namespace YT {
 
@@ -95,4 +95,4 @@ namespace std {
 
 using YT::move;
 
-}
+} /* namespace YT */

@@ -26,9 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <LibYT/Types.hpp>
-
-using namespace YT;
+#include <Types.hpp>
 
 #ifdef KERNEL
 

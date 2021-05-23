@@ -51,6 +51,4 @@
         "typeinfo": "cpp"
     },
     "cmake.configureOnOpen": false,
-
-    // "C_Cpp.default.systemIncludePath": [ "/" ]
 }

@@ -26,9 +26,9 @@
 
 #pragma once
 
-#include "Types.hpp"
-#include "Platform.hpp"
-#include "TypeMagic.hpp"
+#include <Types.hpp>
+#include <Platform.hpp>
+#include <TypeMagic.hpp>
 
 namespace YT {
 
@@ -335,6 +335,3 @@ public:
 };
 
 }
-
-using YT::Atomic;
-using YT::full_memory_barrier;

@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "TypeMagic.hpp"
-#include "Types.hpp"
+#include <TypeMagic.hpp>
+#include <Types.hpp>
 
 namespace YT {
 
@@ -91,4 +91,4 @@ concept HasUnderlyingTypeTraits = requires
     typename ConstValuePointer<T>;
 };
 
-}
+} /* namespace YT */

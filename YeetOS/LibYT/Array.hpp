@@ -25,13 +25,13 @@
 
 #pragma once
 
-#include "Types.hpp"
-#include "Verify.hpp"
+#include <Types.hpp>
+#include <Verify.hpp>
 
 namespace YT {
 
 /**
- * @brief A container for a fixed count of elements.
+ * A container for a fixed count of elements.
  * 
  * @tparam T Type of the element
  * @tparam N Number of elements

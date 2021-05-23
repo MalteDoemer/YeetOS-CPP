@@ -1,2 +1,1 @@
 #undef __STDC_HOSTED__
-#define VSCODE_IS_STUPID 1

@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "Types.hpp"
-#include "TypeMagic.hpp"
+#include <Types.hpp>
+#include <TypeMagic.hpp>
 
 namespace YT {
 

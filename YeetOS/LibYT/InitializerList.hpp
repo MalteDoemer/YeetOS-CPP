@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include <LibYT/Types.hpp>
-#include <LibYT/Verify.hpp>
+#include <Types.hpp>
+#include <Verify.hpp>
 
 namespace std {
 
@@ -43,13 +43,13 @@ public:
     using ConstIterator = const T*;
 
 public:
-    constexpr initializer_list(ConstValuePointer data, YT::Size size) noexcept :
+    constexpr initializer_list(ConstValuePointer data, Size size) noexcept :
         m_data(data), m_size(size) {}
 
     constexpr initializer_list() noexcept :
         m_data(nullptr), m_size(0) {}
 
-    constexpr YT::Size count() const noexcept { return m_size; }
+    constexpr Size count() const noexcept { return m_size; }
     constexpr bool is_empty() const noexcept { return count() == 0; }
 
     constexpr ConstIterator begin() const noexcept { return m_data; }
@@ -57,7 +57,7 @@ public:
 
     constexpr ConstValuePointer data() const noexcept { return m_data; }
 
-    constexpr ConstValueReference operator[](YT::Size index) const noexcept 
+    constexpr ConstValueReference operator[](Size index) const noexcept 
     { 
         VERIFY(index < m_size);
         return m_data[index]; 
@@ -65,7 +65,7 @@ public:
 
 private:
     ConstValuePointer m_data;
-    YT::Size m_size;
+    Size m_size;
 };
 
 }

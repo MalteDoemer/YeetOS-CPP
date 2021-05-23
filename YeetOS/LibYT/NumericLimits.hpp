@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "Types.hpp"
-#include "TypeMagic.hpp"
+#include <Types.hpp>
+#include <TypeMagic.hpp>
 
 namespace YT {
 
@@ -172,4 +172,4 @@ struct NumericLimits : public Detail::NumericLimitsHelper<remove_cvref<T>> {
     static constexpr bool is_unsigned() noexcept { return YT::is_unsigned<remove_cvref<T>>; }
 };
 
-}
+} /* namespace YT */

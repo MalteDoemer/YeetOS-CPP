@@ -23,11 +23,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <LibYT/Types.hpp>
+#include <Types.hpp>
 
 #include <Kernel/Kernel.hpp>
 
-using namespace YT;
 
 extern "C" void arch_pre_init()
 {

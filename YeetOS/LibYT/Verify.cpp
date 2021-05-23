@@ -40,4 +40,4 @@ namespace YT {
     abort();
 }
     
-}
+} /* namespace YT */
