@@ -27,6 +27,8 @@
 
 #ifdef KERNEL
 
+#include <Kernel/Kernel.hpp>
+
 static FILE stderr_impl = { 1 };
 static FILE stdin_impl = { 2 };
 static FILE stdout_impl = { 3 };

@@ -27,74 +27,105 @@
 
 namespace YT {
 
-Exception::Exception() noexcept {}
-Exception::Exception(const Exception&) noexcept {}
+// Excpetion
+
+Exception::Exception() noexcept : m_what("Exception") {}
+Exception::Exception(const char* what) noexcept : m_what(what) {}
+Exception::Exception(const Exception& other) noexcept : m_what(other.what()) {}
 Exception::~Exception() noexcept {}
 
-Exception& Exception::operator=(const Exception&) noexcept
+Exception& Exception::operator=(const Exception& other) noexcept
 {
+    m_what = other.what();
     return *this;
 }
 
 const char* Exception::what() const noexcept
 {
-    return "Exception";
+    return m_what;
 }
 
-BadAllocation::BadAllocation() noexcept {}
-BadAllocation::BadAllocation(const BadAllocation&) noexcept {}
-BadAllocation::~BadAllocation() noexcept {}
+// RuntimeError
 
-BadAllocation& BadAllocation::operator=(const BadAllocation&) noexcept
+RuntimeError::RuntimeError() noexcept : Exception("RuntimeError") {}
+RuntimeError::RuntimeError(const char* what) noexcept : Exception(what) {}
+RuntimeError::RuntimeError(const RuntimeError& other) noexcept : Exception(other) {}
+RuntimeError::~RuntimeError() noexcept {}
+
+RuntimeError& RuntimeError::operator=(const RuntimeError& other) noexcept
 {
+    m_what = other.what();
     return *this;
 }
 
-const char* BadAllocation::what() const noexcept
-{
-    return "BadAllocation";
-}
+// AllocationError
 
-BadArrayNewLength::BadArrayNewLength() noexcept {}
-BadArrayNewLength::BadArrayNewLength(const BadArrayNewLength&) noexcept {}
-BadArrayNewLength::~BadArrayNewLength() noexcept {}
+AllocationError::AllocationError() noexcept : RuntimeError("AllocationError") {}
+AllocationError::AllocationError(const char* what) noexcept : RuntimeError(what) {}
+AllocationError::AllocationError(const AllocationError& other) noexcept : RuntimeError(other) {}
+AllocationError::~AllocationError() noexcept {}
 
-BadArrayNewLength& BadArrayNewLength::operator=(const BadArrayNewLength&) noexcept
+AllocationError& AllocationError::operator=(const AllocationError& other) noexcept
 {
+    m_what = other.what();
     return *this;
 }
 
-const char* BadArrayNewLength::what() const noexcept
-{
-    return "BadArrayNewLength";
-}
+// LogicError
 
-BadCast::BadCast() noexcept {}
-BadCast::BadCast(const BadCast&) noexcept {}
-BadCast::~BadCast() noexcept {}
+LogicError::LogicError() noexcept : Exception("LogicError") {}
+LogicError::LogicError(const char* what) noexcept : Exception(what) {}
+LogicError::LogicError(const LogicError& other) noexcept : Exception(other) {}
+LogicError::~LogicError() noexcept {}
 
-BadCast& BadCast::operator=(const BadCast&) noexcept
+LogicError& LogicError::operator=(const LogicError& other) noexcept
 {
+    m_what = other.what();
     return *this;
 }
 
-const char* BadCast::what() const noexcept
-{
-    return "BadCast";
-}
+// TypeidError
 
-BadTypeid::BadTypeid() noexcept {}
-BadTypeid::BadTypeid(const BadTypeid&) noexcept {}
-BadTypeid::~BadTypeid() noexcept {}
+TypeidError::TypeidError() noexcept : LogicError("TypeidError") {}
+TypeidError::TypeidError(const char* what) noexcept : LogicError(what) {}
+TypeidError::TypeidError(const TypeidError& other) noexcept : LogicError(other) {}
+TypeidError::~TypeidError() noexcept {}
 
-BadTypeid& BadTypeid::operator=(const BadTypeid&) noexcept
+TypeidError& TypeidError::operator=(const TypeidError& other) noexcept
 {
+    m_what = other.what();
     return *this;
 }
 
-const char* BadTypeid::what() const noexcept
+// CastError
+
+CastError::CastError() noexcept : LogicError("CastError") {}
+CastError::CastError(const char* what) noexcept : LogicError(what) {}
+CastError::CastError(const CastError& other) noexcept : LogicError(other) {}
+CastError::~CastError() noexcept {}
+
+CastError& CastError::operator=(const CastError& other) noexcept
 {
-    return "BadTypeid";
+    m_what = other.what();
+    return *this;
+}
+
+// OutOfBoundsError
+
+OutOfBoundsError::OutOfBoundsError() noexcept : LogicError("OutOfBoundsError") {}
+OutOfBoundsError::OutOfBoundsError(const char* what) noexcept : LogicError(what) {}
+OutOfBoundsError::OutOfBoundsError(const OutOfBoundsError& other) noexcept : LogicError(other) {}
+OutOfBoundsError::~OutOfBoundsError() noexcept {}
+
+OutOfBoundsError& OutOfBoundsError::operator=(const OutOfBoundsError& other) noexcept
+{
+    m_what = other.what();
+    return *this;
+}
+
+const char* OutOfBoundsError::what() const noexcept 
+{
+    return "Haha your index was out of bounds. You're a stupid programmer!";
 }
 
 }

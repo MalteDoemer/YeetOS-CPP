@@ -27,6 +27,7 @@
 
 #include <Types.hpp>
 #include <Verify.hpp>
+#include <Exceptions.hpp>
 
 namespace YT {
 
@@ -51,38 +52,119 @@ public:
     using Iterator = T*;
     using ConstIterator = const T*;
 
+    /**
+     * Number of elements.
+     */
     constexpr Size count() const noexcept { return N; }
+
+    /**
+     * Checks wether the array is empty.
+     */
     constexpr Size is_empty() const noexcept { return false; }
 
+    /**
+     * Gets a pointer to the underlying data.
+     */
     constexpr ConstValuePointer data() const noexcept { return m_data; }
+
+    /**
+     * Gets a pointer to the underlying data.
+     */
     constexpr ValuePointer data() noexcept { return m_data; }
 
+    /**
+     * Gets an iterator to the begin of the array.
+     */
     constexpr Iterator begin() noexcept { return Iterator { m_data }; }
+
+    /**
+     * Gets an iterator to the begin of the array.
+     */
     constexpr ConstIterator begin() const noexcept { return ConstIterator { m_data }; }
 
+    /**
+     * Gets an iterator to the end of the array.
+     */
     constexpr Iterator end() noexcept { return begin() + N; }
+
+    /**
+     * Gets an iterator to the end of the array.
+     */
     constexpr ConstIterator end() const noexcept { return begin() + N; }
 
-    constexpr ConstValueReference at(Size index) const noexcept
+    /**
+     * Gets the element at index.
+     *
+     * Throws OutOfBoundsError if the index is greater than count.
+     */
+    constexpr ConstValueReference at(Size index) const noexcept(false)
+    {
+        if (index < count()) {
+            throw OutOfBoundsError();
+        }
+
+        return m_data[index];
+    }
+
+    /**
+     * Gets the element at index.
+     *
+     * Throws OutOfBoundsError if the index is greater than count.
+     */
+    constexpr ValueReference at(Size index) noexcept(false)
+    {
+        if (index < count()) {
+            throw OutOfBoundsError();
+        }
+
+        return m_data[index];
+    }
+
+    /**
+     * Gets the element at index.
+     *
+     * UB if the index is out of bounds
+     */
+    constexpr ConstValueReference operator[](Size index) const noexcept
     {
         VERIFY(index < count());
         return m_data[index];
     }
 
-    constexpr ValueReference at(Size index) noexcept
-    {
-        VERIFY(index < count());
-        return m_data[index];
-    }
-
-    constexpr ConstValueReference front() const noexcept { return at(0); }
-    constexpr ValueReference front() noexcept { return at(0); }
-
-    constexpr ConstValueReference back() const noexcept { return at(count() - 1); }
-    constexpr ValueReference back() noexcept { return at(count() - 1); }
-
-    constexpr ConstValueReference operator[](Size index) const noexcept { return at(index); }
+    /**
+     * Gets the element at index.
+     *
+     * UB if the index is out of bounds
+     */
     constexpr ValueReference operator[](Size index) noexcept { return at(index); }
+
+    /**
+     * Gets the first element.
+     *
+     * UB if the array is empty.
+     */
+    constexpr ConstValueReference front() const noexcept { return operator[](0); }
+
+    /**
+     * Gets the first element.
+     *
+     * UB if the array is empty.
+     */
+    constexpr ValueReference front() noexcept { return operator[](0); }
+
+    /**
+     * Gets the last element.
+     *
+     * UB if the array is empty.
+     */
+    constexpr ConstValueReference back() const noexcept { return operator[](count() - 1); }
+
+    /**
+     * Gets the last element.
+     *
+     * UB if the array is empty.
+     */
+    constexpr ValueReference back() noexcept { return operator[](count() - 1); }
 
 private:
     T m_data[N];

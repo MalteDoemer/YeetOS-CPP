@@ -30,9 +30,14 @@
 
 #ifdef KERNEL
 
+#include <Kernel/Kernel.hpp>
+
 extern "C" void abort()
 {
     // TODO: print error
+
+    Kernel::Arch::notice(2);
+
     while (1)
         ;
 }

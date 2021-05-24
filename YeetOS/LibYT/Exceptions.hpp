@@ -34,72 +34,112 @@ class Exception {
 
 public:
     Exception() noexcept;
-    Exception(const Exception&) noexcept;
-    Exception& operator=(const Exception&) noexcept;
+    Exception(const char* what) noexcept;
+    Exception(const Exception& other) noexcept;
+    Exception& operator=(const Exception& other) noexcept;
 
     virtual ~Exception() noexcept;
 
     virtual const char* what() const noexcept;
+
+protected:
+    const char* m_what;
 };
 
 /**
- * Bad allocation exception. Thrown by ::operator new() when it fails.
+ * Base class of all runtime excpetions/errors.
+ * 
+ * A RuntimeError is something that is unpredictable at compile/write time.
  */
-class BadAllocation : public Exception {
+class RuntimeError : public Exception {
 
 public:
-    BadAllocation() noexcept;
-    BadAllocation(const BadAllocation&) noexcept;
-    BadAllocation& operator=(const BadAllocation&) noexcept;
+    RuntimeError() noexcept;
+    RuntimeError(const char* what) noexcept;
+    RuntimeError(const RuntimeError& other) noexcept;
+    RuntimeError& operator=(const RuntimeError& other) noexcept;
 
-    ~BadAllocation() noexcept;
-
-    virtual const char* what() const noexcept;
+    virtual ~RuntimeError() noexcept;
+    // virtual const char* what() const noexcept;
 };
 
 /**
- * Bad array new length exception. Thrown by ::operator new[]() when it fails.
+ * Thrown by operator new() when it fails to allocate memory.
  */
-class BadArrayNewLength : public BadAllocation {
+class AllocationError : public RuntimeError {
 
 public:
-    BadArrayNewLength() noexcept;
-    BadArrayNewLength(const BadArrayNewLength&) noexcept;
-    BadArrayNewLength& operator=(const BadArrayNewLength&) noexcept;
+    AllocationError() noexcept;
+    AllocationError(const char* what) noexcept;
+    AllocationError(const AllocationError& other) noexcept;
+    AllocationError& operator=(const AllocationError& other) noexcept;
 
-    ~BadArrayNewLength() noexcept;
+    virtual ~AllocationError() noexcept;
+    // virtual const char* what() const noexcept;
+};
 
+
+/**
+ * Base class of all logic excpetions/errors.
+ * 
+ * A LogicError is something, that could be prevented at compile/write time.
+ */
+class LogicError : public Exception {
+public:
+    LogicError() noexcept;
+    LogicError(const char* what) noexcept;
+    LogicError(const LogicError& other) noexcept;
+    LogicError& operator=(const LogicError& other) noexcept;
+
+    virtual ~LogicError() noexcept;
+    // virtual const char* what() const noexcept;
+};
+
+/**
+ * Thrown by the __cxa_bad_typeid() helper function.
+ * 
+ * Most TypeidErrors occur when dereferencing nullptr in a typeid expression.
+ */
+class TypeidError : public LogicError {
+public:
+    TypeidError() noexcept;
+    TypeidError(const char* what) noexcept;
+    TypeidError(const TypeidError& other) noexcept;
+    TypeidError& operator=(const TypeidError& other) noexcept;
+
+    virtual ~TypeidError() noexcept;
+    // virtual const char* what() const noexcept;
+};
+
+/**
+ * Thrown by the __cxa_bad_cast() helper function.
+ * 
+ * This exception occurs when using dynamic_cast<> with incompatible types.
+ */
+class CastError : public LogicError {
+public:
+    CastError() noexcept;
+    CastError(const char* what) noexcept;
+    CastError(const CastError& other) noexcept;
+    CastError& operator=(const CastError& other) noexcept;
+
+    virtual ~CastError() noexcept;
+    // virtual const char* what() const noexcept;
+};
+
+/**
+ * Thrown by bounds checking methods like Array::at() 
+ * if the index is out of the specified bounds.
+ */
+class OutOfBoundsError : public LogicError {
+public:
+    OutOfBoundsError() noexcept;
+    OutOfBoundsError(const char* what) noexcept;
+    OutOfBoundsError(const OutOfBoundsError& other) noexcept;
+    OutOfBoundsError& operator=(const OutOfBoundsError& other) noexcept;
+
+    virtual ~OutOfBoundsError() noexcept;
     virtual const char* what() const noexcept override;
-};
-
-/**
- * Bad cast exception. Thrown by __cxa_bad_cast() helper function
- */
-class BadCast : public Exception {
-
-public:
-    BadCast() noexcept;
-    BadCast(const BadCast&) noexcept;
-    BadCast& operator=(const BadCast&) noexcept;
-
-    ~BadCast() noexcept;
-
-    virtual const char* what() const noexcept;
-};
-
-/**
- * Bad typeid exception. Thrown by __cxa_bad_typeid() helper function
- */
-class BadTypeid : public Exception {
-
-public:
-    BadTypeid() noexcept;
-    BadTypeid(const BadTypeid&) noexcept;
-    BadTypeid& operator=(const BadTypeid&) noexcept;
-
-    ~BadTypeid() noexcept;
-
-    virtual const char* what() const noexcept;
 };
 
 }

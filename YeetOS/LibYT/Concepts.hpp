@@ -89,6 +89,12 @@ concept CompareableWith = requires(const remove_reference<T>& a, const remove_re
 /* clang-format on */
 
 template<typename T>
+concept Void = is_void<T>;
+
+template<typename T>
+concept Bool = is_same<T, bool>;
+
+template<typename T>
 concept Compareable = CompareableWith<T, T>;
 
 template<typename T>

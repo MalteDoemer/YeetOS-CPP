@@ -27,17 +27,26 @@
 
 #include <Kernel/Kernel.hpp>
 
-extern "C" void arch_pre_init()
+
+extern "C" void arch_early_init() noexcept
+{
+    /* We Cannot use functions that throw, since we are called before __register_frame */
+
+    
+}
+
+extern "C" void arch_init()
 {
     Kernel::kernel_main();
 }
 
 namespace Kernel::Arch {
 
-void arch_init()
+void notice(Size index)
 {
     Uint16* vram = reinterpret_cast<Uint16*>(0xB8000 + 0xC0000000);
-    vram[0] = 0x1F20;
+    vram[index] = 0x1F20;
 }
+
 
 }

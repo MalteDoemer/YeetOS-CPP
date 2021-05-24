@@ -30,6 +30,8 @@
 #include <Verify.hpp>
 #include <Ranges.hpp>
 #include <Traits.hpp>
+#include <Platform.hpp>
+#include <Exceptions.hpp>
 
 #include <Kernel/Kernel.hpp>
 
@@ -45,15 +47,38 @@ void assign(Rng& range, const T& value)
     }
 }
 
+__attribute__((constructor)) void ctor()
+{
+    Kernel::Arch::notice(5);
+}
+
+__attribute__((constructor)) void nice()
+{
+    Kernel::Arch::notice(5);
+}
+
+__attribute__((constructor)) void lol()
+{
+    Kernel::Arch::notice(5);
+}
+
+__attribute__((constructor)) void hey()
+{
+    Kernel::Arch::notice(5);
+}
+
 namespace Kernel {
 
 void kernel_main()
 {
-    Arch::arch_init();
-    Array<Uint8, 32> src;
-    Array<Uint8, 32> dest;
+    try {
+        throw Exception("hello");
+    } catch (const Exception& e) {
+        DO_NOT_OPTIMIZE_AWAY(e);
+        Arch::notice(32);
+    }
 
-    memcpy(dest.data(), src.data(), dest.count());
+    Arch::notice(0);
 }
 
 }

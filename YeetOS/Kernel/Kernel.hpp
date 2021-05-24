@@ -25,10 +25,12 @@
 
 #pragma once
 
+#include <Types.hpp>
+
 namespace Kernel {
 void kernel_main();
 }
 
 namespace Kernel::Arch {
-void arch_init();
+void notice(Size index);
 }

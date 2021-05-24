@@ -41,7 +41,7 @@
  */
 extern "C" void __cxa_bad_cast()
 {
-    throw YT::BadCast();
+    throw YT::CastError();
 }
 
 /**
@@ -51,7 +51,7 @@ extern "C" void __cxa_bad_cast()
  */
 extern "C" void __cxa_bad_typeid()
 {
-    throw YT::BadTypeid();
+    throw YT::TypeidError();
 }
 
 /**

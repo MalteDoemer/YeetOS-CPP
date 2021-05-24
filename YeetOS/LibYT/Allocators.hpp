@@ -20,38 +20,20 @@
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
 #pragma once
 
-#undef ALWAYS_INLINE
-#define ALWAYS_INLINE [[gnu::always_inline]] inline
+#include <Concepts.hpp>
 
-#undef NEVER_INLINE
-#define NEVER_INLINE [[gnu::noinline]]
+namespace YT {
 
-#undef FLATTEN
-#define FLATTEN [[gnu::flatten]]
+template <typename T>
+concept Allocator = requires (T alloc, Size size, void* ptr) {
+    { alloc.allocate(size) } -> SameAs<void*>;
+    { alloc.deallocate(ptr) } -> Void;
+    { alloc.owns_ptr(ptr) } -> Bool;
+};
 
-#undef PACKED
-#define PACKED [[gnu::packed]]
-
-#undef ALGINED
-#define ALIGNED(x) [[gnu::aligned(x)]]
-
-#undef SECTION
-#define SECTION(x) [[gnu::section(x)]]
-
-#ifdef __EXCEPTIONS
-    #define YT_USE_EXCEPTIONS 1
-#else
-    #define YT_USE_EXCEPTIONS 0
-#endif
-
-#undef DO_NOT_OPTIMIZE_AWAY
-#define DO_NOT_OPTIMIZE_AWAY(x) asm volatile("" : : "g"(x) : "memory");
-
-inline constexpr bool is_little_endian = __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__;
-inline constexpr bool is_bit_endian = __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__;
-inline constexpr bool use_exceptions = YT_USE_EXCEPTIONS;
+} /* namespace YT */

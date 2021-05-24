@@ -1,4 +1,5 @@
 Language: Cpp
+Standard: c++20
 BasedOnStyle: WebKit
 NamespaceIndentation: None
 SpaceAfterTemplateKeyword: false

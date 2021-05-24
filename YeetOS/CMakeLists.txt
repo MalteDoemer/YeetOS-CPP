@@ -41,8 +41,8 @@ set(LIBC_SOURCES
 
 set(LIBYT_SOURCES
     LibYT/Verify.cpp
-    LibYT/Exceptions.cpp
     LibYT/New.cpp
+    LibYT/Exceptions.cpp
 )
 
 set(CXXRT_SOURCES
@@ -71,6 +71,7 @@ set(KERNEL_COMPILE_OPTIONS
     ${KERNEL_ARCH_COMPILE_OPTIONS}
 )
 
+#-fno-use-init-array
 #-fno-rtti
 #-fno-exceptions    
 
@@ -79,6 +80,7 @@ set(KERNEL_LINK_OPTIONS
     -ffreestanding
     -nostdlib
     -static
+    -Wl,--build-id=none
     -Wl,-T${KERNEL_LINKER_SCRIPT}
 )
 

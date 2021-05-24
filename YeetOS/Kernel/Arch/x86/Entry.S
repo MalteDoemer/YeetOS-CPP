@@ -72,21 +72,35 @@ up:
 
 init:
 
-    // setup stack
+    // setup stack pointer and base pointer
     lea esp, kernel_stack_top
     mov ebp, esp
+
+    xor ecx, ecx
+    push ecx
+    push ecx
 
     // correct mboot structure for higher half
     add ebx, KERNEL_BASE
 
 
-    // store the pointer to mboot structure
-    // mov dword [multiboot_ptr], ebx
+    // arch_eraly_init(void* multiboot_info, uint32_t multiboot_magic)
+    // used for early initialization e.g heap allocator, logger
+    push eax
+    push ebx
+    call arch_early_init
+    add esp, 8
 
-    // store the multiboot signature
-    // mov dword [multiboot_sig], eax
 
-    call arch_pre_init
+    // __regiser_frame(void* begin)
+    // This function is provided by libgcc and is used for exception handling
+    lea eax, eh_frame_start
+    push eax
+    call __register_frame
+    add esp, 4
+
+
+    call arch_init
 
 loop:
     hlt

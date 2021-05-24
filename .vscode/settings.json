@@ -48,7 +48,20 @@
         "sstream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "shared_mutex": "cpp",
+        "thread": "cpp",
+        "regex": "cpp",
+        "*.ixx": "cpp",
+        "map": "cpp",
+        "queue": "cpp",
+        "set": "cpp",
+        "stack": "cpp"
     },
     "cmake.configureOnOpen": false,
+    "C_Cpp.errorSquiggles": "Disabled",
 }
