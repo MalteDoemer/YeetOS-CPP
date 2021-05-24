@@ -52,21 +52,6 @@ __attribute__((constructor)) void ctor()
     Kernel::Arch::notice(5);
 }
 
-__attribute__((constructor)) void nice()
-{
-    Kernel::Arch::notice(5);
-}
-
-__attribute__((constructor)) void lol()
-{
-    Kernel::Arch::notice(5);
-}
-
-__attribute__((constructor)) void hey()
-{
-    Kernel::Arch::notice(5);
-}
-
 namespace Kernel {
 
 void kernel_main()

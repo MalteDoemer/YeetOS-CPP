@@ -41,15 +41,15 @@ SECTIONS {
 
    /* clang uses .init_array and .fini_array for constructors and destructors  (unless -fno-use-init-array is used) */
    .init_array : AT(ADDR(.init_array) - 0xC0000000) {
-      ctors_start = .;
+      init_array = .;
       *(.init_array)
-      ctors_end = .;
+      LONG(0)
    }
 
    .fini_array : AT(ADDR(.fini_array) - 0xC0000000) {
-      dtors_start = .;
+      fini_array = .;
       *(.fini_array)
-      dtors_end = .;
+      LONG(0)
    } 
 
    
