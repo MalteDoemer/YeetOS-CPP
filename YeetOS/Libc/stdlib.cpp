@@ -31,15 +31,15 @@
 #ifdef KERNEL
 
 #include <Kernel/Kernel.hpp>
+#include <Kernel/DebugLog.hpp>
+
+using namespace Kernel;
 
 extern "C" void abort()
 {
-    // TODO: print error
+    DebugLog::println("abort() has been called!");
 
-    Kernel::Arch::notice(2);
-
-    while (1)
-        ;
+    while (1) {}
 }
 
 static Uint8 mem[1024 * 1024];

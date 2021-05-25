@@ -29,10 +29,5 @@
 
 namespace Kernel::Arch {
 
-void notice(Size index)
-{
-    Uint16* vram = reinterpret_cast<Uint16*>(0xB8000 + 0xC0000000);
-    vram[index] = 0x1F20;
-}
 
 }

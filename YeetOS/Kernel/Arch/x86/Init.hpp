@@ -20,16 +20,38 @@
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
 #pragma once
 
 #include <Types.hpp>
 
-namespace Kernel {
-void kernel_main();
-}
+/**
+ * Basic function pointer type used to call global constructors.
+ */
+using CtorFunction = void (*)();
+
+/**
+ * Zero-Terminated array of function pointers to global constructors.
+ */
+extern "C" CtorFunction init_array[];
+
+/**
+ * Incomplete type to represent the exception handler frame.
+ */
+struct EhFrame;
+
+/**
+ * Linker symbol to begin of the exception handler frame.
+ */
+extern "C" EhFrame eh_frame;
+
+/**
+ * Libgcc function to register an exception handler frame.
+ */
+extern "C" void __register_frame(void* eh_frame) noexcept;
 
 namespace Kernel::Arch {
+
 }

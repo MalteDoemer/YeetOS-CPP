@@ -60,10 +60,9 @@ SECTIONS {
    }
 
    .eh_frame ALIGN(8) : AT(ADDR(.eh_frame) - 0xC0000000) {
-      eh_frame_start = .;
+      eh_frame = .;
       *(.eh_frame)
       QUAD(0);
-      eh_frame_end = .;
    }
 
    .gcc_except_table ALIGN(8) : AT(ADDR(.gcc_except_table) - 0xC0000000) {

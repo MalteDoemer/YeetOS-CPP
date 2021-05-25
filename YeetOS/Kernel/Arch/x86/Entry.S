@@ -92,16 +92,6 @@ init:
     add esp, 8
 
 
-    // __regiser_frame(void* begin)
-    // This function is provided by libgcc and is used for exception handling
-    lea eax, eh_frame_start
-    push eax
-    call __register_frame
-    add esp, 4
-
-
-    call arch_init
-
 loop:
     hlt
     jmp loop

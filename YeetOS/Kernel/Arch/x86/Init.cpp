@@ -26,46 +26,45 @@
 #include <Types.hpp>
 
 #include <Kernel/Kernel.hpp>
+#include <Kernel/DebugLog.hpp>
 
-/**
- * Basic function pointer type used to call global constructors.
- */
-using CtorFunction = void (*)();
-
-/**
- * Zero-Terminated array of function pointers to global constructors.
- */
-extern "C" CtorFunction init_array[];
+#include <Kernel/Arch/x86/Init.hpp>
 
 namespace Kernel::Arch {
 
 /**
  * Calls all function pointers in init_array[];
  */
-void call_global_ctors() noexcept
+static void call_global_ctors() noexcept
 {
     // FIXME: gcc says ctors need to be called in reverse order
-
     for (CtorFunction* ctor = init_array; *ctor != 0; ctor++) {
         (*ctor)();
     }
 }
 
-} /* namespace Kernel::Arch */
+/**
+ * Sets up the exception handler frame by calling the according libgcc function
+ */
+static void register_eh_frame() noexcept
+{
+    __register_frame(&eh_frame);
+}
 
 /**
  * This function is called by Entry.S to set the most basic things up.
  * This includes calling global constructors and initializing dynamic memory.
  */
-extern "C" void arch_early_init(FlatPtr multiboot_struct, Uint32 multiboot_check) noexcept
+extern "C" void arch_early_init(FlatPtr multiboot_struct, Uint32 multiboot_check)
 {
-    Kernel::Arch::call_global_ctors();
+    /* Set up a debug channel */
+    DebugLog::initialize();
+    DebugLog::println("DebugLog initialized...");
+
+    register_eh_frame();
+    call_global_ctors();
+
+    kernel_main();
 }
 
-/**
- * This function is also called by Entry.S but after most of the initialization.
- */
-extern "C" void arch_init()
-{
-    Kernel::kernel_main();
-}
+} /* namespace Kernel::Arch */
