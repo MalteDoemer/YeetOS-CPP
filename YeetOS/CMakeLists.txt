@@ -8,6 +8,7 @@ if(YEETOS_ARCH STREQUAL "x86")
     set(KERNEL_ARCH_SOURCES
         Kernel/Arch/x86/Arch.cpp
         Kernel/Arch/x86/Init.cpp
+        Kernel/Arch/x86/DebugLog.cpp
         Kernel/Arch/x86/Entry.S
     )
 
