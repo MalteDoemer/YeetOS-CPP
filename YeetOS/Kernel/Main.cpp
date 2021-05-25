@@ -52,7 +52,7 @@ void kernel_main()
 {
 
     try {
-        throw Exception("hello");
+        throw Exception();
     } catch (const Exception& e) {
         DebugLog::println(e.what());
         throw;

@@ -33,17 +33,13 @@ namespace YT {
 class Exception {
 
 public:
-    Exception() noexcept;
-    Exception(const char* what) noexcept;
-    Exception(const Exception& other) noexcept;
-    Exception& operator=(const Exception& other) noexcept;
+    Exception() noexcept = default;
+    Exception(const Exception&) noexcept = default;
+    Exception& operator=(const Exception&) noexcept = default;
 
-    virtual ~Exception() noexcept;
+    virtual ~Exception() noexcept = default;
 
     virtual const char* what() const noexcept;
-
-protected:
-    const char* m_what;
 };
 
 /**
@@ -54,13 +50,12 @@ protected:
 class RuntimeError : public Exception {
 
 public:
-    RuntimeError() noexcept;
-    RuntimeError(const char* what) noexcept;
-    RuntimeError(const RuntimeError& other) noexcept;
-    RuntimeError& operator=(const RuntimeError& other) noexcept;
+    RuntimeError() noexcept = default;
+    RuntimeError(const RuntimeError&) noexcept = default;
+    RuntimeError& operator=(const RuntimeError&) noexcept = default;
 
-    virtual ~RuntimeError() noexcept;
-    // virtual const char* what() const noexcept;
+    virtual ~RuntimeError() noexcept = default;
+    virtual const char* what() const noexcept override;
 };
 
 /**
@@ -69,13 +64,12 @@ public:
 class AllocationError : public RuntimeError {
 
 public:
-    AllocationError() noexcept;
-    AllocationError(const char* what) noexcept;
-    AllocationError(const AllocationError& other) noexcept;
-    AllocationError& operator=(const AllocationError& other) noexcept;
+    AllocationError() noexcept = default;
+    AllocationError(const AllocationError&) noexcept = default;
+    AllocationError& operator=(const AllocationError&) noexcept = default;
 
-    virtual ~AllocationError() noexcept;
-    // virtual const char* what() const noexcept;
+    virtual ~AllocationError() noexcept = default;
+    virtual const char* what() const noexcept override;
 };
 
 
@@ -86,13 +80,12 @@ public:
  */
 class LogicError : public Exception {
 public:
-    LogicError() noexcept;
-    LogicError(const char* what) noexcept;
-    LogicError(const LogicError& other) noexcept;
-    LogicError& operator=(const LogicError& other) noexcept;
+    LogicError() noexcept = default;
+    LogicError(const LogicError&) noexcept = default;
+    LogicError& operator=(const LogicError&) noexcept = default;
 
-    virtual ~LogicError() noexcept;
-    // virtual const char* what() const noexcept;
+    virtual ~LogicError() noexcept = default;
+    virtual const char* what() const noexcept override;
 };
 
 /**
@@ -102,13 +95,12 @@ public:
  */
 class TypeidError : public LogicError {
 public:
-    TypeidError() noexcept;
-    TypeidError(const char* what) noexcept;
-    TypeidError(const TypeidError& other) noexcept;
-    TypeidError& operator=(const TypeidError& other) noexcept;
+    TypeidError() noexcept = default;
+    TypeidError(const TypeidError&) noexcept = default;
+    TypeidError& operator=(const TypeidError&) noexcept = default;
 
-    virtual ~TypeidError() noexcept;
-    // virtual const char* what() const noexcept;
+    virtual ~TypeidError() noexcept = default;
+    virtual const char* what() const noexcept override;
 };
 
 /**
@@ -118,13 +110,12 @@ public:
  */
 class CastError : public LogicError {
 public:
-    CastError() noexcept;
-    CastError(const char* what) noexcept;
-    CastError(const CastError& other) noexcept;
-    CastError& operator=(const CastError& other) noexcept;
+    CastError() noexcept = default;
+    CastError(const CastError&) noexcept = default;
+    CastError& operator=(const CastError&) noexcept = default;
 
-    virtual ~CastError() noexcept;
-    // virtual const char* what() const noexcept;
+    virtual ~CastError() noexcept = default;
+    virtual const char* what() const noexcept override;
 };
 
 /**
@@ -133,12 +124,11 @@ public:
  */
 class OutOfBoundsError : public LogicError {
 public:
-    OutOfBoundsError() noexcept;
-    OutOfBoundsError(const char* what) noexcept;
-    OutOfBoundsError(const OutOfBoundsError& other) noexcept;
-    OutOfBoundsError& operator=(const OutOfBoundsError& other) noexcept;
+    OutOfBoundsError() noexcept = default;
+    OutOfBoundsError(const OutOfBoundsError&) noexcept = default;
+    OutOfBoundsError& operator=(const OutOfBoundsError&) noexcept = default;
 
-    virtual ~OutOfBoundsError() noexcept;
+    virtual ~OutOfBoundsError() noexcept = default;
     virtual const char* what() const noexcept override;
 };
 
