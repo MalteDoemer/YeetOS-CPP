@@ -99,7 +99,7 @@ public:
      */
     constexpr ConstValueReference at(Size index) const noexcept(false)
     {
-        if (index < count()) {
+        if (index > count()) {
             throw OutOfBoundsError();
         }
 
@@ -113,7 +113,7 @@ public:
      */
     constexpr ValueReference at(Size index) noexcept(false)
     {
-        if (index < count()) {
+        if (index > count()) {
             throw OutOfBoundsError();
         }
 
@@ -136,7 +136,11 @@ public:
      *
      * UB if the index is out of bounds
      */
-    constexpr ValueReference operator[](Size index) noexcept { return at(index); }
+    constexpr ValueReference operator[](Size index) noexcept
+    {
+        VERIFY(index < count());
+        return m_data[index];
+    }
 
     /**
      * Gets the first element.
