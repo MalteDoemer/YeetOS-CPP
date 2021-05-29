@@ -95,6 +95,9 @@ template<typename T>
 concept Bool = is_same<T, bool>;
 
 template<typename T>
+concept NonFinal = !is_final<T>;
+
+template<typename T>
 concept Compareable = CompareableWith<T, T>;
 
 template<typename T>
