@@ -25,33 +25,71 @@
 
 #pragma once
 
+#ifdef __cplusplus
+
 #undef ALWAYS_INLINE
-#define ALWAYS_INLINE [[gnu::always_inline]] inline
+#define ALWAYS_INLINE [[__gnu__::__always_inline__]] inline
 
 #undef NEVER_INLINE
-#define NEVER_INLINE [[gnu::noinline]]
+#define NEVER_INLINE [[__gnu__::__noinline__]]
 
 #undef FLATTEN
-#define FLATTEN [[gnu::flatten]]
+#define FLATTEN [[__gnu__::__flatten__]]
 
 #undef PACKED
-#define PACKED [[gnu::packed]]
+#define PACKED [[__gnu__::__packed__]]
 
 #undef ALGINED
-#define ALIGNED(x) [[gnu::aligned(x)]]
+#define ALIGNED(x) [[__gnu__::__aligned__(x)]]
 
 #undef SECTION
-#define SECTION(x) [[gnu::section(x)]]
+#define SECTION(x) [[__gnu__::__section__(x)]]
 
-#ifdef __EXCEPTIONS
-    #define YT_USE_EXCEPTIONS 1
-#else
-    #define YT_USE_EXCEPTIONS 0
-#endif
+#undef NODISCARD
+#define NODISCARD [[__nodiscard__]]
+
+#undef UNUSED
+#define UNUSED [[__maybe_unused__]]
+
+#undef NORETURN
+#define NORETURN [[__noreturn__]]
+
+inline constexpr bool is_little_endian = __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__;
+inline constexpr bool is_big_endian = __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__;
+
+inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
+
+#else /* __cplusplus */
+
+#undef ALWAYS_INLINE
+#define ALWAYS_INLINE  __attribute__((__always_inline__)) inline
+
+#undef NEVER_INLINE
+#define NEVER_INLINE __attribute__((__noinline__))
+
+#undef FLATTEN
+#define FLATTEN __attribute__((__flatten__))
+
+#undef PACKED
+#define PACKED __attribute__((__packed__))
+
+#undef ALGINED
+#define ALIGNED(x) __attribute__((__aligned__(x)))
+
+#undef SECTION
+#define SECTION(x) __attribute__((__section__(x)))
+
+#undef NODISCARD
+#define NODISCARD /* nodiscard */
+
+#undef UNUSED
+#define UNUSED __attribute__((__unused__))
+
+#undef NORETURN
+#define NORETURN __attribute__((__noreturn__))
+
+#endif /* __cplusplus */
 
 #undef DO_NOT_OPTIMIZE_AWAY
 #define DO_NOT_OPTIMIZE_AWAY(x) asm volatile("" : : "g"(x) : "memory");
 
-inline constexpr bool is_little_endian = __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__;
-inline constexpr bool is_big_endian = __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__;
-inline constexpr bool use_exceptions = YT_USE_EXCEPTIONS;

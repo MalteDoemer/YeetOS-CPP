@@ -31,7 +31,7 @@
 
 __BEGIN_DECLS
 
-void assert_fail(const char* expr, const char* file, int line, const char* fn) __attribute__((noreturn));
+NORETURN void assert_fail(const char* expr, const char* file, int line, const char* fn);
 
 __END_DECLS
 

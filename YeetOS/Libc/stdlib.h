@@ -30,7 +30,7 @@
 
 __BEGIN_DECLS
 
-void abort() __attribute__((__noreturn__));
+NORETURN void abort();
 void* malloc(size_t size);
 void free(void* ptr);
 void* calloc(size_t size, size_t num);
