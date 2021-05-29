@@ -43,6 +43,18 @@ constexpr T max(const T& a, const T& b) noexcept
     return a < b ? b : a;
 }
 
+template<IntegralType T>
+T align_up(T val, T align)
+{
+    return (1 + ((val - 1) / align)) * align;
+}
+
+template<IntegralType T>
+T align_down(T val, T align)
+{
+    return  (val / align) * align;
+}
+
 template<typename T>
 constexpr remove_reference<T>&& move(T&& t) noexcept
 {
