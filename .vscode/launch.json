@@ -14,7 +14,8 @@
             "gdbpath": "/usr/bin/gdb",
             "autorun": [
                 "symbol-file build/YeetOS/kernel",
-                "set disassembly-flavor intel"
+                "set disassembly-flavor intel",
+                "break kernel_main"
             ]
         }
     ]

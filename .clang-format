@@ -11,6 +11,8 @@ IndentPPDirectives: BeforeHash
 
 AlwaysBreakTemplateDeclarations: Yes
 
+BreakInheritanceList: AfterColon
+
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 

@@ -1,6 +1,7 @@
 /build
 root/
 disk.img
+core
 
 # Compiler/linker output.
 #
