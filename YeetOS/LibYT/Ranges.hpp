@@ -282,7 +282,7 @@ concept SentinelFor = Iterator<It> && Copyable<S> && EqualityCompareableWith<It,
  * Defines whether S is a PostitonAware sentinel for the iterator It.
  */
 template<typename S, typename It>
-concept SizedSentinelFor = Iterator<It> && Copyable<S> && PositionAwareWith<It, S>;
+concept SizedSentinelFor = Iterator<It> && Copyable<S> && PositionAwareWith<S, It>;
 
 /**
  * Type alias for the associated iterator of a range.
