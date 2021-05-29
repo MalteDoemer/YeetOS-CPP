@@ -25,15 +25,151 @@
 
 #pragma once
 
+#include <Types.hpp>
+#include <Verify.hpp>
+#include <Utility.hpp>
 #include <Concepts.hpp>
+#include <BitmapView.hpp>
 
 namespace YT {
 
-template <typename T>
-concept Allocator = requires (T alloc, Size size, void* ptr) {
-    { alloc.allocate(size) } -> SameAs<void*>;
-    { alloc.deallocate(ptr) } -> Void;
-    { alloc.owns_ptr(ptr) } -> Bool;
+/* clang-format off */
+
+/*
+template<typename T>
+concept PrimitiveAllocator = requires (T alloc, void* ptr, Size size)
+{
+    requires NonFinal<T>;
+    { alloc.alloc_ptr(size) } -> SameAs<void*>;
+    requires noexcept(alloc.alloc_ptr(size));
+    
+    { alloc.free_ptr(ptr) } -> SameAs<void>;
+    requires noexcept(alloc.free_ptr(ptr));
+
+    { alloc.owns_ptr(ptr) } -> SameAs<bool>;
+    requires noexcept(alloc.owns_ptr(ptr));
+};
+
+template<typename T>
+concept BlockAllocator = requires (T alloc, Blk blk, Size size)
+{
+    requires NonFinal<T>;
+    { alloc.alloc_blk(size) } -> SameAs<Blk>;
+    requires noexcept(alloc.alloc_blk(size));
+
+    { alloc.free_blk(blk) } -> SameAs<void>;
+    requires noexcept(alloc.free_blk(blk));
+
+    { alloc.owns_blk(blk) } -> SameAs<bool>;
+    requires noexcept(alloc.owns_blk(blk));
+};
+*/
+
+/* clang-format on */
+
+template<typename Primary, typename Fallback>
+class FallbackAllocator : private Primary, private Fallback {
+
+public:
+    void* alloc(Size size) noexcept
+    {
+        void* ptr = Primary::alloc(size);
+
+        if (!ptr) {
+            return Fallback::alloc(size);
+        }
+
+        return ptr;
+    }
+
+    void dealloc(void* ptr) noexcept
+    {
+        if (Primary::owns_ptr(ptr)) {
+            Primary::dealloc(ptr);
+        } else {
+            Fallback::dealloc(ptr);
+        }
+    }
+
+    bool owns_ptr(void* ptr) const noexcept { return Primary::owns_ptr(ptr) || Fallback::owns_ptr(ptr); }
+};
+
+template<Size N>
+class StackAllocator {
+
+public:
+    constexpr static Size alignment = sizeof(void*);
+
+    void* alloc(Size size) noexcept
+    {
+        size = align_up(size, alignment);
+
+        pointer -= size;
+
+        if (pointer < storage)
+            return nullptr;
+
+        return pointer;
+    }
+
+    void dealloc(void* ptr) noexcept
+    {
+        VERIFY(owns_ptr(ptr));
+
+        // StackAllocator's cannot deallocate.
+        return;
+    }
+
+    bool owns_ptr(void* ptr) const noexcept { return ptr >= storage && ptr < storage + N; }
+
+private:
+    Uint8 storage[N];
+    Uint8* pointer = storage + N;
+};
+
+template<Size SlabSize, Size Num>
+class SlabAllocator {
+
+public:
+    SlabAllocator(Uint8* memory) : m_memory(memory) {}
+
+    void* alloc(Size size) noexcept
+    {
+        BitmapView bitmap(reinterpret_cast<FlatPtr>(m_bitmap), Num);
+
+        for (Size i = m_last_alloc; i < Num; i++) {
+            if (!bitmap[i]) {
+                m_last_alloc = i;
+                bitmap[i] = true;
+
+                return m_memory + (i * SlabSize);
+            }
+        }
+
+        // Out of memory.
+        return nullptr;
+    }
+
+    void dealloc(void* ptr) noexcept
+    {
+        VERIFY(owns_ptr(ptr));
+
+        BitmapView bitmap(reinterpret_cast<FlatPtr>(m_bitmap), Num);
+        Size index = (reinterpret_cast<Uint8*>(ptr) - m_memory) / SlabSize;
+
+        bitmap[index] = false;
+
+        if (index < m_last_alloc) {
+            m_last_alloc = index;
+        }
+    }
+
+    bool owns_ptr(void* ptr) const noexcept { return ptr >= m_memory && ptr < m_memory + (Num * SlabSize); }
+
+private:
+    Uint8* m_memory = nullptr;
+    Size m_last_alloc = 0;
+    Uint8 m_bitmap[Num / __CHAR_BIT__];
 };
 
 } /* namespace YT */

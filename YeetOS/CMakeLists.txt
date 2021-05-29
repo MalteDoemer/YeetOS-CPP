@@ -43,7 +43,7 @@ set(LIBC_SOURCES
 
 set(LIBYT_SOURCES
     LibYT/Verify.cpp
-    LibYT/New.cpp
+    LibYT/Memory.cpp
     LibYT/Exceptions.cpp
 )
 

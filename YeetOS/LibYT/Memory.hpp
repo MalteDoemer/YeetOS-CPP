@@ -23,70 +23,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#pragma once
 
-#include <New.hpp>
-#include <Atomic.hpp>
-#include <Exceptions.hpp>
+#include <stddef.h>
 
-namespace YT {
+#include <Allocators.hpp>
 
-static Atomic<NewFailHandler> new_fail_handler;
+struct nothrow_t {
+};
 
-NewFailHandler set_new_fail_handler(NewFailHandler handler) noexcept
+void* operator new(size_t size);
+void* operator new[](size_t size);
+
+void* operator new(size_t size, nothrow_t) noexcept;
+void* operator new[](size_t size, nothrow_t) noexcept;
+
+void operator delete(void* ptr) noexcept;
+void operator delete[](void* ptr) noexcept;
+
+void operator delete(void* ptr, size_t size) noexcept;
+void operator delete[](void* ptr, size_t size) noexcept;
+
+inline void* operator new(size_t, void* ptr) noexcept
 {
-    return new_fail_handler.exchange(handler);
+    return ptr;
 }
 
-NewFailHandler get_new_fail_handler() noexcept
+inline void* operator new[](size_t, void* ptr) noexcept
 {
-    return new_fail_handler.load();
+    return ptr;
 }
 
-}
-
-void* operator new(size_t size)
-{
-    void* mem = malloc(size);
-
-    if (mem == nullptr) {
-        throw YT::AllocationError();
-    }
-
-    return mem;
-}
-
-void* operator new[](size_t size)
-{
-    return ::operator new(size);
-}
-
-void* operator new(size_t size, nothrow_t) noexcept
-{
-    return malloc(size);
-}
-
-void* operator new[](size_t size, nothrow_t) noexcept
-{
-    return ::operator new(size, nothrow_t());
-}
-
-void operator delete(void* ptr) noexcept
-{
-    free(ptr);
-}
-
-void operator delete[](void* ptr) noexcept
-{
-    free(ptr);
-}
-
-void operator delete(void* ptr, size_t size) noexcept
-{
-    free(ptr);
-}
-
-void operator delete[](void* ptr, size_t size) noexcept
-{
-    free(ptr);
-}
+inline void operator delete(void*, void*) noexcept {}
+inline void operator delete[](void*, void*) noexcept {}

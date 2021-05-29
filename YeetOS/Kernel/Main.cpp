@@ -30,8 +30,11 @@
 #include <Verify.hpp>
 #include <Ranges.hpp>
 #include <Traits.hpp>
+#include <Concepts.hpp>
 #include <Platform.hpp>
 #include <Exceptions.hpp>
+#include <Allocators.hpp>
+#include <BitmapView.hpp>
 
 #include <Kernel/Kernel.hpp>
 #include <Kernel/DebugLog.hpp>
@@ -48,15 +51,20 @@ void assign(Rng& range, const T& value)
 
 namespace Kernel {
 
+Uint8 slab_storage[16 * 32];
+
 void kernel_main()
 {
+    SlabAllocator<16, 32> allocator(slab_storage);
 
-    try {
-        throw Exception();
-    } catch (const Exception& e) {
-        DebugLog::println(e.what());
-        throw;
-    }
+    auto* ptr = allocator.alloc(10);
+
+    DO_NOT_OPTIMIZE_AWAY(ptr);
+
+    allocator.dealloc(ptr);
+
+    DebugLog::println("Done!");
+    while (1) {}
 }
 
 }
