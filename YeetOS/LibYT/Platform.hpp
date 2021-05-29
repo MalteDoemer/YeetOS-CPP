@@ -53,5 +53,5 @@
 #define DO_NOT_OPTIMIZE_AWAY(x) asm volatile("" : : "g"(x) : "memory");
 
 inline constexpr bool is_little_endian = __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__;
-inline constexpr bool is_bit_endian = __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__;
+inline constexpr bool is_big_endian = __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__;
 inline constexpr bool use_exceptions = YT_USE_EXCEPTIONS;
