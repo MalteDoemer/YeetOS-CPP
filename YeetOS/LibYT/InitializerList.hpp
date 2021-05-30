@@ -27,9 +27,15 @@
 
 #include <Types.hpp>
 #include <Verify.hpp>
+#include <Exceptions.hpp>
 
 namespace std {
 
+/**
+ * Container used by the compiler for the initializer list syntax.
+ *
+ * @tparam T the type of the elements
+ */
 template<class T>
 class initializer_list {
 public:
@@ -46,18 +52,59 @@ public:
     constexpr initializer_list(ConstValuePointer data, Size size) noexcept : m_data(data), m_size(size) {}
     constexpr initializer_list() noexcept : m_data(nullptr), m_size(0) {}
 
+    /**
+     * Returns the number of elements.
+     */
     constexpr Size count() const noexcept { return m_size; }
+
+    /**
+     * Checks wether the initializer_list is empty.
+     */
     constexpr bool is_empty() const noexcept { return count() == 0; }
 
-    constexpr ConstIterator begin() const noexcept { return m_data; }
-    constexpr ConstIterator end() const noexcept { return begin() + count(); }
+    /**
+     * Checks wether the initializer_list points to nullptr.
+     */
+    constexpr bool is_null() const noexcept { return data() == nullptr; }
 
+    /**
+     * Returns a pointer to the underlying data.
+     */
     constexpr ConstValuePointer data() const noexcept { return m_data; }
 
+    /**
+     * Returns an iterator to the begin of the initializer_list.
+     */
+    constexpr ConstIterator begin() const noexcept { return ConstIterator { data() }; }
+
+    /**
+     * Returns an iterator to the end of the initializer_list.
+     */
+    constexpr ConstIterator end() const noexcept { return begin() + count(); }
+
+    /**
+     * Returns the element at the specified index.
+     *
+     * Throws OutOfBoundsError if the index is out of bounds.
+     */
+    constexpr ConstValueReference at(Size index) const noexcept(false)
+    {
+        if (index >= count()) {
+            throw YT::OutOfBoundsError();
+        }
+
+        return data()[index];
+    }
+
+    /**
+     * Returns the element at the specified index.
+     *
+     * UB if the index is out of bounds.
+     */
     constexpr ConstValueReference operator[](Size index) const noexcept
     {
-        VERIFY(index < m_size);
-        return m_data[index];
+        VERIFY(index < count());
+        return data()[index];
     }
 
 private:

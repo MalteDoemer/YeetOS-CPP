@@ -58,7 +58,7 @@ public:
     constexpr Size count() const noexcept { return N; }
 
     /**
-     * Checks wheter the Array is empty.
+     * Checks wether the Array is empty.
      */
     constexpr Size is_empty() const noexcept { return false; }
 

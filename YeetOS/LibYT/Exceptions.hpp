@@ -39,12 +39,12 @@ public:
 
     virtual ~Exception() noexcept = default;
 
-    virtual const char* what() const noexcept;
+    virtual const char* what() const noexcept { return "Exception"; }
 };
 
 /**
  * Base class of all runtime excpetions/errors.
- * 
+ *
  * A RuntimeError is something that is unpredictable at compile/write time.
  */
 class RuntimeError : public Exception {
@@ -55,7 +55,8 @@ public:
     RuntimeError& operator=(const RuntimeError&) noexcept = default;
 
     virtual ~RuntimeError() noexcept = default;
-    virtual const char* what() const noexcept override;
+
+    virtual const char* what() const noexcept override { return "RuntimeError"; }
 };
 
 /**
@@ -69,13 +70,13 @@ public:
     AllocationError& operator=(const AllocationError&) noexcept = default;
 
     virtual ~AllocationError() noexcept = default;
-    virtual const char* what() const noexcept override;
-};
 
+    virtual const char* what() const noexcept override { return "AllocationError"; }
+};
 
 /**
  * Base class of all logic excpetions/errors.
- * 
+ *
  * A LogicError is something, that could be prevented at compile/write time.
  */
 class LogicError : public Exception {
@@ -85,12 +86,13 @@ public:
     LogicError& operator=(const LogicError&) noexcept = default;
 
     virtual ~LogicError() noexcept = default;
-    virtual const char* what() const noexcept override;
+
+    virtual const char* what() const noexcept override { return "LogicalError"; }
 };
 
 /**
  * Thrown by the __cxa_bad_typeid() helper function.
- * 
+ *
  * Most TypeidErrors occur when dereferencing nullptr in a typeid expression.
  */
 class TypeidError : public LogicError {
@@ -100,12 +102,13 @@ public:
     TypeidError& operator=(const TypeidError&) noexcept = default;
 
     virtual ~TypeidError() noexcept = default;
-    virtual const char* what() const noexcept override;
+
+    virtual const char* what() const noexcept override { return "TypeidError"; }
 };
 
 /**
  * Thrown by the __cxa_bad_cast() helper function.
- * 
+ *
  * This exception occurs when using dynamic_cast<> with incompatible types.
  */
 class CastError : public LogicError {
@@ -115,11 +118,11 @@ public:
     CastError& operator=(const CastError&) noexcept = default;
 
     virtual ~CastError() noexcept = default;
-    virtual const char* what() const noexcept override;
+    virtual const char* what() const noexcept override { return "CastError"; }
 };
 
 /**
- * Thrown by bounds checking methods like Array::at() 
+ * Thrown by bounds checking methods like Array::at()
  * if the index is out of the specified bounds.
  */
 class OutOfBoundsError : public LogicError {
@@ -129,7 +132,7 @@ public:
     OutOfBoundsError& operator=(const OutOfBoundsError&) noexcept = default;
 
     virtual ~OutOfBoundsError() noexcept = default;
-    virtual const char* what() const noexcept override;
+    virtual const char* what() const noexcept override { return "OutOfBoundsError"; }
 };
 
 }

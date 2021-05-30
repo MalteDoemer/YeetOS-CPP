@@ -22,9 +22,19 @@
 
 #pragma once
 
+/*
+ * The CxxAbi.h header provides a set of public definitions for types and
+ * functions defined by the Itanium C++ ABI specification.  For reference, see
+ * the ABI specification here:
+ *
+ * http://sourcery.mentor.com/public/cxx-abi/abi.html
+ *
+ * All deviations from this specification, unless otherwise noted, are
+ * accidental.
+ */
+
 #include <stddef.h>
 #include <stdint.h>
-
 
 // _GNU_SOURCE must be defined for unwind.h to expose some of the functions
 // that we want.  If it isn't, then we define it and undefine it to make sure
@@ -43,21 +53,9 @@
  */
 #define ABI_NAMESPACE __cxxabiv1
 
-
 namespace std {
 class type_info;
 }
-
-/*
- * The CxxAbi.h header provides a set of public definitions for types and
- * functions defined by the Itanium C++ ABI specification.  For reference, see
- * the ABI specification here:
- *
- * http://sourcery.mentor.com/public/cxx-abi/abi.html
- *
- * All deviations from this specification, unless otherwise noted, are
- * accidental.
- */
 
 #ifdef __cplusplus
 namespace ABI_NAMESPACE {
@@ -67,6 +65,7 @@ extern "C" {
  * Function type to call when an unexpected exception is encountered.
  */
 typedef void (*unexpected_handler)();
+
 /**
  * Function type to call when an unrecoverable condition is encountered.
  */
@@ -108,18 +107,23 @@ struct __cxa_exception {
 #endif
     /** Type info for the thrown object. */
     std::type_info* exceptionType;
+
     /** Destructor for the object, if one exists. */
     void (*exceptionDestructor)(void*);
+
     /** Handler called when an exception specification is violated. */
     unexpected_handler unexpectedHandler;
+
     /** Hander called to terminate. */
     terminate_handler terminateHandler;
+
     /**
      * Next exception in the list.  If an exception is thrown inside a catch
      * block and caught in a nested catch, this points to the exception that
      * will be handled after the inner catch block completes.
      */
     __cxa_exception* nextException;
+
     /**
      * The number of handlers that currently have references to this
      * exception.  The top (non-sign) bit of this is used as a flag to indicate
@@ -127,6 +131,7 @@ struct __cxa_exception {
      * handler count reaches 0 (which it doesn't with the top bit set).
      */
     int handlerCount;
+
 #if defined(__arm__) && !defined(__ARM_DWARF_EH__)
     /**
      * The ARM EH ABI requires the unwind library to keep track of exceptions
@@ -134,36 +139,43 @@ struct __cxa_exception {
      * them.
      */
     _Unwind_Exception* nextCleanup;
+
     /**
      * The number of cleanups that are currently being run on this exception.
      */
     int cleanupCount;
 #endif
+
     /**
      * The selector value to be returned when installing the catch handler.
      * Used at the call site to determine which catch() block should execute.
      * This is found in phase 1 of unwinding then installed in phase 2.
      */
     int handlerSwitchValue;
+
     /**
      * The action record for the catch.  This is cached during phase 1
      * unwinding.
      */
     const char* actionRecord;
+
     /**
      * Pointer to the language-specific data area (LSDA) for the handler
      * frame.  This is unused in this implementation, but set for ABI
      * compatibility in case we want to mix code in very weird ways.
      */
     const char* languageSpecificData;
+
     /** The cached landing pad for the catch handler.*/
     void* catchTemp;
+
     /**
      * The pointer that will be returned as the pointer to the object.  When
      * throwing a class and catching a virtual superclass (for example), we
      * need to adjust the thrown pointer to make it all work correctly.
      */
     void* adjustedPtr;
+
 #if !__LP64__
     /**
      * Reference count.  Used to support the C++11 exception_ptr class.  This
@@ -177,6 +189,7 @@ struct __cxa_exception {
      */
     uintptr_t referenceCount;
 #endif
+
     /** The language-agnostic part of the exception header. */
     _Unwind_Exception unwindHeader;
 };
@@ -195,11 +208,13 @@ struct __cxa_eh_globals {
      * several of these in nested catch() blocks.
      */
     __cxa_exception* caughtExceptions;
+
     /**
      * The number of uncaught exceptions.
      */
     unsigned int uncaughtExceptions;
 };
+
 /**
  * ABI function returning the __cxa_eh_globals structure.
  */

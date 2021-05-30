@@ -66,19 +66,37 @@ public:
     friend BitmapProxy<BitmapView>;
     friend BitmapProxy<const BitmapView>;
 
+public:
     static constexpr Size bits_per_entry = sizeof(Native) * __CHAR_BIT__;
 
 public:
     BitmapView(Span<Native> span) noexcept : m_span(span) {}
 
+    /**
+     * Returns the number of bits in the BitmapView.
+     */
     constexpr Size count() const { return m_span.count() * bits_per_entry; }
+
+    /**
+     * Checks wether the BitmapView is empty.
+     */
     constexpr bool is_empty() const { return count() == 0; }
 
+    /**
+     * Returns an object representing a single bit at the specified index.
+     *
+     * UB if the index is out of bounds.
+     */
     constexpr BitmapProxy<const BitmapView> operator[](Size index) const noexcept
     {
         return BitmapProxy<const BitmapView> { index, *this };
     }
 
+    /**
+     * Returns an object representing a single bit at the specified index.
+     *
+     * UB if the index is out of bounds.
+     */
     constexpr BitmapProxy<BitmapView> operator[](Size index) noexcept
     {
         return BitmapProxy<BitmapView> { index, *this };

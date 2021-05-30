@@ -44,7 +44,6 @@ set(LIBC_SOURCES
 set(LIBYT_SOURCES
     LibYT/Verify.cpp
     LibYT/Memory.cpp
-    LibYT/Exceptions.cpp
 )
 
 set(CXXRT_SOURCES
