@@ -28,6 +28,7 @@
 #include <Types.hpp>
 #include <Verify.hpp>
 #include <Utility.hpp>
+#include <Platform.hpp>
 #include <Concepts.hpp>
 #include <BitmapView.hpp>
 
@@ -35,6 +36,12 @@ namespace YT {
 
 template<typename Primary, typename Fallback>
 class FallbackAllocator : private Primary, private Fallback {
+
+public:
+    FallbackAllocator() noexcept = default;
+    FallbackAllocator(const Primary& primary, const Fallback& fallback) noexcept : Primary(primary), Fallback(fallback)
+    {
+    }
 
 public:
     void* alloc(Size size) noexcept
@@ -58,6 +65,35 @@ public:
     }
 
     bool owns_ptr(void* ptr) const noexcept { return Primary::owns_ptr(ptr) || Fallback::owns_ptr(ptr); }
+};
+
+template<Size Threshold, typename SmallAlloc, typename LargeAlloc>
+class Segregator : private SmallAlloc, private LargeAlloc {
+
+public:
+    Segregator() noexcept = default;
+    Segregator(const SmallAlloc& small, const LargeAlloc& large) noexcept : SmallAlloc(small), LargeAlloc(large) {}
+
+public:
+    void* alloc(Size size) noexcept
+    {
+        if (size <= Threshold) {
+            return SmallAlloc::alloc(size);
+        } else {
+            return LargeAlloc::alloc(size);
+        }
+    }
+
+    void dealloc(void* ptr) noexcept
+    {
+        if (SmallAlloc::owns_ptr(ptr)) {
+            SmallAlloc::dealloc(ptr);
+        } else {
+            LargeAlloc::dealloc(ptr);
+        }
+    }
+
+    bool owns_ptr(void* ptr) const noexcept { return SmallAlloc::owns_ptr(ptr) || LargeAlloc::owns_ptr(ptr); }
 };
 
 template<Size N>
@@ -101,6 +137,9 @@ public:
 
     void* alloc(Size size) noexcept
     {
+
+        VERIFY(size <= SlabSize);
+
         BitmapView bitmap(Span<Native> { m_bitmap });
 
         for (Size i = m_last_alloc; i < Num; i++) {
@@ -137,5 +176,52 @@ private:
     Size m_last_alloc = 0;
     Native m_bitmap[Num / (sizeof(Native) * char_bits)];
 };
+
+class FreeList {
+public:
+    struct Node {
+        Node* next;
+        Node* prev;
+    };
+
+public:
+    FreeList() noexcept = default;
+    FreeList(Node* first_node) noexcept : m_first_node(first_node) {}
+
+public:
+    void add_to_freelist(Node* node) noexcept
+    {
+        Node* first_node = m_first_node;
+
+        if (first_node) {
+            first_node->prev = node;
+        }
+
+        node->next = first_node;
+        node->prev = nullptr;
+
+        m_first_node = node;
+    }
+
+    void remove_from_freelist(Node* node) noexcept
+    {
+        Node* prev = node->prev;
+        Node* next = node->next;
+
+        if (prev) {
+            prev->next = next;
+        } else {
+            m_first_node = next;
+        }
+
+        if (next) {
+            next->prev = prev;
+        }
+    }
+
+private:
+    Node* m_first_node = nullptr;
+};
+
 
 } /* namespace YT */

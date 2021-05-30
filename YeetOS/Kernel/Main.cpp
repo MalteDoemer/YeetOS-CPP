@@ -56,15 +56,6 @@ Byte slab_storage[8 * 512];
 
 void kernel_main()
 {
-
-    SlabAllocator<8, 512> slab_alloc { slab_storage };
-
-    auto* ptr = slab_alloc.alloc(8);
-    
-    DO_NOT_OPTIMIZE_AWAY(ptr);
-
-    slab_alloc.dealloc(ptr);
-
     DebugLog::println("Done!");
     while (1) {}
 }
