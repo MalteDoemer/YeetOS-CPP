@@ -135,7 +135,7 @@ public:
 
     void* alloc(Size size) noexcept
     {
-        BitmapView bitmap(reinterpret_cast<FlatPtr>(m_bitmap), Num);
+        BitmapView bitmap(Span<Native> { m_bitmap });
 
         for (Size i = m_last_alloc; i < Num; i++) {
             if (!bitmap[i]) {
@@ -154,7 +154,7 @@ public:
     {
         VERIFY(owns_ptr(ptr));
 
-        BitmapView bitmap(reinterpret_cast<FlatPtr>(m_bitmap), Num);
+        BitmapView bitmap(Span<Native> { m_bitmap });
         Size index = (reinterpret_cast<Uint8*>(ptr) - m_memory) / SlabSize;
 
         bitmap[index] = false;
@@ -169,7 +169,7 @@ public:
 private:
     Uint8* m_memory = nullptr;
     Size m_last_alloc = 0;
-    Uint8 m_bitmap[Num / __CHAR_BIT__];
+    Native m_bitmap[Num / (sizeof(Native) * char_bits)];
 };
 
 } /* namespace YT */

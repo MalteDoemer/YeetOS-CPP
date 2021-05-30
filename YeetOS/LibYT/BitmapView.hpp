@@ -49,6 +49,9 @@ struct BitmapProxy {
     constexpr operator bool() const noexcept { return bitmap.get_bit(pos); }
 };
 
+/**
+ * BitmapView is a non-owning class that provides utility functions to read/write individual bits in an array of memory.
+ */
 class BitmapView {
 
 public:
@@ -62,50 +65,45 @@ public:
     friend BitmapProxy<BitmapView>;
     friend BitmapProxy<const BitmapView>;
 
-    static constexpr Size bits_per_entry = sizeof(Size) * __CHAR_BIT__;
+    static constexpr Size bits_per_entry = sizeof(Native) * __CHAR_BIT__;
 
 public:
-    BitmapView(FlatPtr mem, Size bit_count) noexcept : m_bits(reinterpret_cast<Size*>(mem)), m_bit_count(bit_count) {}
+    BitmapView(Span<Native> span) noexcept : m_span(span) {}
 
-    constexpr Size count() const { return m_bit_count; }
+    constexpr Size count() const { return m_span.count() * bits_per_entry; }
     constexpr bool is_empty() const { return count() == 0; }
 
-    constexpr BitmapProxy<const BitmapView> operator[](Diff index) const noexcept
+    constexpr BitmapProxy<const BitmapView> operator[](Size index) const noexcept
     {
-        VERIFY(index > 0);
-        Size s = index;
-        return BitmapProxy<const BitmapView> { s, *this };
+        return BitmapProxy<const BitmapView> { index, *this };
     }
 
-    constexpr BitmapProxy<BitmapView> operator[](Diff index) noexcept
+    constexpr BitmapProxy<BitmapView> operator[](Size index) noexcept
     {
-        VERIFY(index > 0);
-        Size s = index;
-        return BitmapProxy<BitmapView> { s, *this };
+        return BitmapProxy<BitmapView> { index, *this };
     }
 
 private:
     constexpr bool get_bit(Size index) const noexcept
     {
-        VERIFY(index < m_bit_count);
-        return (m_bits[index / bits_per_entry] & (1u << (index % bits_per_entry)));
+        VERIFY(index < count());
+        return (m_span[index / bits_per_entry] & (1u << (index % bits_per_entry)));
     }
 
     constexpr void set_bit(Size index) noexcept
     {
-        VERIFY(index < m_bit_count);
-        m_bits[index / bits_per_entry] |= (1u << (index % bits_per_entry));
+        VERIFY(index < count());
+        m_span[index / bits_per_entry] |= (1u << (index % bits_per_entry));
     }
 
     constexpr void clear_bit(Size index) noexcept
     {
-        VERIFY(index < m_bit_count);
-        m_bits[index / bits_per_entry] &= ~(1u << (index % bits_per_entry));
+        VERIFY(index < count());
+        m_span[index / bits_per_entry] &= ~(1u << (index % bits_per_entry));
     }
 
 private:
-    Size* m_bits;
-    Size m_bit_count;
+    Span<Native> m_span;
 };
 
 } /* namespace YT */

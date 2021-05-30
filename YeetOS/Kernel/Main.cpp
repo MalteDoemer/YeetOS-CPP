@@ -25,6 +25,7 @@
 
 #include <string.h>
 
+#include <Span.hpp>
 #include <Types.hpp>
 #include <Array.hpp>
 #include <Verify.hpp>
@@ -51,17 +52,17 @@ void assign(Rng& range, const T& value)
 
 namespace Kernel {
 
-Uint8 slab_storage[16 * 32];
-
 void kernel_main()
 {
-    SlabAllocator<16, 32> allocator(slab_storage);
 
-    auto* ptr = allocator.alloc(10);
+    char storage[512];
 
-    DO_NOT_OPTIMIZE_AWAY(ptr);
+    Span<Byte> bytes(storage);
+    assign(bytes, (Byte)'f');
 
-    allocator.dealloc(ptr);
+    for (auto b : bytes) {
+        DebugLog::putchar(b);
+    }
 
     DebugLog::println("Done!");
     while (1) {}
