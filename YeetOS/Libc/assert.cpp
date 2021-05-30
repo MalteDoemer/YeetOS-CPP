@@ -24,9 +24,10 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 extern "C" void assert_fail(const char* expr, const char* file, int line, const char* fn)
 {
-    // TODO: print assert failiure
+    fprintf(stderr, "%s:%d: %s\nassert() failed: %s\n", file, line, fn, expr);
     abort();
 }

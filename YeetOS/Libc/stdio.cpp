@@ -25,17 +25,9 @@
 
 #include <stdio.h>
 
-#ifdef KERNEL
+#ifdef YEETOS_KERNEL
 
 #include <Kernel/Kernel.hpp>
-
-static FILE stderr_impl = { 1 };
-static FILE stdin_impl = { 2 };
-static FILE stdout_impl = { 3 };
-
-extern "C" FILE* stderr_file = &stderr_impl;
-extern "C" FILE* stdin_file = &stdin_impl;
-extern "C" FILE* stdout_file = &stdout_impl;
 
 int printf(const char* __restrict fmt, ...)
 {
@@ -49,6 +41,6 @@ int fprintf(FILE* __restrict stream, const char* __restrict fmt, ...)
     return 0;
 }
 
-#else /* KERNEL */
+#else /* YEETOS_KERNEL */
     #error "stdio not implemented"
-#endif /* KERNEL */
+#endif /* YEETOS_KERNEL */

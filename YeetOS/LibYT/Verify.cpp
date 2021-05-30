@@ -23,20 +23,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 
 namespace YT {
 
-[[noreturn]] void verify_fail(const char* expr, const char* file, int line, const char* func)
+NORETURN void verify_fail(const char* expr, const char* file, int line, const char* func)
 {
-    // TODO: print verfiy failure
-    // like printf("Verify fail: %s in %s\n%s:%d", msg, expr, func, file, line);
+    fprintf(stderr, "%s:%d: %s\nVERIFY() failed: %s\n", file, line, func, expr);
     abort();
 }
 
-[[noreturn]] void verify_not_reached_fail(const char* file, int line, const char* func)
+NORETURN void verify_not_reached_fail(const char* file, int line, const char* func)
 {
-    // TODO: print verfiy not reached failure
+    fprintf(stderr, "%s:%d: %s\naVERIFY_NOT_REACHED() was called!\n", file, line, func);
     abort();
 }
 

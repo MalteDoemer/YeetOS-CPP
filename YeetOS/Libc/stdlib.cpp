@@ -28,7 +28,7 @@
 
 #include <Types.hpp>
 
-#ifdef KERNEL
+#ifdef YEETOS_KERNEL
 
 #include <Kernel/Kernel.hpp>
 #include <Kernel/DebugLog.hpp>
@@ -67,8 +67,8 @@ extern "C" void* realloc(void* ptr, size_t size)
     return malloc(size);
 }
 
-#else /* KERNEL */
+#else /* YEETOS_KERNEL */
 
     #error "stdlib not implemented"
 
-#endif /* KERNEL */
+#endif /* YEETOS_KERNEL */

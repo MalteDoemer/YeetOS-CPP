@@ -84,39 +84,4 @@ extern "C" char* __cxa_demangle(const char* mangled_name, char* buf, size_t* n, 
 
     *status = -1;
     return NULL;
-
-    /*
-    // TODO: We should probably just be linking against libelf-tc, rather than
-    // copying their code.  This requires them to do an actual release,
-    // however, and for our changes to be pushed upstream.  We also need to
-    // call a different demangling function here depending on the ABI (e.g.
-    // ARM).
-    char* demangled = __cxa_demangle_gnu3(mangled_name);
-    if (NULL != demangled) {
-        size_t len = strlen(demangled);
-        if (!buf || (*n < len + 1)) {
-            buf = static_cast<char*>(realloc(buf, len + 1));
-        }
-        if (0 != buf) {
-            memcpy(buf, demangled, len);
-            buf[len] = 0;
-            if (n) {
-                *n = len;
-            }
-            if (status) {
-                *status = 0;
-            }
-        } else {
-            if (status) {
-                *status = -1;
-            }
-        }
-        free(demangled);
-    } else {
-        if (status) {
-            *status = -2;
-        }
-        return NULL;
-    }
-    return buf; */
 }

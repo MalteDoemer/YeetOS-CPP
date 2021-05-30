@@ -34,13 +34,9 @@ typedef struct FILE {
     int id;
 } FILE;
 
-extern FILE* stderr_file;
-extern FILE* stdin_file;
-extern FILE* stdout_file;
-
-#define stderr stderr_file
-#define stdint stdin_file
-#define stdout stdout_file
+#define stdout ((FILE*)1)
+#define stdint ((FILE*)2)
+#define stderr ((FILE*)3)
 
 int printf(const char* __restrict fmt, ...);
 int fprintf(FILE* __restrict stream, const char* __restrict fmt, ...);

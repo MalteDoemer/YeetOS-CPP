@@ -33,40 +33,6 @@
 
 namespace YT {
 
-/* clang-format off */
-
-/*
-template<typename T>
-concept PrimitiveAllocator = requires (T alloc, void* ptr, Size size)
-{
-    requires NonFinal<T>;
-    { alloc.alloc_ptr(size) } -> SameAs<void*>;
-    requires noexcept(alloc.alloc_ptr(size));
-    
-    { alloc.free_ptr(ptr) } -> SameAs<void>;
-    requires noexcept(alloc.free_ptr(ptr));
-
-    { alloc.owns_ptr(ptr) } -> SameAs<bool>;
-    requires noexcept(alloc.owns_ptr(ptr));
-};
-
-template<typename T>
-concept BlockAllocator = requires (T alloc, Blk blk, Size size)
-{
-    requires NonFinal<T>;
-    { alloc.alloc_blk(size) } -> SameAs<Blk>;
-    requires noexcept(alloc.alloc_blk(size));
-
-    { alloc.free_blk(blk) } -> SameAs<void>;
-    requires noexcept(alloc.free_blk(blk));
-
-    { alloc.owns_blk(blk) } -> SameAs<bool>;
-    requires noexcept(alloc.owns_blk(blk));
-};
-*/
-
-/* clang-format on */
-
 template<typename Primary, typename Fallback>
 class FallbackAllocator : private Primary, private Fallback {
 

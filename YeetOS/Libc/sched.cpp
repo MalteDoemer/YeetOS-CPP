@@ -25,7 +25,7 @@
 
 #include <sched.h>
 
-#ifdef KERNEL
+#ifdef YEETOS_KERNEL
 extern "C" int sched_yield()
 {
     // TODO: implement sched_yield in the kernel
@@ -33,6 +33,6 @@ extern "C" int sched_yield()
     // does the kernel even need sched_yield() ?
     return 0;
 }
-#else /* KERNEL */
+#else /* YEETOS_KERNEL */
 
-#endif /* KERNEL */
+#endif /* YEETOS_KERNEL */
