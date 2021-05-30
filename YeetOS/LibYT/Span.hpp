@@ -188,7 +188,7 @@ public:
 public:
     constexpr Span() noexcept = default;
 
-    constexpr Span(const Span& other) noexcept : Span(other.data(), other.count()) {}
+    constexpr Span(const Span& other) noexcept : Detail::SpanBase<T>(other.m_values, other.m_count) {}
 
     constexpr Span& operator=(const Span& other) noexcept
     {

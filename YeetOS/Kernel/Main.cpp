@@ -52,17 +52,18 @@ void assign(Rng& range, const T& value)
 
 namespace Kernel {
 
+Byte slab_storage[8 * 512];
+
 void kernel_main()
 {
 
-    char storage[512];
+    SlabAllocator<8, 512> slab_alloc { slab_storage };
 
-    Span<Byte> bytes(storage);
-    assign(bytes, (Byte)'f');
+    auto* ptr = slab_alloc.alloc(8);
+    
+    DO_NOT_OPTIMIZE_AWAY(ptr);
 
-    for (auto b : bytes) {
-        DebugLog::putchar(b);
-    }
+    slab_alloc.dealloc(ptr);
 
     DebugLog::println("Done!");
     while (1) {}

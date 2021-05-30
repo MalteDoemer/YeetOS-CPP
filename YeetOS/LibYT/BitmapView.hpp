@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <Span.hpp>
 #include <Types.hpp>
 #include <Verify.hpp>
 

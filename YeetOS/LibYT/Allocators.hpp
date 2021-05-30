@@ -123,15 +123,15 @@ public:
     bool owns_ptr(void* ptr) const noexcept { return ptr >= storage && ptr < storage + N; }
 
 private:
-    Uint8 storage[N];
-    Uint8* pointer = storage + N;
+    Byte storage[N];
+    Byte* pointer = storage + N;
 };
 
 template<Size SlabSize, Size Num>
 class SlabAllocator {
 
 public:
-    SlabAllocator(Uint8* memory) : m_memory(memory) {}
+    SlabAllocator(Byte* memory) : m_memory(memory) {}
 
     void* alloc(Size size) noexcept
     {
@@ -155,7 +155,7 @@ public:
         VERIFY(owns_ptr(ptr));
 
         BitmapView bitmap(Span<Native> { m_bitmap });
-        Size index = (reinterpret_cast<Uint8*>(ptr) - m_memory) / SlabSize;
+        Size index = (reinterpret_cast<Byte*>(ptr) - m_memory) / SlabSize;
 
         bitmap[index] = false;
 
@@ -167,7 +167,7 @@ public:
     bool owns_ptr(void* ptr) const noexcept { return ptr >= m_memory && ptr < m_memory + (Num * SlabSize); }
 
 private:
-    Uint8* m_memory = nullptr;
+    Byte* m_memory = nullptr;
     Size m_last_alloc = 0;
     Native m_bitmap[Num / (sizeof(Native) * char_bits)];
 };
