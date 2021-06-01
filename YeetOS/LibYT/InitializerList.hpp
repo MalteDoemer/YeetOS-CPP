@@ -90,7 +90,7 @@ public:
     constexpr ConstValueReference at(Size index) const noexcept(false)
     {
         if (index >= count()) {
-            throw YT::OutOfBoundsError();
+            throw Yt::OutOfBoundsError();
         }
 
         return data()[index];
@@ -114,9 +114,9 @@ private:
 
 }
 
-namespace YT {
+namespace Yt {
 
 template<typename T>
 using InitializerList = std::initializer_list<T>;
 
-}
+} /* namespace Yt */

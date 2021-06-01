@@ -27,31 +27,31 @@
 
 #include <Types.hpp>
 
+namespace kernel::arch {
+
 /**
  * Basic function pointer type used to call global constructors.
  */
-using CtorFunction = void (*)();
+using ctor_function = void (*)();
 
 /**
  * Zero-Terminated array of function pointers to global constructors.
  */
-extern "C" CtorFunction init_array[];
+extern "C" ctor_function init_array[];
 
 /**
  * Incomplete type to represent the exception handler frame.
  */
-struct EhFrame;
+struct eh_frame;
 
 /**
  * Linker symbol to begin of the exception handler frame.
  */
-extern "C" EhFrame eh_frame;
+extern "C" eh_frame eh_frame;
 
 /**
  * Libgcc function to register an exception handler frame.
  */
 extern "C" void __register_frame(void* eh_frame) noexcept;
 
-namespace Kernel::Arch {
-
-}
+} /* namespace kernel::arch */

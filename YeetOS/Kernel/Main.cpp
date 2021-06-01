@@ -40,7 +40,7 @@
 #include <Kernel/Kernel.hpp>
 #include <Kernel/DebugLog.hpp>
 
-using namespace YT;
+using namespace Yt;
 
 template<WriteableRange Rng, typename T>
 void assign(Rng& range, const T& value)
@@ -55,6 +55,16 @@ namespace Kernel {
 void kernel_main()
 {
     DebugLog::println("Done!");
+
+    typename YT::UniquePtr;
+    typename Yt::UniquePtr;
+    typename yt::UniquePtr;
+
+    typename yt::unique_ptr;
+
+    
+
+
     while (1) {}
 }
 

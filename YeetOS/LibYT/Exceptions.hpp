@@ -25,7 +25,7 @@
 
 #pragma once
 
-namespace YT {
+namespace Yt {
 
 /**
  * Base class of all exceptions.
@@ -135,4 +135,4 @@ public:
     virtual const char* what() const noexcept override { return "OutOfBoundsError"; }
 };
 
-}
+} /* namespace Yt */

@@ -29,7 +29,7 @@
 #include <Verify.hpp>
 #include <Exceptions.hpp>
 
-namespace YT {
+namespace Yt {
 
 /**
  * A container for a fixed count of elements.
@@ -174,4 +174,4 @@ private:
     T m_data[N];
 };
 
-}
+} /* namespace Yt */

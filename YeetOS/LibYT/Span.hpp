@@ -30,7 +30,7 @@
 #include <Platform.hpp>
 #include <Exceptions.hpp>
 
-namespace YT {
+namespace Yt {
 
 namespace Detail {
 
@@ -337,4 +337,4 @@ public:
     constexpr operator Span<const T>() const { return Span<const T> { data(), count() }; }
 };
 
-} /* namespace YT */
+} /* namespace Yt */

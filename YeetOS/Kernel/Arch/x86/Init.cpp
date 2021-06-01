@@ -30,7 +30,7 @@
 
 #include <Kernel/Arch/x86/Init.hpp>
 
-namespace Kernel::Arch {
+namespace kernel::arch {
 
 /**
  * Calls all function pointers in init_array[];
@@ -58,8 +58,8 @@ static void register_eh_frame() noexcept
 extern "C" void arch_early_init(FlatPtr multiboot_struct, Uint32 multiboot_check)
 {
     /* Set up a debug channel */
-    DebugLog::initialize();
-    DebugLog::println("DebugLog initialized...");
+    kernel::debug::initialize();
+    kernel::debug::println("DebugLog initialized...");
 
     register_eh_frame();
     call_global_ctors();
@@ -67,4 +67,4 @@ extern "C" void arch_early_init(FlatPtr multiboot_struct, Uint32 multiboot_check
     kernel_main();
 }
 
-} /* namespace Kernel::Arch */
+} /* namespace kernel::arch */

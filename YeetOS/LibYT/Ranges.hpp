@@ -32,7 +32,7 @@
 
 /* clang-format off */
 
-namespace YT {
+namespace Yt {
 
 /**
  * Retrieves a pointer to the underlying data of T.
@@ -118,13 +118,13 @@ constexpr auto end(const Rng& rng) noexcept(noexcept(rng.end()))
     return rng.end();
 }
 
-} /* namespace YT */
+} /* namespace Yt */
 
-namespace YT {
+namespace Yt {
 
-using YT::data;
-using YT::begin;
-using YT::end;
+using Yt::data;
+using Yt::begin;
+using Yt::end;
 
 /**
  * Defines whether Iter is readable through operator*.
@@ -352,6 +352,6 @@ concept WriteableContiguousRange = requires (T rng)
     { end(rng) } -> SizedSentinelFor<IteratorOf<T>>;
 };
 
-} /* namespace YT */
+} /* namespace Yt */
 
 /* clang-format on */
