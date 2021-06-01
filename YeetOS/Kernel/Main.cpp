@@ -52,8 +52,6 @@ void assign(Rng& range, const T& value)
 
 namespace Kernel {
 
-Byte slab_storage[8 * 512];
-
 void kernel_main()
 {
     DebugLog::println("Done!");
