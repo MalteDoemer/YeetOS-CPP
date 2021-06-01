@@ -29,7 +29,7 @@
 #include <Utility.hpp>
 #include <Concepts.hpp>
 
-namespace Yt {
+namespace YT {
 
 /* clang-format off */
 
@@ -160,7 +160,7 @@ constexpr HashCode combined_hash(T to_hash, Vargs... vargs) noexcept(noexcept(ha
     return (hash_code(to_hash) * 209) ^ (combined_hash(vargs...) * 413);
 }
 
-using Yt::hash_code;
+using YT::hash_code;
 
 /**
  * A concept wich defines if a type is hashable.
@@ -173,4 +173,4 @@ concept Hashable = requires(T a)
 
 /* clang-format on */
 
-} /* namespace Yt */
+} /* namespace YT */

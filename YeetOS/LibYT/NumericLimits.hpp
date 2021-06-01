@@ -28,7 +28,7 @@
 #include <Types.hpp>
 #include <TypeMagic.hpp>
 
-namespace Yt {
+namespace YT {
 
 namespace Detail {
 
@@ -168,8 +168,8 @@ struct NumericLimitsHelper<long double> {
 template<typename T>
 struct NumericLimits : public Detail::NumericLimitsHelper<remove_cvref<T>> {
 
-    static constexpr bool is_signed() noexcept { return Yt::is_signed<remove_cvref<T>>; }
-    static constexpr bool is_unsigned() noexcept { return Yt::is_unsigned<remove_cvref<T>>; }
+    static constexpr bool is_signed() noexcept { return YT::is_signed<remove_cvref<T>>; }
+    static constexpr bool is_unsigned() noexcept { return YT::is_unsigned<remove_cvref<T>>; }
 };
 
-} /* namespace Yt */
+} /* namespace YT */

@@ -27,5 +27,7 @@
 #include <Kernel/Kernel.hpp>
 
 
-namespace kernel::arch {
+namespace Kernel::Arch {
+
+
 }

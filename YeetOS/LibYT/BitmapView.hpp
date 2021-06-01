@@ -29,7 +29,7 @@
 #include <Types.hpp>
 #include <Verify.hpp>
 
-namespace Yt {
+namespace YT {
 
 template<typename T>
 struct BitmapProxy {
@@ -125,4 +125,4 @@ private:
     Span<Native> m_span;
 };
 
-} /* namespace Yt */
+} /* namespace YT */

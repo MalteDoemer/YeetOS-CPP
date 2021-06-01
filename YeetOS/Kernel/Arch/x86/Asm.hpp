@@ -27,8 +27,6 @@
 
 #include <Types.hpp>
 
-namespace kernel::arch {
-
 static inline void outb(Uint16 port, Uint8 data)
 {
     asm volatile("outb %1, %0" ::"dN"(port), "a"(data));
@@ -117,5 +115,3 @@ static inline void hlt()
 {
     asm("hlt");
 }
-
-} /* namespace kernel::arch */

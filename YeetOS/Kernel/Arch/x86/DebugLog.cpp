@@ -38,7 +38,7 @@
 #define MODEM_STAT 6
 #define SCRATCH    7
 
-namespace kernel::debug {
+namespace Kernel::DebugLog {
 
 static inline bool is_transmit_empty()
 {
