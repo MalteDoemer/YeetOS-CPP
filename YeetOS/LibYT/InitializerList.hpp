@@ -27,7 +27,6 @@
 
 #include <Types.hpp>
 #include <Verify.hpp>
-#include <Exceptions.hpp>
 
 namespace std {
 
@@ -81,20 +80,6 @@ public:
      * Returns an iterator to the end of the initializer_list.
      */
     constexpr ConstIterator end() const noexcept { return begin() + count(); }
-
-    /**
-     * Returns the element at the specified index.
-     *
-     * Throws OutOfBoundsError if the index is out of bounds.
-     */
-    constexpr ConstValueReference at(Size index) const noexcept(false)
-    {
-        if (index >= count()) {
-            throw YT::OutOfBoundsError();
-        }
-
-        return data()[index];
-    }
 
     /**
      * Returns the element at the specified index.

@@ -33,11 +33,6 @@
 void* operator new(size_t size)
 {
     void* mem = malloc(size);
-
-    if (mem == nullptr) {
-        throw YT::AllocationError();
-    }
-
     return mem;
 }
 

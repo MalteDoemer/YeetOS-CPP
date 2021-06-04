@@ -27,7 +27,6 @@
 
 #include <Types.hpp>
 #include <Verify.hpp>
-#include <Exceptions.hpp>
 
 namespace YT {
 
@@ -95,34 +94,6 @@ public:
     /**
      * Returns the element at index.
      *
-     * Throws OutOfBoundsError if the index is out of bounds.
-     */
-    constexpr ConstValueReference at(Size index) const noexcept(false)
-    {
-        if (index >= count()) {
-            throw OutOfBoundsError();
-        }
-
-        return m_data[index];
-    }
-
-    /**
-     * Returns the element at index.
-     *
-     * Throws OutOfBoundsError if the index is out of bounds.
-     */
-    constexpr ValueReference at(Size index) noexcept(false)
-    {
-        if (index >= count()) {
-            throw OutOfBoundsError();
-        }
-
-        return m_data[index];
-    }
-
-    /**
-     * Returns the element at index.
-     *
      * UB if the index is out of bounds.
      */
     constexpr ConstValueReference operator[](Size index) const noexcept
@@ -174,4 +145,4 @@ private:
     T m_data[N];
 };
 
-}
+} /* namespace YT */

@@ -32,7 +32,6 @@
  */
 
 #include <stdlib.h>
-#include <Exceptions.hpp>
 
 /**
  * Called to generate a bad cast exception.  This function is intended to allow
@@ -41,7 +40,7 @@
  */
 extern "C" void __cxa_bad_cast()
 {
-    throw YT::CastError();
+    abort();
 }
 
 /**
@@ -51,7 +50,7 @@ extern "C" void __cxa_bad_cast()
  */
 extern "C" void __cxa_bad_typeid()
 {
-    throw YT::TypeidError();
+    abort();
 }
 
 /**
