@@ -40,7 +40,7 @@
 #include <Kernel/Kernel.hpp>
 #include <Kernel/DebugLog.hpp>
 
-using namespace YT;
+using namespace Yt;
 
 template<WriteableRange Rng, typename T>
 void assign(Rng& range, const T& value)

@@ -97,11 +97,11 @@ private:
     Size m_size;
 };
 
-}
+} /* namespace std */
 
-namespace YT {
+namespace Yt {
 
 template<typename T>
 using InitializerList = std::initializer_list<T>;
 
-}
+} /* namespace Yt */

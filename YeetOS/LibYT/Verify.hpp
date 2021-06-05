@@ -29,18 +29,20 @@
 
 #ifndef NDEBUG
 
-namespace YT {
+namespace Yt {
+
 NORETURN void verify_fail(const char* expr, const char* file, int line, const char* func);
 NORETURN void verify_not_reached_fail(const char* file, int line, const char* func);
-} /* namespace YT */
+
+} /* namespace Yt */
 
     #define VERIFY(x)                                                                                                  \
         do {                                                                                                           \
             if (!static_cast<bool>(x)) [[unlikely]]                                                                    \
-                YT::verify_fail(#x, __FILE__, __LINE__, __func__);                                                     \
+                Yt::verify_fail(#x, __FILE__, __LINE__, __func__);                                                     \
         } while (0)
 
-    #define VERIFY_NOT_REACHED(x) YT::verify_not_reached_fail(__FILE__, __LINE__, __func__)
+    #define VERIFY_NOT_REACHED(x) Yt::verify_not_reached_fail(__FILE__, __LINE__, __func__)
 
 #else
 

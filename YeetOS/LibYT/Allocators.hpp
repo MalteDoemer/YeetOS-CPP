@@ -32,7 +32,7 @@
 #include <Concepts.hpp>
 #include <BitmapView.hpp>
 
-namespace YT {
+namespace Yt {
 
 template<typename Primary, typename Fallback>
 class FallbackAllocator : private Primary, private Fallback {
@@ -224,4 +224,4 @@ private:
 };
 
 
-} /* namespace YT */
+} /* namespace Yt */

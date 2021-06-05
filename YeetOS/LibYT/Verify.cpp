@@ -26,7 +26,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-namespace YT {
+#include <Platform.hpp>
+
+namespace Yt {
 
 NORETURN void verify_fail(const char* expr, const char* file, int line, const char* func)
 {
@@ -40,4 +42,4 @@ NORETURN void verify_not_reached_fail(const char* file, int line, const char* fu
     abort();
 }
 
-} /* namespace YT */
+} /* namespace Yt */

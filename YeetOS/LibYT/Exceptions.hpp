@@ -25,7 +25,7 @@
 
 #pragma once
 
-namespace YT {
+namespace Yt {
 
 /**
  * Base class of all exceptions.
@@ -42,4 +42,4 @@ public:
     virtual const char* what() const noexcept { return "Exception"; }
 };
 
-}
+} /* namespace Yt */

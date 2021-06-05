@@ -25,10 +25,10 @@
 
 #pragma once
 
-#include <TypeMagic.hpp>
 #include <Types.hpp>
+#include <TypeMagic.hpp>
 
-namespace YT {
+namespace Yt {
 
 template<typename T>
 struct UnderlyingTypeTraits {
@@ -91,4 +91,4 @@ concept HasUnderlyingTypeTraits = requires
     typename ConstValuePointer<T>;
 };
 
-} /* namespace YT */
+} /* namespace Yt */

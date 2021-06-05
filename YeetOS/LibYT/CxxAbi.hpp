@@ -269,8 +269,8 @@ void __cxa_decrement_exception_refcount(void* thrown_exception);
 char* __cxa_demangle(const char* mangled_name, char* buf, size_t* n, int* status);
 
 #ifdef __cplusplus
-} // extern "C"
-} // namespace
+} /* extern "C" */
+} /* namespace ABI_NAMESPACE */
 
 namespace abi = ABI_NAMESPACE;
 

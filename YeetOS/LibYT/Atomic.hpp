@@ -30,7 +30,7 @@
 #include <Platform.hpp>
 #include <TypeMagic.hpp>
 
-namespace YT {
+namespace Yt {
 
 enum MemoryOrder {
     relaxed = __ATOMIC_RELAXED,
@@ -76,7 +76,7 @@ static inline V* atomic_exchange(volatile T** var, std::nullptr_t, MemoryOrder o
 }
 
 template<typename T>
-[[nodiscard]] static inline bool atomic_compare_exchange_strong(volatile T* var,
+NODISCARD static inline bool atomic_compare_exchange_strong(volatile T* var,
                                                                 T& expected,
                                                                 T desired,
                                                                 MemoryOrder order = MemoryOrder::seq_cst) noexcept
@@ -93,7 +93,7 @@ template<typename T>
 }
 
 template<typename T, typename V = remove_volatile<T>>
-[[nodiscard]] static inline bool atomic_compare_exchange_strong(volatile T** var,
+NODISCARD static inline bool atomic_compare_exchange_strong(volatile T** var,
                                                                 V*& expected,
                                                                 V* desired,
                                                                 MemoryOrder order = MemoryOrder::seq_cst) noexcept
@@ -105,7 +105,7 @@ template<typename T, typename V = remove_volatile<T>>
 }
 
 template<typename T, typename V = remove_volatile<T>>
-[[nodiscard]] static inline bool atomic_compare_exchange_strong(volatile T** var,
+NODISCARD static inline bool atomic_compare_exchange_strong(volatile T** var,
                                                                 V*& expected,
                                                                 std::nullptr_t,
                                                                 MemoryOrder order = MemoryOrder::seq_cst) noexcept
@@ -201,7 +201,7 @@ public:
         return __atomic_exchange_n(&m_value, desired, order);
     }
 
-    [[nodiscard]] bool compare_exchange_strong(T& expected,
+    NODISCARD bool compare_exchange_strong(T& expected,
                                                T desired,
                                                MemoryOrder order = DefaultMemoryOrder) volatile noexcept
     {
@@ -303,7 +303,7 @@ public:
         return __atomic_exchange_n(&m_value, desired, order);
     }
 
-    [[nodiscard]] bool compare_exchange_strong(T*& expected,
+    NODISCARD bool compare_exchange_strong(T*& expected,
                                                T* desired,
                                                MemoryOrder order = DefaultMemoryOrder) volatile noexcept
     {
@@ -358,4 +358,4 @@ public:
     bool is_lock_free() const volatile noexcept { return __atomic_is_lock_free(sizeof(m_value), &m_value); }
 };
 
-}
+} /* namespace Yt */
