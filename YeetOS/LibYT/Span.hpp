@@ -245,34 +245,6 @@ public:
     /**
      * Returns the element at the specified index.
      *
-     * Throws an OutOfBoundsError if the index is out of bounds.
-     */
-    constexpr ValueReference at(Size index) noexcept(false)
-    {
-        if (index >= count()) {
-            throw OutOfBoundsError();
-        }
-
-        return data()[index];
-    }
-
-    /**
-     * Returns the element at the specified index.
-     *
-     * Throws an OutOfBoundsError if the index is out of bounds.
-     */
-    constexpr ConstValueReference at(Size index) const noexcept(false)
-    {
-        if (index >= count()) {
-            throw OutOfBoundsError();
-        }
-
-        return data()[index];
-    }
-
-    /**
-     * Returns the element at the specified index.
-     *
      * UB if the index is out of bounds.
      */
     constexpr ValueReference operator[](Size index) noexcept
