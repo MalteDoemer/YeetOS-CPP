@@ -50,10 +50,6 @@ set(LIBYT_SOURCES
     LibYT/New.cpp
 )
 
-set(LIBALLOC_SOURCES
-    Liballoc/MiddleEnd.cpp
-)
-
 set(CXXRT_SOURCES
     Libcxxrt/Guard.cpp
     Libcxxrt/TypeInfo.cpp
@@ -103,7 +99,6 @@ set(KERNEL_LIBS
     gcc
     c_k
     yt_k
-    alloc_k
 )
 
 if(${CMAKE_BUILD_TYPE} MATCHES DEBUG)
@@ -126,7 +121,6 @@ endif()
 
 add_library(c_k STATIC ${LIBCK_SOURCES})
 add_library(yt_k STATIC ${LIBYT_SOURCES})
-add_library(alloc_k STATIC ${LIBALLOC_SOURCES})
 add_library(cxxrt_k STATIC ${CXXRT_SOURCES})
 
 add_executable(kernel ${KERNEL_SOURCES})
@@ -149,7 +143,3 @@ target_compile_definitions(yt_k PUBLIC ${KERNEL_COMPILE_DEFINITIONS})
 target_include_directories(cxxrt_k PUBLIC ${KERNEL_INCLUDE_DIRECTORIES})
 target_compile_options(cxxrt_k PUBLIC ${KERNEL_COMPILE_OPTIONS})
 target_compile_definitions(cxxrt_k PUBLIC ${KERNEL_COMPILE_DEFINITIONS})
-
-target_include_directories(alloc_k PUBLIC ${KERNEL_INCLUDE_DIRECTORIES})
-target_compile_options(alloc_k PUBLIC ${KERNEL_COMPILE_OPTIONS})
-target_compile_definitions(alloc_k PUBLIC ${KERNEL_COMPILE_DEFINITIONS})
