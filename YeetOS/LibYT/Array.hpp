@@ -27,11 +27,12 @@
 
 #include <Types.hpp>
 #include <Verify.hpp>
+#include <TypeMagic.hpp>
 
 namespace YT {
 
 /**
- * A container for a fixed count of elements.
+ * A container with a fixed amount of elements.
  *
  * @tparam T Type of the elements
  * @tparam N Number of elements
@@ -141,8 +142,10 @@ public:
      */
     constexpr ValueReference back() noexcept { return operator[](count() - 1); }
 
-private:
     T m_data[N];
 };
+
+template<typename T, typename... U>
+Array(T, U...) -> Array<enable_if<(is_same<T, U> && ...), T>, 1 + sizeof...(U)>;
 
 } /* namespace YT */
