@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <Platform.hpp>
+
 #ifndef NDEBUG
 
 namespace YT {
