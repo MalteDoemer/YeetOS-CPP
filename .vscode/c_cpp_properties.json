@@ -8,7 +8,8 @@
                 "${workspaceFolder}/YeetOS/LibYT"
             ],
             "defines": [
-                "YEETOS_KERNEL"
+                "YEETOS_KERNEL",
+                "__i386__"
             ],
             "forcedInclude": [ "${workspaceFolder}/.vscode/pre.h" ],
             "compilerPath": "/usr/local/bin/clang",
