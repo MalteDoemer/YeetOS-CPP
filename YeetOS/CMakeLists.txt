@@ -28,6 +28,7 @@ endif()
 
 set(KERNEL_SOURCES 
     Kernel/Main.cpp
+    Kernel/KernelHeap.cpp
     ${KERNEL_ARCH_SOURCES}
 )
 

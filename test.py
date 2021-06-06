@@ -6,6 +6,7 @@ def compute_mem(start, step, size):
 
     return mem
 
+
 def size_to_index(size: int):
     if (size <= 128):
         return 0 + (size - 1) // 8
@@ -26,4 +27,4 @@ def create_csv(path: str):
     with open(path, "w") as file:
         for i in range(1, 3969):
             file.write(f"{i}, {size_to_index(i)}\n")
-        
+

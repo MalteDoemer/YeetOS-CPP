@@ -92,4 +92,3 @@ inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
 
 #undef DO_NOT_OPTIMIZE_AWAY
 #define DO_NOT_OPTIMIZE_AWAY(x) asm volatile("" : : "g"(x) : "memory");
-

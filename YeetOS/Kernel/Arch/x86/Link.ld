@@ -98,7 +98,9 @@ SECTIONS {
    }
 
    .heap_memory ALIGN (4M) (NOLOAD) : AT(ADDR(.heap_memory) - 0xC0000000) {
-      *(.heap_memory)
+      heap_memory_start = .;
+      . += 4M;
+      heap_memory_end = .;
    }
 
    alloc_only_end = .;
