@@ -25,8 +25,16 @@
 
 #pragma once
 
+#include <Span.hpp>
+#include <Types.hpp>
+
+#include <Liballoc/LogicalPage.hpp>
+
 namespace Alloc::Backend {
 
-void initialize();
+void initialize() noexcept;
+
+Yt::Span<LogicalPage> allocate_pages(Size num_pages) noexcept;
+void deallocate_pages(Yt::Span<LogicalPage> pages) noexcept;
 
 } /* namespace Alloc */

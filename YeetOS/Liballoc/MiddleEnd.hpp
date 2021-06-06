@@ -25,10 +25,14 @@
 
 #pragma once
 
-#include <Liballoc/SizeClass.hpp>
+#include <Types.hpp>
 
-#ifdef __i386__
-    #include <Liballoc/Arch/x86/SizeClassArray.hpp>
-#else /* __i386__ */
-    #error "unsupported architecture"
-#endif /* __i386__ */
+namespace Alloc::MiddleEnd {
+
+void initialize() noexcept;
+
+void* allocate(Size size) noexcept;
+void deallocate(void* ptr) noexcept;
+
+
+} /* namespace Alloc::MiddleEnd */

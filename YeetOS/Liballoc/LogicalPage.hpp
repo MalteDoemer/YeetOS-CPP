@@ -25,9 +25,20 @@
 
 #pragma once
 
+#include <Types.hpp>
+#include <Platform.hpp>
+
 #ifdef __i386__
-    #define ALLOC_PAGE_SIZE  4096
-    #define ALLOC_PAGE_SHIFT 12
+    #define LIBALLOC_PAGE_SIZE  4096
+    #define LIBALLOC_PAGE_SHIFT 12
 #else /* __i386__ */
     #error "unsupported architecutre"
 #endif /* __i386__ */
+
+namespace Alloc {
+
+struct PACKED ALIGNED(LIBALLOC_PAGE_SIZE) LogicalPage {
+    Byte bytes[LIBALLOC_PAGE_SIZE];
+};
+
+} /* namespace Alloc */

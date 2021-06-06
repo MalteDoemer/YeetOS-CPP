@@ -25,19 +25,25 @@
 
 #pragma once
 
-#include <Types.hpp>
+#include <Liballoc/BackEnd.hpp>
+#include <Liballoc/MiddleEnd.hpp>
 
 namespace Alloc {
 
-struct SizeClass {
-    Size size;
-    Size count;
-};
-
+void initialize() noexcept(false)
+{
+    Backend::initialize();
+    MiddleEnd::initialize();
 }
 
-#ifdef __i386__
-    #include <Liballoc/Arch/x86/SizeClass.hpp>
-#else /* __i386__ */
-    #error "unsupported architecture"
-#endif /* __i386__ */
+void* allocate(Size size) noexcept
+{
+    return MiddleEnd::allocate(size);
+}
+
+void deallocate(void* ptr) noexcept
+{
+    MiddleEnd::deallocate(ptr);
+}
+
+} /* namespace Alloc */

@@ -23,21 +23,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
-#pragma once
+#include <Liballoc/BackEnd.hpp>
 
-#include <Types.hpp>
+using namespace Yt;
 
-namespace Alloc {
+namespace Alloc::Backend {
 
-struct SizeClass {
-    Size size;
-    Size count;
-};
+#ifdef YEETOS_KERNEL
 
+void initialize() noexcept {}
+
+Span<LogicalPage> allocate_pages(Size num_pages) noexcept
+{
+    return {};
 }
 
-#ifdef __i386__
-    #include <Liballoc/Arch/x86/SizeClass.hpp>
-#else /* __i386__ */
-    #error "unsupported architecture"
-#endif /* __i386__ */
+void deallocate_pages(Yt::Span<LogicalPage> pages) noexcept {}
+
+#else /* YEETOS_KERNEL */
+    #error "not implemented"
+#endif /* YEETOS_KERNEL */
+
+} /* namespace Alloc::Backend */

@@ -23,12 +23,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
+#include <Span.hpp>
 #include <Types.hpp>
 #include <Array.hpp>
 
+#include <Liballoc/BackEnd.hpp>
 #include <Liballoc/FreeList.hpp>
 #include <Liballoc/SizeClass.hpp>
+#include <Liballoc/MiddleEnd.hpp>
+#include <Liballoc/LogicalPage.hpp>
 
-using namespace YT;
+using namespace Yt;
 
+namespace Alloc::MiddleEnd {
 
+Array<FreeList, size_class_array.count()> free_lists;
+
+void initialize() noexcept {}
+
+void* allocate(Size size) noexcept
+{
+    return nullptr;
+}
+
+void deallocate(void* ptr) noexcept {}
+
+} /* namespace Alloc */

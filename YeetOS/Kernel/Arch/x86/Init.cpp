@@ -25,9 +25,10 @@
 
 #include <Types.hpp>
 
+#include <Liballoc/Alloc.hpp>
+
 #include <Kernel/Kernel.hpp>
 #include <Kernel/DebugLog.hpp>
-
 #include <Kernel/Arch/x86/Init.hpp>
 
 namespace Kernel::Arch {
@@ -57,11 +58,13 @@ static void register_eh_frame() noexcept
  */
 extern "C" void arch_early_init(FlatPtr multiboot_struct, Uint32 multiboot_check)
 {
-    /* Set up a debug channel */
     DebugLog::initialize();
     DebugLog::println("DebugLog initialized...");
 
+    Alloc::initialize();
+
     register_eh_frame();
+
     call_global_ctors();
 
     kernel_main();

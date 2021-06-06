@@ -27,12 +27,11 @@
 
 #include <Types.hpp>
 
-namespace Kernel::Kheap {
+namespace Alloc {
 
 void initialize() noexcept;
 
 void* allocate(Size size) noexcept;
 void deallocate(void* ptr) noexcept;
-void* reallocate(void* ptr, Size size) noexcept;
 
-} /* namespace Kernel */
+} /* namespace Alloc */

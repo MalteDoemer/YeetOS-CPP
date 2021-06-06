@@ -48,7 +48,7 @@ constexpr Size size_to_index(Size size) noexcept
         VERIFY_NOT_REACHED();
 }
 
-constexpr YT::Array size_class_array = {
+constexpr Yt::Array size_class_array = {
     /* 8-byte steps */
     SizeClass { 8, 64 },
     SizeClass { 16, 64 },
