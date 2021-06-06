@@ -39,7 +39,33 @@ namespace Alloc::MiddleEnd {
 
 Array<FreeList, size_class_array.count()> free_lists;
 
-void initialize() noexcept {}
+
+static void refill_free_list(Size list_index)
+{
+    SizeClass size_class = size_class_array[list_index];
+
+    Size pages_needed = (size_class.size * size_class.count) / LIBALLOC_PAGE_SIZE;
+    Span<LogicalPage> pages = Backend::allocate_pages(pages_needed):
+
+    if (pages.is_null()){
+        // TODO: handle out of memory
+        VERIFY_NOT_REACHED();
+    }
+
+    
+
+}
+
+
+
+void initialize() noexcept 
+{
+
+    for (Size i = 0; i < free_lists.count(); i++){
+
+    }
+
+}
 
 void* allocate(Size size) noexcept
 {
