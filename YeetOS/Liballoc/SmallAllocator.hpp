@@ -25,20 +25,74 @@
 
 #pragma once
 
+#include <Span.hpp>
 #include <Types.hpp>
-#include <Platform.hpp>
+#include <Array.hpp>
+#include <Verify.hpp>
 
-#ifdef __i386__
-    #define LIBALLOC_PAGE_SIZE  4096
-    #define LIBALLOC_PAGE_SHIFT 12
-#else /* __i386__ */
-    #error "unsupported architecutre"
-#endif /* __i386__ */
+#include <Liballoc/Pages.hpp>
+#include <Liballoc/FreeList.hpp>
+#include <Liballoc/PageAllocator.hpp>
 
 namespace Alloc {
 
-struct PACKED ALIGNED(LIBALLOC_PAGE_SIZE) LogicalPage {
-    Byte bytes[LIBALLOC_PAGE_SIZE];
+struct SizeInfo {
+    Size size;
+    Size pages;
+};
+
+class SmallAllocator {
+
+private:
+    static constexpr Size min_align = 8;
+    static constexpr Size num_lists = 32;
+    static constexpr Size max_size = 256;
+
+public:
+    constexpr SmallAllocator() noexcept
+    {
+        for (Size i = 0; i < max_size; i++) {
+            size_infos[i].size = (i + 1) * min_align;
+            size_infos[i].pages = (i / 4) + 1;
+        }
+    }
+
+    void initialize() noexcept {}
+    
+    void* allocate(Size size) noexcept
+    {
+        VERIFY(size <= max_size);
+
+        FreeList& list = free_lists[size / min_align];
+
+        if (list.is_empty()) {
+            refill_list(size / min_align);
+        }
+
+        auto* node = list.pop();
+        return reinterpret_cast<void*>(node);
+    }
+
+    void deallocate(void* ptr) {}
+
+private:
+    void refill_list(Size index)
+    {
+        FreeList& list = free_lists[index];
+        SizeInfo info = size_infos[index];
+
+        Yt::Span<RawPage> pages = allocate_pages(info.pages);
+
+        if (pages.is_null()){
+            // TODO: handle out of memory
+            VERIFY_NOT_REACHED();
+        }
+        
+    }
+
+private:
+    Yt::Array<FreeList, num_lists> free_lists;
+    Yt::Array<SizeInfo, num_lists> size_infos;
 };
 
 } /* namespace Alloc */

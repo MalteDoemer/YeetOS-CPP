@@ -52,8 +52,6 @@ set(LIBYT_SOURCES
 
 set(LIBALLOC_SOURCES
     Liballoc/Alloc.cpp
-    Liballoc/MiddleEnd.cpp
-    Liballoc/Backend.cpp
 )
 
 set(CXXRT_SOURCES
@@ -126,10 +124,10 @@ elseif(${CMAKE_BUILD_TYPE} MATCHES RELEASE)
 endif()
 
 
-add_library(c_k STATIC ${LIBCK_SOURCES})
-add_library(yt_k STATIC ${LIBYT_SOURCES})
-add_library(alloc_k STATIC ${LIBALLOC_SOURCES})
-add_library(cxxrt_k STATIC ${CXXRT_SOURCES})
+add_library(c_k OBJECT ${LIBCK_SOURCES})
+add_library(yt_k OBJECT ${LIBYT_SOURCES})
+add_library(alloc_k OBJECT ${LIBALLOC_SOURCES})
+add_library(cxxrt_k OBJECT ${CXXRT_SOURCES})
 
 add_executable(kernel ${KERNEL_SOURCES})
 

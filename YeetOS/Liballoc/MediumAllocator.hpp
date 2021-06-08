@@ -23,55 +23,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
-#include <Span.hpp>
-#include <Types.hpp>
-#include <Array.hpp>
+#pragma once
 
-#include <Liballoc/BackEnd.hpp>
-#include <Liballoc/FreeList.hpp>
-#include <Liballoc/SizeClass.hpp>
-#include <Liballoc/MiddleEnd.hpp>
-#include <Liballoc/LogicalPage.hpp>
+namespace Alloc {
 
-using namespace Yt;
+class MediumAllocator {
 
-namespace Alloc::MiddleEnd {
+public:
+    constexpr MediumAllocator() noexcept = default;
 
-Array<FreeList, size_class_array.count()> free_lists;
-
-
-static void refill_free_list(Size list_index)
-{
-    SizeClass size_class = size_class_array[list_index];
-
-    Size pages_needed = (size_class.size * size_class.count) / LIBALLOC_PAGE_SIZE;
-    Span<LogicalPage> pages = Backend::allocate_pages(pages_needed):
-
-    if (pages.is_null()){
-        // TODO: handle out of memory
-        VERIFY_NOT_REACHED();
-    }
-
-    
-
-}
-
-
-
-void initialize() noexcept 
-{
-
-    for (Size i = 0; i < free_lists.count(); i++){
-
-    }
-
-}
-
-void* allocate(Size size) noexcept
-{
-    return nullptr;
-}
-
-void deallocate(void* ptr) noexcept {}
+    void initialize() noexcept {}
+    void* allocate(Size size) noexcept { return nullptr; }
+    void deallocate(void* ptr) noexcept {}
+};
 
 } /* namespace Alloc */

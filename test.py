@@ -28,3 +28,13 @@ def create_csv(path: str):
         for i in range(1, 3969):
             file.write(f"{i}, {size_to_index(i)}\n")
 
+
+
+def fef():
+    for i in range(32):
+        size = (i+1) * 8
+        pages = i // 4
+        print(f"{size}:{1 + pages}")
+        # num = (pages * 4096) // size
+        # rem = (pages * 4096) % size
+        # print(f"{size}: ({num},{rem})")

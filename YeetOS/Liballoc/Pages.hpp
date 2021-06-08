@@ -26,18 +26,19 @@
 #pragma once
 
 #include <Types.hpp>
+#include <Platform.hpp>
+
+#ifdef __i386__
+    #define LIBALLOC_PAGE_SIZE  4096
+    #define LIBALLOC_PAGE_SHIFT 12
+#else /* __i386__ */
+    #error "unsupported architecutre"
+#endif /* __i386__ */
 
 namespace Alloc {
 
-struct SizeClass {
-    Size size;
-    Size count;
+struct PACKED ALIGNED(LIBALLOC_PAGE_SIZE) RawPage {
+    Byte bytes[LIBALLOC_PAGE_SIZE];
 };
 
-}
-
-#ifdef __i386__
-    #include <Liballoc/Arch/x86/SizeClass.hpp>
-#else /* __i386__ */
-    #error "unsupported architecture"
-#endif /* __i386__ */
+} /* namespace Alloc */

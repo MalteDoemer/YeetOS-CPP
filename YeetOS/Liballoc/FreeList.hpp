@@ -27,8 +27,6 @@
 
 #include <Types.hpp>
 
-#include <Liballoc/SizeClass.hpp>
-
 namespace Alloc {
 
 class FreeList {
@@ -40,15 +38,30 @@ public:
 
 public:
     constexpr FreeList() noexcept = default;
-    
+
     FreeList(Node* node) noexcept : m_first(node) {}
 
+    /**
+     * Checks whether the list is empty.
+     */
+    bool is_empty() { return m_first == nullptr; }
+
+    /**
+     * Adds a node to the front of the free list.
+     *
+     * UB if node is nullptr.
+     */
     void push(Node* node) noexcept
     {
         node->next = m_first;
         m_first = node;
     }
 
+    /**
+     * Returns and removes the first node in the free list.
+     *
+     * UB if the list is empty.
+     */
     Node* pop() noexcept
     {
         Node* temp = m_first;
@@ -57,6 +70,7 @@ public:
     }
 
     Node* first() const noexcept { return m_first; }
+    void set_first(Node* node) noexcept { m_first = node; }
 
 private:
     Node* m_first;

@@ -25,14 +25,38 @@
 
 #pragma once
 
+#include <Span.hpp>
 #include <Types.hpp>
+#include <Platform.hpp>
 
-namespace Alloc::MiddleEnd {
+#include <Liballoc/Pages.hpp>
 
-void initialize() noexcept;
+namespace Alloc {
 
-void* allocate(Size size) noexcept;
-void deallocate(void* ptr) noexcept;
+#if defined(YEETOS_KERNEL)
 
+/* Temporary Solution until the memory manager exists */
 
-} /* namespace Alloc::MiddleEnd */
+SECTION(".heap_memory") static RawPage kernel_memory[1024];
+static RawPage* top = kernel_memory;
+
+Yt::Span<RawPage> allocate_pages(Size page_count) noexcept
+{
+    RawPage* temp = top;
+
+    top += page_count;
+
+    if (top > kernel_memory + 1024) {
+        return Yt::Span<RawPage> { nullptr, 0 };
+    }
+
+    return Yt::Span<RawPage> { temp, page_count };
+}
+
+void deallocate_pages(Yt::Span<RawPage> pages) noexcept {}
+
+#else /* YEETOS_KERNEL */
+    #error "not implemented"
+#endif /* YEETOS_KERNEL */
+
+} /* namespace Alloc */

@@ -23,27 +23,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
-#pragma once
-
-#include <Liballoc/BackEnd.hpp>
-#include <Liballoc/MiddleEnd.hpp>
+#include <Liballoc/PageAllocator.hpp>
+#include <Liballoc/MediumAllocator.hpp>
+#include <Liballoc/SmallAllocator.hpp>
 
 namespace Alloc {
 
+static SmallAllocator small_allocator;
+
 void initialize() noexcept(false)
 {
-    Backend::initialize();
-    MiddleEnd::initialize();
+    
 }
 
 void* allocate(Size size) noexcept
 {
-    return MiddleEnd::allocate(size);
+    
 }
 
 void deallocate(void* ptr) noexcept
 {
-    MiddleEnd::deallocate(ptr);
+    
 }
 
 } /* namespace Alloc */
