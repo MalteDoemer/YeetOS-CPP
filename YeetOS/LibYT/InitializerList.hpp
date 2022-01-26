@@ -99,9 +99,9 @@ private:
 
 } /* namespace std */
 
-namespace Yt {
+namespace YT {
 
 template<typename T>
 using InitializerList = std::initializer_list<T>;
 
-} /* namespace Yt */
+} /* namespace YT */

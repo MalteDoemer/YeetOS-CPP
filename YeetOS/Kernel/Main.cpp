@@ -34,13 +34,11 @@
 #include <Concepts.hpp>
 #include <Platform.hpp>
 #include <Exceptions.hpp>
-#include <Allocators.hpp>
-#include <BitmapView.hpp>
 
 #include <Kernel/Kernel.hpp>
 #include <Kernel/DebugLog.hpp>
 
-using namespace Yt;
+using namespace YT;
 
 template<WriteableRange Rng, typename T>
 void assign(Rng& range, const T& value)

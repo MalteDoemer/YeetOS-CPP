@@ -30,7 +30,7 @@
 #include <Platform.hpp>
 #include <TypeMagic.hpp>
 
-namespace Yt {
+namespace YT {
 
 enum MemoryOrder {
     relaxed = __ATOMIC_RELAXED,
@@ -358,4 +358,4 @@ public:
     bool is_lock_free() const volatile noexcept { return __atomic_is_lock_free(sizeof(m_value), &m_value); }
 };
 
-} /* namespace Yt */
+} /* namespace YT */

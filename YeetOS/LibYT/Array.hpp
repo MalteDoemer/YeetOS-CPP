@@ -29,7 +29,7 @@
 #include <Verify.hpp>
 #include <TypeMagic.hpp>
 
-namespace Yt {
+namespace YT {
 
 /**
  * A container with a fixed amount of elements.
@@ -148,4 +148,4 @@ public:
 template<typename T, typename... U>
 Array(T, U...) -> Array<enable_if<(is_same<T, U> && ...), T>, 1 + sizeof...(U)>;
 
-} /* namespace Yt */
+} /* namespace YT */

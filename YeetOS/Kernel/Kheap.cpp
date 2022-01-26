@@ -32,7 +32,7 @@
 
 #include <Kernel/Kheap.hpp>
 
-using namespace Yt;
+using namespace YT;
 
 namespace Kernel::Kheap {
 

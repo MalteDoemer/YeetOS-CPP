@@ -29,7 +29,7 @@
 #include <Concepts.hpp>
 #include <TypeMagic.hpp>
 
-namespace Yt {
+namespace YT {
 
 template<typename T>
 constexpr T min(const T& a, const T& b) noexcept
@@ -125,6 +125,6 @@ constexpr To BitCast(const From& from)
 
 namespace std {
 
-using Yt::move;
+using YT::move;
 
-} /* namespace Yt */
+} /* namespace YT */

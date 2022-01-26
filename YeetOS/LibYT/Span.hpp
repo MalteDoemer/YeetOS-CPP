@@ -29,7 +29,7 @@
 #include <Verify.hpp>
 #include <Platform.hpp>
 
-namespace Yt {
+namespace YT {
 
 namespace Detail {
 
@@ -308,4 +308,4 @@ public:
     constexpr operator Span<const T>() const { return Span<const T> { data(), count() }; }
 };
 
-} /* namespace Yt */
+} /* namespace YT */

@@ -28,7 +28,7 @@
 #include <Types.hpp>
 #include <TypeMagic.hpp>
 
-namespace Yt {
+namespace YT {
 
 template<typename T>
 struct UnderlyingTypeTraits {
@@ -91,4 +91,4 @@ concept HasUnderlyingTypeTraits = requires
     typename ConstValuePointer<T>;
 };
 
-} /* namespace Yt */
+} /* namespace YT */

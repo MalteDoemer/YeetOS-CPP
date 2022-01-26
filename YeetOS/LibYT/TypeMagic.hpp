@@ -27,7 +27,7 @@
 
 #include <Types.hpp>
 
-namespace Yt {
+namespace YT {
 
 /// IntegralConstant
 template<typename T, T val>
@@ -1281,7 +1281,7 @@ using TypeList = Detail::TypeList<T...>;
 template<Size size, typename List>
 using TypeSelect = typename Detail::TypeSelect<size, List>::Type;
 
-} /* namespace Yt */
+} /* namespace YT */
 
 /*
 xxxx is_scoped_enum xxxx

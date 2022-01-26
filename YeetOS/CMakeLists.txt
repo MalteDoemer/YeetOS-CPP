@@ -18,7 +18,7 @@ if(YEETOS_ARCH STREQUAL "x86")
     )
 
     set(KERNEL_ARCH_COMPILE_DEFINITIONS
-        __i386__
+        __x86__
     )
 
 else()

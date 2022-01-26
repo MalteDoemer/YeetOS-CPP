@@ -28,7 +28,7 @@
 #include <Types.hpp>
 #include <TypeMagic.hpp>
 
-namespace Yt {
+namespace YT {
 
 template<typename T, typename U>
 concept SameAs = is_same<T, U>;
@@ -115,4 +115,4 @@ concept ScalarType = is_scalar<T>;
 template<typename T>
 concept PointerType = is_pointer<T>;
 
-} /* namespace Yt */
+} /* namespace YT */

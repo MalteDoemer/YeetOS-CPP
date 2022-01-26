@@ -9,7 +9,7 @@
             ],
             "defines": [
                 "YEETOS_KERNEL",
-                "__i386__"
+                "__x86__"
             ],
             "forcedInclude": [ "${workspaceFolder}/.vscode/pre.h" ],
             "compilerPath": "/usr/local/bin/clang",
