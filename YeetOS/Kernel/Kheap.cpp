@@ -23,7 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
-#include <Span.hpp>
+#include <Slice.hpp>
 #include <Types.hpp>
 #include <Array.hpp>
 #include <Verify.hpp>
@@ -152,11 +152,11 @@ public:
         }
     }
 
-    void initialize(Span<Byte> memory) { m_memory = memory; }
+    void initialize(Slice<Byte> memory) { m_memory = memory; }
 
 private:
     Array<FreeList, num_bins> m_bins {};
-    Span<Byte> m_memory {};
+    Slice<Byte> m_memory {};
 };
 
 void* allocate(usize size) noexcept

@@ -26,6 +26,7 @@
 #pragma once
 
 #include <Types.hpp>
+#include <Slice.hpp>
 #include <Verify.hpp>
 #include <TypeMagic.hpp>
 
@@ -141,6 +142,16 @@ public:
      * UB if the Array is empty.
      */
     constexpr ValueReference back() noexcept { return operator[](count() - 1); }
+
+    /**
+     * Returns a mutable slice over the whole array.
+     */
+    constexpr Slice<T> slice() noexcept { return Slice<T>(data(), count()); }
+
+    /**
+     * Returns a const slice over the whole array.
+     */
+    constexpr Slice<const T> slice() const noexcept { return Slice<T>(data(), count()); }
 
     T m_data[N];
 };

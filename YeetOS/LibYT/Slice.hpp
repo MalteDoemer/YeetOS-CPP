@@ -34,15 +34,15 @@ namespace YT {
 namespace Detail {
 
 template<typename T>
-class SpanBase {
+class SliceBase {
 
 public:
-    ALWAYS_INLINE constexpr SpanBase() noexcept = default;
+    ALWAYS_INLINE constexpr SliceBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SpanBase(T* values, usize count) noexcept : m_values(values), m_count(count) {}
+    ALWAYS_INLINE constexpr SliceBase(T* values, usize count) noexcept : m_values(values), m_count(count) {}
 
     template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(T (&values)[N]) noexcept : m_values(values), m_count(N)
+    ALWAYS_INLINE constexpr SliceBase(T (&values)[N]) noexcept : m_values(values), m_count(N)
     {
     }
 
@@ -52,51 +52,52 @@ protected:
 };
 
 template<>
-class SpanBase<Byte> {
+class SliceBase<Byte> {
 
 public:
-    ALWAYS_INLINE constexpr SpanBase() noexcept = default;
+    ALWAYS_INLINE constexpr SliceBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SpanBase(Byte* values, usize count) noexcept : m_values(values), m_count(count) {}
+    ALWAYS_INLINE constexpr SliceBase(Byte* values, usize count) noexcept : m_values(values), m_count(count) {}
 
-    ALWAYS_INLINE SpanBase(void* values, usize count) noexcept :
+    ALWAYS_INLINE SliceBase(void* values, usize count) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(char* values, usize count) noexcept :
+    ALWAYS_INLINE SliceBase(char* values, usize count) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(signed char* values, usize count) noexcept :
+    ALWAYS_INLINE SliceBase(signed char* values, usize count) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(unsigned char* values, usize count) noexcept :
+    ALWAYS_INLINE SliceBase(unsigned char* values, usize count) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(count)
     {
     }
 
     template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(Byte (&values)[N]) noexcept : m_values(values), m_count(N)
+    ALWAYS_INLINE constexpr SliceBase(Byte (&values)[N]) noexcept : m_values(values), m_count(N)
     {
     }
 
     template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(char (&values)[N]) noexcept : m_values(reinterpret_cast<Byte*>(values)), m_count(N)
-    {
-    }
-
-    template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(signed char (&values)[N]) noexcept :
+    ALWAYS_INLINE constexpr SliceBase(char (&values)[N]) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(N)
     {
     }
 
     template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(unsigned char (&values)[N]) noexcept :
+    ALWAYS_INLINE constexpr SliceBase(signed char (&values)[N]) noexcept :
+        m_values(reinterpret_cast<Byte*>(values)), m_count(N)
+    {
+    }
+
+    template<usize N>
+    ALWAYS_INLINE constexpr SliceBase(unsigned char (&values)[N]) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(N)
     {
     }
@@ -107,52 +108,52 @@ protected:
 };
 
 template<>
-class SpanBase<const Byte> {
+class SliceBase<const Byte> {
 
 public:
-    ALWAYS_INLINE constexpr SpanBase() noexcept = default;
+    ALWAYS_INLINE constexpr SliceBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SpanBase(const Byte* values, usize count) noexcept : m_values(values), m_count(count) {}
+    ALWAYS_INLINE constexpr SliceBase(const Byte* values, usize count) noexcept : m_values(values), m_count(count) {}
 
-    ALWAYS_INLINE SpanBase(const void* values, usize count) noexcept :
+    ALWAYS_INLINE SliceBase(const void* values, usize count) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(const char* values, usize count) noexcept :
+    ALWAYS_INLINE SliceBase(const char* values, usize count) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(const signed char* values, usize count) noexcept :
+    ALWAYS_INLINE SliceBase(const signed char* values, usize count) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(const unsigned char* values, usize count) noexcept :
+    ALWAYS_INLINE SliceBase(const unsigned char* values, usize count) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(count)
     {
     }
 
     template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(const Byte (&values)[N]) noexcept : m_values(values), m_count(N)
+    ALWAYS_INLINE constexpr SliceBase(const Byte (&values)[N]) noexcept : m_values(values), m_count(N)
     {
     }
 
     template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(const char (&values)[N]) noexcept :
+    ALWAYS_INLINE constexpr SliceBase(const char (&values)[N]) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(N)
     {
     }
 
     template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(const signed char (&values)[N]) noexcept :
+    ALWAYS_INLINE constexpr SliceBase(const signed char (&values)[N]) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(N)
     {
     }
 
     template<usize N>
-    ALWAYS_INLINE constexpr SpanBase(const unsigned char (&values)[N]) noexcept :
+    ALWAYS_INLINE constexpr SliceBase(const unsigned char (&values)[N]) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(N)
     {
     }
@@ -170,9 +171,9 @@ protected:
  * @tparam T Type of the elements
  */
 template<typename T>
-class Span : public Detail::SpanBase<T> {
+class Slice : public Detail::SliceBase<T> {
 
-using Detail::SpanBase<T>::SpanBase;
+    using Detail::SliceBase<T>::SliceBase;
 
 public:
     using ValueType = T;
@@ -185,11 +186,11 @@ public:
     using ConstIteratorType = const T*;
 
 public:
-    constexpr Span() noexcept = default;
+    constexpr Slice() noexcept = default;
 
-    constexpr Span(const Span& other) noexcept : Detail::SpanBase<T>(other.m_values, other.m_count) {}
+    constexpr Slice(const Slice& other) noexcept : Detail::SliceBase<T>(other.m_values, other.m_count) {}
 
-    constexpr Span& operator=(const Span& other) noexcept
+    constexpr Slice& operator=(const Slice& other) noexcept
     {
         this->m_values = other.m_values;
         this->m_count = other.m_count;
@@ -296,16 +297,16 @@ public:
      *
      * UB if start + length > count()
      */
-    NODISCARD constexpr Span subspan(usize start, usize length) const noexcept
+    NODISCARD constexpr Slice subspan(usize start, usize length) const noexcept
     {
         VERIFY(start + length <= count());
-        return Span { data() + start, length };
+        return Slice { data() + start, length };
     }
 
     /**
      * Converts the Span into a Span with const elements.
      */
-    constexpr operator Span<const T>() const { return Span<const T> { data(), count() }; }
+    constexpr operator Slice<const T>() const { return Slice<const T> { data(), count() }; }
 };
 
 } /* namespace YT */

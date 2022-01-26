@@ -26,6 +26,7 @@
 #pragma once
 
 #include <Types.hpp>
+#include <Slice.hpp>
 #include <Verify.hpp>
 
 namespace std {
@@ -91,6 +92,16 @@ public:
         VERIFY(index < count());
         return data()[index];
     }
+
+    /**
+     * Returns a mutable slice over the whole array.
+     */
+    constexpr Slice<T> slice() noexcept { return Slice<T>(data(), count()); }
+
+    /**
+     * Returns a const slice over the whole array.
+     */
+    constexpr Slice<const T> slice() const noexcept { return Slice<T>(data(), count()); }
 
 private:
     ConstValuePointer m_data;
