@@ -54,7 +54,7 @@ static void register_eh_frame() noexcept
  * This function is called by Entry.S to set the most basic things up.
  * This includes calling global constructors and initializing dynamic memory.
  */
-extern "C" void arch_early_init(FlatPtr multiboot_struct, Uint32 multiboot_check)
+extern "C" void arch_early_init(FlatPtr multiboot_struct, u32 multiboot_check)
 {
     DebugLog::initialize();
     DebugLog::println("DebugLog initialized...");

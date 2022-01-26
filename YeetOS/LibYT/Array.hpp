@@ -37,7 +37,7 @@ namespace YT {
  * @tparam T Type of the elements
  * @tparam N Number of elements
  */
-template<typename T, Size N>
+template<typename T, usize N>
 class Array {
 
     static_assert(N > 0u, "Array size must not be zero");
@@ -55,12 +55,12 @@ public:
     /**
      * Returns the number of elements.
      */
-    constexpr Size count() const noexcept { return N; }
+    constexpr usize count() const noexcept { return N; }
 
     /**
      * Checks wether the Array is empty.
      */
-    constexpr Size is_empty() const noexcept { return false; }
+    constexpr usize is_empty() const noexcept { return false; }
 
     /**
      * Returns a pointer to the underlying data.
@@ -97,7 +97,7 @@ public:
      *
      * UB if the index is out of bounds.
      */
-    constexpr ConstValueReference operator[](Size index) const noexcept
+    constexpr ConstValueReference operator[](usize index) const noexcept
     {
         VERIFY(index < count());
         return m_data[index];
@@ -108,7 +108,7 @@ public:
      *
      * UB if the index is out of bounds.
      */
-    constexpr ValueReference operator[](Size index) noexcept
+    constexpr ValueReference operator[](usize index) noexcept
     {
         VERIFY(index < count());
         return m_data[index];

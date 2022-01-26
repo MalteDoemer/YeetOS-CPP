@@ -26,25 +26,22 @@
 #pragma once
 
 using FlatPtr = __UINTPTR_TYPE__;
-using Native = __UINTPTR_TYPE__;
 
-using Uint8 = __UINT8_TYPE__;
-using Uint16 = __UINT16_TYPE__;
-using Uint32 = __UINT32_TYPE__;
-using Uint64 = __UINT64_TYPE__;
+using u8 = __UINT8_TYPE__;
+using u16 = __UINT16_TYPE__;
+using u32 = __UINT32_TYPE__;
+using u64 = __UINT64_TYPE__;
 
-using Int8 = __INT8_TYPE__;
-using Int16 = __INT16_TYPE__;
-using Int32 = __INT32_TYPE__;
-using Int64 = __INT64_TYPE__;
+using i8 = __INT8_TYPE__;
+using i16 = __INT16_TYPE__;
+using i32 = __INT32_TYPE__;
+using i64 = __INT64_TYPE__;
 
-using Size = __SIZE_TYPE__;
+using usize = __SIZE_TYPE__;
 
 #define unsigned signed
-using SSize = __SIZE_TYPE__;
+using isize = __SIZE_TYPE__;
 #undef unsigned
-
-using Diff = __PTRDIFF_TYPE__;
 
 using HashCode = __UINTPTR_TYPE__;
 

@@ -31,7 +31,7 @@ namespace Kernel::DebugLog {
 
 void initialize();
 void putchar(char c);
-SSize print(const char* msg);
-SSize println(const char* msg);
+isize print(const char* msg);
+isize println(const char* msg);
 
 }

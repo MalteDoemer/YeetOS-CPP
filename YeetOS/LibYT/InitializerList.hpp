@@ -48,13 +48,13 @@ public:
     using ConstIterator = const T*;
 
 public:
-    constexpr initializer_list(ConstValuePointer data, Size size) noexcept : m_data(data), m_size(size) {}
+    constexpr initializer_list(ConstValuePointer data, usize size) noexcept : m_data(data), m_size(size) {}
     constexpr initializer_list() noexcept : m_data(nullptr), m_size(0) {}
 
     /**
      * Returns the number of elements.
      */
-    constexpr Size count() const noexcept { return m_size; }
+    constexpr usize count() const noexcept { return m_size; }
 
     /**
      * Checks wether the initializer_list is empty.
@@ -86,7 +86,7 @@ public:
      *
      * UB if the index is out of bounds.
      */
-    constexpr ConstValueReference operator[](Size index) const noexcept
+    constexpr ConstValueReference operator[](usize index) const noexcept
     {
         VERIFY(index < count());
         return data()[index];
@@ -94,7 +94,7 @@ public:
 
 private:
     ConstValuePointer m_data;
-    Size m_size;
+    usize m_size;
 };
 
 } /* namespace std */

@@ -57,7 +57,7 @@ struct UnderlyingTypeTraits<T[]> {
     using ConstValuePointer = const T*;
 };
 
-template<typename T, Size N>
+template<typename T, usize N>
 struct UnderlyingTypeTraits<T[N]> {
     using ValueType = T;
     using ValueReference = T&;

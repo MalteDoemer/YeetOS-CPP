@@ -172,7 +172,7 @@ template<typename T, typename U>
 concept PositionAwareWith = requires (T i, U j)
 {
     requires CompareableWith<T, U>;
-    { i - j } -> SameAs<Diff>;
+    { i - j } -> SameAs<usize>;
 };
 
 /**
@@ -185,7 +185,7 @@ concept PositionAware = PositionAwareWith<T, T>;
  * Defines whether T has operators +=, -=, +, - and [].
  */
 template<typename T>
-concept RandomAccessable = requires (T i, const T j, Diff n)
+concept RandomAccessable = requires (T i, const T j, usize n)
 {
     requires Readable<T>;
     { i += n } -> SameAs<T&>;

@@ -35,7 +35,7 @@
 
 using namespace Kernel;
 
-static Uint8 mem[1024 * 1024];
+static u8 mem[1024 * 1024];
 static FlatPtr malloc_top = 0;
 
 extern "C" void* malloc(size_t size)

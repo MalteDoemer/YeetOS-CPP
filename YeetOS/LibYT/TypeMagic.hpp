@@ -71,21 +71,21 @@ struct TypeList {
 /// TypeList
 template<typename T, typename... U>
 struct TypeList<T, U...> {
-    static constexpr Size size = sizeof(T);
+    static constexpr usize size = sizeof(T);
 };
 
 /// TypeSelect
-template<Size s, typename T, bool = (s <= T::size)>
+template<usize s, typename T, bool = (s <= T::size)>
 struct TypeSelect;
 
 /// TypeSelect
-template<Size s, typename UInt, typename... UInts>
+template<usize s, typename UInt, typename... UInts>
 struct TypeSelect<s, TypeList<UInt, UInts...>, true> {
     using Type = UInt;
 };
 
 /// TypeSelect
-template<Size s, typename UInt, typename... UInts>
+template<usize s, typename UInt, typename... UInts>
 struct TypeSelect<s, TypeList<UInt, UInts...>, false> : TypeSelect<s, TypeList<UInts...>> {
 };
 
@@ -330,7 +330,7 @@ struct IsBoundedArray : public FalseType {
 };
 
 /// IsBoundedArray
-template<typename T, Size N>
+template<typename T, usize N>
 struct IsBoundedArray<T[N]> : public TrueType {
 };
 
@@ -521,17 +521,17 @@ struct HasVirtualDestructor : public BoolConstant<__has_virtual_destructor(T)> {
 
 /// AlignmentOf
 template<typename T>
-struct AlignmentOf : public IntegralConstant<Size, alignof(T)> {
+struct AlignmentOf : public IntegralConstant<usize, alignof(T)> {
 };
 
 /// Rank
 template<typename T>
-struct Rank : public IntegralConstant<Size, __array_rank(T)> {
+struct Rank : public IntegralConstant<usize, __array_rank(T)> {
 };
 
 /// Extent
 template<typename T, unsigned N = 0>
-struct Extent : public IntegralConstant<Size, __array_extent(T, N)> {
+struct Extent : public IntegralConstant<usize, __array_extent(T, N)> {
 };
 
 /// IsSame
@@ -902,7 +902,7 @@ struct RemoveExtent<T[]> {
 };
 
 /// RemoveExtent
-template<typename T, Size N>
+template<typename T, usize N>
 struct RemoveExtent<T[N]> {
     using Type = T;
 };
@@ -920,7 +920,7 @@ struct RemoveAllExtents<T[]> {
 };
 
 /// RemoveAllExtents
-template<typename T, Size N>
+template<typename T, usize N>
 struct RemoveAllExtents<T[N]> {
     using Type = typename RemoveAllExtents<T>::Type;
 };
@@ -1163,13 +1163,13 @@ template<typename T>
 inline constexpr bool has_virtual_destructor = Detail::HasVirtualDestructor<T>::value;
 
 template<typename T>
-inline constexpr Size alignment_of = Detail::AlignmentOf<T>::value;
+inline constexpr usize alignment_of = Detail::AlignmentOf<T>::value;
 
 template<typename T>
-inline constexpr Size rank = Detail::Rank<T>::value;
+inline constexpr usize rank = Detail::Rank<T>::value;
 
 template<typename T>
-inline constexpr Size extent = Detail::Extent<T>::value;
+inline constexpr usize extent = Detail::Extent<T>::value;
 
 template<typename T, typename U>
 inline constexpr bool is_same = Detail::IsSame<T, U>::value;
@@ -1278,7 +1278,7 @@ using underlying_type = typename Detail::UnderlyingType<T>::Type;
 template<typename... T>
 using TypeList = Detail::TypeList<T...>;
 
-template<Size size, typename List>
+template<usize size, typename List>
 using TypeSelect = typename Detail::TypeSelect<size, List>::Type;
 
 } /* namespace YT */

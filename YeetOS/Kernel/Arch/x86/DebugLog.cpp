@@ -71,9 +71,9 @@ void putchar(char c)
     outb(COM1 + DATA, c);
 }
 
-SSize print(const char* msg)
+isize print(const char* msg)
 {
-    SSize res = 0;
+    isize res = 0;
     for (; *msg; msg++) {
         res++;
         putchar(*msg);
@@ -81,9 +81,9 @@ SSize print(const char* msg)
     return res;
 }
 
-SSize println(const char* msg)
+isize println(const char* msg)
 {
-    SSize res = print(msg);
+    isize res = print(msg);
     putchar('\n');
     return res + 1;
 }

@@ -57,7 +57,7 @@ constexpr HashCode hash_code(const T& object) noexcept(noexcept(object.hash_code
 
 namespace Detail {
 
-constexpr Uint32 hash32(Uint32 key) noexcept
+constexpr u32 hash32(u32 key) noexcept
 {
     key += ~(key << 15);
     key ^= (key >> 10);
@@ -68,7 +68,7 @@ constexpr Uint32 hash32(Uint32 key) noexcept
     return key;
 }
 
-constexpr Uint64 hash64(Uint64 key) noexcept
+constexpr u64 hash64(u64 key) noexcept
 {
     key += ~(key << 15);
     key ^= (key >> 10);
@@ -85,7 +85,7 @@ constexpr Uint64 hash64(Uint64 key) noexcept
     return key;
 }
 
-constexpr Uint32 combine_hash32(Uint32 key1, Uint32 key2) noexcept
+constexpr u32 combine_hash32(u32 key1, u32 key2) noexcept
 {
     return hash32((hash32(key1) * 209) ^ (hash32(key2 * 413)));
 }
@@ -135,7 +135,7 @@ constexpr HashCode hash_code(T key) noexcept
 template<FloatingPointType T>
 constexpr HashCode hash_code(T key) noexcept
 {
-    using IntType = TypeSelect<sizeof(T), TypeList<Uint8, Uint16, Uint32, Uint64>>;
+    using IntType = TypeSelect<sizeof(T), TypeList<u8, u16, u32, u64>>;
     IntType val = BitCast<IntType>(key);
     return hash_code(val);
 }

@@ -31,9 +31,9 @@ namespace Kernel::Kheap {
 
 void initialize() noexcept;
 
-void* allocate(Size size) noexcept;
+void* allocate(usize size) noexcept;
 void deallocate(void* ptr) noexcept;
 
-void* allocate_eternal(Size size, Size align = sizeof(void*)) noexcept;
+void* allocate_eternal(usize size, usize align = sizeof(void*)) noexcept;
 
 } /* namespace Kernel::Kheap */

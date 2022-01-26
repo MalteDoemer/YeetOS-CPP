@@ -90,24 +90,24 @@ private:
     Node* m_node { nullptr };
 };
 
-struct alignas(Size) PACKED BlockInfo {
-    Size used_flag : 1;
-    Size upper_bits : sizeof(Size) * char_bits - 1;
+struct alignas(usize) PACKED BlockInfo {
+    usize used_flag : 1;
+    usize upper_bits : sizeof(usize) * char_bits - 1;
 
     BlockInfo() noexcept = default;
 
-    BlockInfo(Size size) noexcept : used_flag(0), upper_bits(size >> 1) {}
+    BlockInfo(usize size) noexcept : used_flag(0), upper_bits(size >> 1) {}
 
-    BlockInfo& operator=(Size size) noexcept
+    BlockInfo& operator=(usize size) noexcept
     {
         upper_bits = size >> 1;
         return *this;
     }
 
-    operator Size() const noexcept { return upper_bits << 1; }
+    operator usize() const noexcept { return upper_bits << 1; }
 };
 
-struct alignas(Size) PACKED HeapBlock {
+struct alignas(usize) PACKED HeapBlock {
     BlockInfo prev;
     BlockInfo self;
 
@@ -122,8 +122,8 @@ struct alignas(Size) PACKED HeapBlock {
 class KernelHeap {
 
 private:
-    constexpr static Size min_align = 2 * sizeof(void*);
-    constexpr static Size num_bins = 32;
+    constexpr static usize min_align = 2 * sizeof(void*);
+    constexpr static usize num_bins = 32;
 
 private:
 
@@ -131,9 +131,9 @@ private:
      * Returns the index of the bin to size.
      * Size must be non-zero and aligned to min_align
      */
-    constexpr Size bin_index(Size size)
+    constexpr usize bin_index(usize size)
     {
-        Size idx = log2(size) - log2(min_align);
+        usize idx = log2(size) - log2(min_align);
 
         if (idx >= num_bins)
             return num_bins - 1;
@@ -159,7 +159,7 @@ private:
     Span<Byte> m_memory {};
 };
 
-void* allocate(Size size) noexcept
+void* allocate(usize size) noexcept
 {
     return nullptr;
 }

@@ -39,16 +39,16 @@ class SpanBase {
 public:
     ALWAYS_INLINE constexpr SpanBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SpanBase(T* values, Size count) noexcept : m_values(values), m_count(count) {}
+    ALWAYS_INLINE constexpr SpanBase(T* values, usize count) noexcept : m_values(values), m_count(count) {}
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(T (&values)[N]) noexcept : m_values(values), m_count(N)
     {
     }
 
 protected:
     T* m_values = nullptr;
-    Size m_count = 0;
+    usize m_count = 0;
 };
 
 template<>
@@ -57,45 +57,45 @@ class SpanBase<Byte> {
 public:
     ALWAYS_INLINE constexpr SpanBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SpanBase(Byte* values, Size count) noexcept : m_values(values), m_count(count) {}
+    ALWAYS_INLINE constexpr SpanBase(Byte* values, usize count) noexcept : m_values(values), m_count(count) {}
 
-    ALWAYS_INLINE SpanBase(void* values, Size count) noexcept :
+    ALWAYS_INLINE SpanBase(void* values, usize count) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(char* values, Size count) noexcept :
+    ALWAYS_INLINE SpanBase(char* values, usize count) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(signed char* values, Size count) noexcept :
+    ALWAYS_INLINE SpanBase(signed char* values, usize count) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(unsigned char* values, Size count) noexcept :
+    ALWAYS_INLINE SpanBase(unsigned char* values, usize count) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(count)
     {
     }
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(Byte (&values)[N]) noexcept : m_values(values), m_count(N)
     {
     }
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(char (&values)[N]) noexcept : m_values(reinterpret_cast<Byte*>(values)), m_count(N)
     {
     }
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(signed char (&values)[N]) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(N)
     {
     }
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(unsigned char (&values)[N]) noexcept :
         m_values(reinterpret_cast<Byte*>(values)), m_count(N)
     {
@@ -103,7 +103,7 @@ public:
 
 protected:
     Byte* m_values = nullptr;
-    Size m_count = 0;
+    usize m_count = 0;
 };
 
 template<>
@@ -112,46 +112,46 @@ class SpanBase<const Byte> {
 public:
     ALWAYS_INLINE constexpr SpanBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SpanBase(const Byte* values, Size count) noexcept : m_values(values), m_count(count) {}
+    ALWAYS_INLINE constexpr SpanBase(const Byte* values, usize count) noexcept : m_values(values), m_count(count) {}
 
-    ALWAYS_INLINE SpanBase(const void* values, Size count) noexcept :
+    ALWAYS_INLINE SpanBase(const void* values, usize count) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(const char* values, Size count) noexcept :
+    ALWAYS_INLINE SpanBase(const char* values, usize count) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(const signed char* values, Size count) noexcept :
+    ALWAYS_INLINE SpanBase(const signed char* values, usize count) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(count)
     {
     }
 
-    ALWAYS_INLINE SpanBase(const unsigned char* values, Size count) noexcept :
+    ALWAYS_INLINE SpanBase(const unsigned char* values, usize count) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(count)
     {
     }
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(const Byte (&values)[N]) noexcept : m_values(values), m_count(N)
     {
     }
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(const char (&values)[N]) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(N)
     {
     }
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(const signed char (&values)[N]) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(N)
     {
     }
 
-    template<Size N>
+    template<usize N>
     ALWAYS_INLINE constexpr SpanBase(const unsigned char (&values)[N]) noexcept :
         m_values(reinterpret_cast<const Byte*>(values)), m_count(N)
     {
@@ -159,7 +159,7 @@ public:
 
 protected:
     const Byte* m_values = nullptr;
-    Size m_count = 0;
+    usize m_count = 0;
 };
 
 } /* namespace Detail */
@@ -199,7 +199,7 @@ public:
     /**
      * Returns the number of elements.
      */
-    constexpr Size count() const noexcept { return this->m_count; }
+    constexpr usize count() const noexcept { return this->m_count; }
 
     /**
      * Checks wether the Span is empty.
@@ -246,7 +246,7 @@ public:
      *
      * UB if the index is out of bounds.
      */
-    constexpr ValueReference operator[](Size index) noexcept
+    constexpr ValueReference operator[](usize index) noexcept
     {
         VERIFY(index < count());
         return data()[index];
@@ -257,7 +257,7 @@ public:
      *
      * UB if the index is out of bounds.
      */
-    constexpr ConstValueReference operator[](Size index) const noexcept
+    constexpr ConstValueReference operator[](usize index) const noexcept
     {
         VERIFY(index < count());
         return data()[index];
@@ -296,7 +296,7 @@ public:
      *
      * UB if start + length > count()
      */
-    NODISCARD constexpr Span subspan(Size start, Size length) const noexcept
+    NODISCARD constexpr Span subspan(usize start, usize length) const noexcept
     {
         VERIFY(start + length <= count());
         return Span { data() + start, length };

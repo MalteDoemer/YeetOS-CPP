@@ -27,56 +27,56 @@
 
 #include <Types.hpp>
 
-static inline void outb(Uint16 port, Uint8 data)
+static inline void outb(u16 port, u8 data)
 {
     asm volatile("outb %1, %0" ::"dN"(port), "a"(data));
 }
 
-static inline void outw(Uint16 port, Uint16 data)
+static inline void outw(u16 port, u16 data)
 {
     asm volatile("outw %1, %0" ::"dN"(port), "a"(data));
 }
 
-static inline Uint8 inb(Uint16 port)
+static inline u8 inb(u16 port)
 {
-    Uint8 ret;
+    u8 ret;
     asm volatile("inb %1, %0" : "=a"(ret) : "dN"(port));
     return ret;
 }
 
-static inline Uint16 inw(Uint16 port)
+static inline u16 inw(u16 port)
 {
-    Uint16 ret;
+    u16 ret;
     asm volatile("inw %1, %0" : "=a"(ret) : "dN"(port));
     return ret;
 }
 
-static inline void stosb(void* buf, Uint8 val, Uint32 count)
+static inline void stosb(void* buf, u8 val, u32 count)
 {
     asm("rep stosb" ::"a"(val), "c"(count), "D"(buf));
 }
 
-static inline void stosw(void* buf, Uint16 val, Uint32 count)
+static inline void stosw(void* buf, u16 val, u32 count)
 {
     asm("rep stosw" ::"a"(val), "c"(count), "D"(buf));
 }
 
-static inline void stosd(void* buf, Uint32 val, Uint32 count)
+static inline void stosd(void* buf, u32 val, u32 count)
 {
     asm("rep stosl" ::"a"(val), "c"(count), "D"(buf));
 }
 
-static inline void movsb(void* dest, const void* src, Uint32 count)
+static inline void movsb(void* dest, const void* src, u32 count)
 {
     asm("rep movsb" ::"D"(dest), "S"(src), "c"(count));
 }
 
-static inline void movsw(void* dest, const void* src, Uint32 count)
+static inline void movsw(void* dest, const void* src, u32 count)
 {
     asm("rep movsw" ::"D"(dest), "S"(src), "c"(count));
 }
 
-static inline void movsd(void* dest, const void* src, Uint32 count)
+static inline void movsd(void* dest, const void* src, u32 count)
 {
     asm("rep movsl" ::"D"(dest), "S"(src), "c"(count));
 }
@@ -86,7 +86,7 @@ static inline void invlpg(FlatPtr addr)
     asm("invlpg %0" ::"m"(addr));
 }
 
-static inline void set_cr3(Uint32 val)
+static inline void set_cr3(u32 val)
 {
     asm("movl %%eax, %%cr3" ::"a"(val));
 }
