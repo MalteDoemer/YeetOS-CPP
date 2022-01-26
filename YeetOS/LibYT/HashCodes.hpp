@@ -31,6 +31,8 @@
 
 namespace YT {
 
+using HashCode = __UINTPTR_TYPE__;
+
 /* clang-format off */
 
 /**
@@ -136,7 +138,7 @@ template<FloatingPointType T>
 constexpr HashCode hash_code(T key) noexcept
 {
     using IntType = TypeSelect<sizeof(T), TypeList<u8, u16, u32, u64>>;
-    IntType val = BitCast<IntType>(key);
+    IntType val = bit_cast<IntType>(key);
     return hash_code(val);
 }
 
@@ -174,3 +176,8 @@ concept Hashable = requires(T a)
 /* clang-format on */
 
 } /* namespace YT */
+
+using YT::combined_hash;
+using YT::hash_code;
+using YT::Hashable;
+using YT::HashCode;

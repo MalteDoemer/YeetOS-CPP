@@ -310,3 +310,5 @@ public:
 };
 
 } /* namespace YT */
+
+using YT::Slice;

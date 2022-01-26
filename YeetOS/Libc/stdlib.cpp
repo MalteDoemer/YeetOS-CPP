@@ -33,8 +33,6 @@
     #include <Kernel/Kernel.hpp>
     #include <Kernel/DebugLog.hpp>
 
-using namespace Kernel;
-
 static u8 mem[1024 * 1024];
 static FlatPtr malloc_top = 0;
 
@@ -62,7 +60,7 @@ extern "C" void* realloc(void* ptr, size_t size)
 
 extern "C" void abort()
 {
-    DebugLog::println("abort() has been called!");
+    Kernel::DebugLog::println("abort() has been called!");
 
     while (1) {}
 }

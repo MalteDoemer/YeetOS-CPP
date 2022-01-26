@@ -173,3 +173,5 @@ struct NumericLimits : public Detail::NumericLimitsHelper<remove_cvref<T>> {
 };
 
 } /* namespace YT */
+
+using YT::NumericLimits;

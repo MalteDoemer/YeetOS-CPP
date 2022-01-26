@@ -43,3 +43,5 @@ public:
 };
 
 } /* namespace YT */
+
+using YT::Exception;

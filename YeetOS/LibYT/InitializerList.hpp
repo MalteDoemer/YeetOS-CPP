@@ -116,3 +116,5 @@ template<typename T>
 using InitializerList = std::initializer_list<T>;
 
 } /* namespace YT */
+
+using YT::InitializerList;

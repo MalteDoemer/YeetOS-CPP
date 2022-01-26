@@ -160,3 +160,5 @@ template<typename T, typename... U>
 Array(T, U...) -> Array<enable_if<(is_same<T, U> && ...), T>, 1 + sizeof...(U)>;
 
 } /* namespace YT */
+
+using YT::Array;

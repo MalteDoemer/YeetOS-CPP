@@ -113,7 +113,7 @@ constexpr T exchange(T& obj, U&& new_value) noexcept(is_nothrow_move_constructib
 
 template<typename To, typename From>
 requires is_trivially_copyable<To> && is_trivially_copyable<From>
-constexpr To BitCast(const From& from)
+constexpr To bit_cast(const From& from)
 {
     static_assert(sizeof(To) == sizeof(From));
 
@@ -121,10 +121,22 @@ constexpr To BitCast(const From& from)
     __builtin_memcpy(&res, &from, sizeof(To));
     return res;
 }
-}
+
+} /* namespace YT */
+
+using YT::align_down;
+using YT::align_up;
+using YT::bit_cast;
+using YT::exchange;
+using YT::forward;
+using YT::log2;
+using YT::max;
+using YT::min;
+using YT::move;
+using YT::swap;
 
 namespace std {
 
 using YT::move;
 
-} /* namespace YT */
+} /* namespace std */

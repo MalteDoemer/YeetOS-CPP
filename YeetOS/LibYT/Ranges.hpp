@@ -120,11 +120,11 @@ constexpr auto end(const Rng& rng) noexcept(noexcept(rng.end()))
 
 } /* namespace YT */
 
-namespace YT {
-
 using YT::data;
 using YT::begin;
 using YT::end;
+
+namespace YT {
 
 /**
  * Defines whether Iter is readable through operator*.
@@ -355,3 +355,31 @@ concept WriteableContiguousRange = requires (T rng)
 } /* namespace YT */
 
 /* clang-format on */
+
+using YT::BidirectionalIterator;
+using YT::BidirectionalRange;
+using YT::ContiguousIterator;
+using YT::ContiguousRange;
+using YT::Decrementable;
+using YT::HasContiguousData;
+using YT::Incrementable;
+using YT::Iterator;
+using YT::IteratorOf;
+using YT::PositionAware;
+using YT::PositionAwareWith;
+using YT::RandomAccessable;
+using YT::RandomAccessIterator;
+using YT::RandomAccessRange;
+using YT::Range;
+using YT::Readable;
+using YT::SentinelFor;
+using YT::SizedSentinelFor;
+using YT::Writeable;
+using YT::WriteableBidirectionalIterator;
+using YT::WriteableBidirectionalRange;
+using YT::WriteableContiguousIterator;
+using YT::WriteableContiguousRange;
+using YT::WriteableIterator;
+using YT::WriteableRandomAccessIterator;
+using YT::WriteableRandomAccessRange;
+using YT::WriteableRange;

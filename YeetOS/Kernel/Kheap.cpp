@@ -32,8 +32,6 @@
 
 #include <Kernel/Kheap.hpp>
 
-using namespace YT;
-
 namespace Kernel::Kheap {
 
 struct HeapBlock;
@@ -147,7 +145,7 @@ public:
     constexpr KernelHeap() noexcept
     {
         /* Constructor should never be called, since the KernelHeap has to exsist before constructors are called. */
-        if (!is_constant_evaluated()) {
+        if (!YT::is_constant_evaluated()) {
             VERIFY_NOT_REACHED();
         }
     }

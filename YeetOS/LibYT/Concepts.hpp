@@ -116,3 +116,25 @@ template<typename T>
 concept PointerType = is_pointer<T>;
 
 } /* namespace YT */
+
+using YT::ArithmeticType;
+using YT::AssignableFrom;
+using YT::Bool;
+using YT::Compareable;
+using YT::CompareableWith;
+using YT::ConstructibleFrom;
+using YT::ConvertibleTo;
+using YT::Copyable;
+using YT::DerivedFrom;
+using YT::Destructible;
+using YT::EqualityCompareable;
+using YT::EqualityCompareableWith;
+using YT::FloatingPointType;
+using YT::IntegralType;
+using YT::Movable;
+using YT::NonFinal;
+using YT::PointerType;
+using YT::SameAs;
+using YT::ScalarType;
+using YT::Semiregular;
+using YT::Void;
