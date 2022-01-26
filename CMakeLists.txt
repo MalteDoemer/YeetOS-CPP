@@ -34,11 +34,13 @@ add_custom_target(iso
 
 add_custom_target(run-qemu
     USES_TERMINAL
+    DEPENDS iso
     COMMAND ${CMAKE_COMMAND} -E env "YEETOS_ARCH=${YEETOS_ARCH}" "YEETOS_CONFIG=${CMAKE_BUILD_TYPE}" "OUT_DIR=${CMAKE_BINARY_DIR}" ${CMAKE_SOURCE_DIR}/scripts/run-qemu.sh
 )
 
 add_custom_target(debug-qemu
     USES_TERMINAL
+    DEPENDS iso
     COMMAND ${CMAKE_COMMAND} -E env "YEETOS_ARCH=${YEETOS_ARCH}" "YEETOS_CONFIG=${CMAKE_BUILD_TYPE}" "OUT_DIR=${CMAKE_BINARY_DIR}" ${CMAKE_SOURCE_DIR}/scripts/debug-qemu.sh
 )
 

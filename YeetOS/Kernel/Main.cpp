@@ -53,6 +53,7 @@ namespace Kernel {
 void kernel_main()
 {
     DebugLog::println("Done!");
+
     while (1) {}
 }
 

@@ -152,7 +152,7 @@ extern "C" int __cxa_guard_acquire(volatile guard_t* guard_object)
         // if we are done before yielding and looping.
         if (INIT_PART(guard_object) != LOCK_PART(guard_object) && INITIALISED == *INIT_PART(guard_object))
             return 0;
-        sched_yield(); // TODO: sched_yield isn't implemented in the kernel yet
+        sched_yield();
     }
 }
 

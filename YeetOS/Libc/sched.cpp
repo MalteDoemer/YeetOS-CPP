@@ -28,9 +28,6 @@
 #ifdef YEETOS_KERNEL
 extern "C" int sched_yield()
 {
-    // TODO: implement sched_yield in the kernel
-
-    // does the kernel even need sched_yield() ?
     return 0;
 }
 #else /* YEETOS_KERNEL */
