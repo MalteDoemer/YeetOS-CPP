@@ -29,11 +29,6 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
-// #ifdef VSCODE_IS_STUPID
-//     #include <Libc/sys/types.h>
-// #else
-// #endif
-
 __BEGIN_DECLS
 
 #define PTHREAD_COND_INITIALIZER  -1
