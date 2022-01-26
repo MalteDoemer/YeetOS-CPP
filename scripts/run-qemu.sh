@@ -1,12 +1,14 @@
 #!/bin/bash
 
-IMAGE=$YEETOS_DISK_IMAGE
+# environement variables defined in cmake
+ARCH=$YEETOS_ARCH
+CONFIG=$YEETOS_CONFIG
+ISO_FILE="$OUT_DIR/yeetos.iso"
 
 
-if [ "$YEETOS_ARCH" != "x86" ] ; then
-    echo "unsupported architecture!"
+if [ "$ARCH" == "x86" ] ; then
+    qemu-system-i386 --accel kvm -m 2G -name "YeetOS" -serial stdio -cdrom "$ISO_FILE"
+else
+    echo "unsupported architecture: $ARCH"
     exit
 fi
-
-
-qemu-system-i386 -accel kvm -drive format=raw,file="$IMAGE",if=ide -m 512 -name "YeetOS" -serial stdio -k ch
