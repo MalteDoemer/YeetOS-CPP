@@ -1192,7 +1192,6 @@ inline constexpr bool is_copyable = is_copy_constructible<T>&& is_copy_assignabl
 template<typename T>
 inline constexpr bool is_nothrow_copyable = is_nothrow_copy_constructible<T>&& is_nothrow_copy_assignable<T>;
 
-template<typename T>
 constexpr bool is_constant_evaluated()
 {
     return __builtin_is_constant_evaluated();

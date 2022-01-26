@@ -44,6 +44,26 @@ constexpr T max(const T& a, const T& b) noexcept
 }
 
 template<IntegralType T>
+constexpr T log2(T val)
+{
+    using IntType = TypeSelect<sizeof(T), TypeList<unsigned int, unsigned long, unsigned long long>>;
+
+    IntType casted_val = static_cast<IntType>(val);
+
+    int clz_res;
+
+    if constexpr (is_same<IntType, unsigned int>) {
+        clz_res = __builtin_clz(casted_val);
+    } else if constexpr (is_same<IntType, unsigned long>) {
+        clz_res = __builtin_clzl(casted_val);
+    } else {
+        clz_res = __builtin_clzll(casted_val);
+    }
+
+    return static_cast<T>(((sizeof(IntType) * char_bits) - 1) - clz_res);
+}
+
+template<IntegralType T>
 T align_up(T val, T align)
 {
     return (1 + ((val - 1) / align)) * align;
@@ -52,7 +72,7 @@ T align_up(T val, T align)
 template<IntegralType T>
 T align_down(T val, T align)
 {
-    return  (val / align) * align;
+    return (val / align) * align;
 }
 
 template<typename T>

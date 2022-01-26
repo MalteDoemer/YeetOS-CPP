@@ -28,8 +28,6 @@
 
 #include <Types.hpp>
 
-#include <Liballoc/Alloc.hpp>
-
 #ifdef YEETOS_KERNEL
 
     #include <Kernel/Kernel.hpp>
@@ -37,18 +35,6 @@
 
 using namespace Kernel;
 
-extern "C" void abort()
-{
-    DebugLog::println("abort() has been called!");
-
-    while (1) {}
-}
-
-#else /* YEETOS_KERNEL */
-    #error "stdlib not implemented"
-#endif /* YEETOS_KERNEL */
-
-/*
 static Uint8 mem[1024 * 1024];
 static FlatPtr malloc_top = 0;
 
@@ -73,27 +59,14 @@ extern "C" void* realloc(void* ptr, size_t size)
     free(ptr);
     return malloc(size);
 }
-*/
 
-extern "C" void* malloc(size_t size)
+extern "C" void abort()
 {
-    return Alloc::allocate(size);
+    DebugLog::println("abort() has been called!");
+
+    while (1) {}
 }
 
-extern "C" void free(void* ptr)
-{
-    Alloc::deallocate(ptr);
-}
-
-extern "C" void* calloc(size_t size, size_t count)
-{
-    void* mem = malloc(size * count);
-    memset(mem, 0, size * count);
-    return mem;
-}
-
-extern "C" void* realloc(void* ptr, size_t size)
-{
-    free(ptr);
-    return malloc(size);
-}
+#else /* YEETOS_KERNEL */
+    #error "stdlib not implemented"
+#endif /* YEETOS_KERNEL */

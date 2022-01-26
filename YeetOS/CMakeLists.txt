@@ -28,6 +28,7 @@ endif()
 
 set(KERNEL_SOURCES 
     Kernel/Main.cpp
+    Kernel/Kheap.cpp
     ${KERNEL_ARCH_SOURCES}
 )
 
@@ -48,10 +49,6 @@ set(LIBC_SOURCES
 set(LIBYT_SOURCES
     LibYT/Verify.cpp
     LibYT/New.cpp
-)
-
-set(LIBALLOC_SOURCES
-    Liballoc/Alloc.cpp
 )
 
 set(CXXRT_SOURCES
