@@ -77,9 +77,9 @@ static inline V* atomic_exchange(volatile T** var, std::nullptr_t, MemoryOrder o
 
 template<typename T>
 NODISCARD static inline bool atomic_compare_exchange_strong(volatile T* var,
-                                                                T& expected,
-                                                                T desired,
-                                                                MemoryOrder order = MemoryOrder::SeqCst) noexcept
+                                                            T& expected,
+                                                            T desired,
+                                                            MemoryOrder order = MemoryOrder::SeqCst) noexcept
 {
     if (order == MemoryOrder::AcqRel || order == MemoryOrder::Release)
         return __atomic_compare_exchange_n(var,
@@ -94,9 +94,9 @@ NODISCARD static inline bool atomic_compare_exchange_strong(volatile T* var,
 
 template<typename T, typename V = remove_volatile<T>>
 NODISCARD static inline bool atomic_compare_exchange_strong(volatile T** var,
-                                                                V*& expected,
-                                                                V* desired,
-                                                                MemoryOrder order = MemoryOrder::SeqCst) noexcept
+                                                            V*& expected,
+                                                            V* desired,
+                                                            MemoryOrder order = MemoryOrder::SeqCst) noexcept
 {
     if (order == MemoryOrder::AcqRel || order == MemoryOrder::Release)
         return __atomic_compare_exchange_n(var, &expected, desired, false, MemoryOrder::Release, MemoryOrder::Acquire);
@@ -106,9 +106,9 @@ NODISCARD static inline bool atomic_compare_exchange_strong(volatile T** var,
 
 template<typename T, typename V = remove_volatile<T>>
 NODISCARD static inline bool atomic_compare_exchange_strong(volatile T** var,
-                                                                V*& expected,
-                                                                std::nullptr_t,
-                                                                MemoryOrder order = MemoryOrder::SeqCst) noexcept
+                                                            V*& expected,
+                                                            std::nullptr_t,
+                                                            MemoryOrder order = MemoryOrder::SeqCst) noexcept
 {
     if (order == MemoryOrder::AcqRel || order == MemoryOrder::Release)
         return __atomic_compare_exchange_n(const_cast<V**>(var),
@@ -201,19 +201,18 @@ public:
         return __atomic_exchange_n(&m_value, desired, order);
     }
 
-    NODISCARD bool compare_exchange_strong(T& expected,
-                                               T desired,
-                                               MemoryOrder order = DefaultMemoryOrder) volatile noexcept
+    
+    /**
+     * Compare the value of `*this` to the value of `expected`. 
+     * If they are equal `*this` is replaced with `desired` and `true` is returned.
+     * If they are not equal the contents of `*this` is written into `expected` and `false` is returned.
+     */
+    NODISCARD ALWAYS_INLINE bool compare_exchange(T& expected,
+                                                         T desired,
+                                                         MemoryOrder success_ordering,
+                                                         MemoryOrder failiure_ordering)
     {
-        if (order == MemoryOrder::AcqRel || order == MemoryOrder::Release)
-            return __atomic_compare_exchange_n(&m_value,
-                                               &expected,
-                                               desired,
-                                               false,
-                                               MemoryOrder::Release,
-                                               MemoryOrder::Acquire);
-        else
-            return __atomic_compare_exchange_n(&m_value, &expected, desired, false, order, order);
+        return __atomic_compare_exchange_n(&m_value, &expected, desired, false, success_ordering, failiure_ordering);
     }
 
     ALWAYS_INLINE T operator++() volatile noexcept { return fetch_add(1) + 1; }
@@ -304,8 +303,8 @@ public:
     }
 
     NODISCARD bool compare_exchange_strong(T*& expected,
-                                               T* desired,
-                                               MemoryOrder order = DefaultMemoryOrder) volatile noexcept
+                                           T* desired,
+                                           MemoryOrder order = DefaultMemoryOrder) volatile noexcept
     {
         if (order == MemoryOrder::AcqRel || order == MemoryOrder::Release)
             return __atomic_compare_exchange_n(&m_value,
@@ -322,9 +321,9 @@ public:
 
     T* operator++(int) volatile noexcept { return fetch_add(1); }
 
-    T* operator+=(Diff val) volatile noexcept { return fetch_add(val) + val; }
+    T* operator+=(usize val) volatile noexcept { return fetch_add(val) + val; }
 
-    T* fetch_add(Diff val, MemoryOrder order = DefaultMemoryOrder) volatile noexcept
+    T* fetch_add(usize val, MemoryOrder order = DefaultMemoryOrder) volatile noexcept
     {
         return __atomic_fetch_add(&m_value, val * sizeof(*m_value), order);
     }
@@ -333,9 +332,9 @@ public:
 
     T* operator--(int) volatile noexcept { return fetch_sub(1); }
 
-    T* operator-=(Diff val) volatile noexcept { return fetch_sub(val) - val; }
+    T* operator-=(usize val) volatile noexcept { return fetch_sub(val) - val; }
 
-    T* fetch_sub(Diff val, MemoryOrder order = DefaultMemoryOrder) volatile noexcept
+    T* fetch_sub(usize val, MemoryOrder order = DefaultMemoryOrder) volatile noexcept
     {
         return __atomic_fetch_sub(&m_value, val * sizeof(*m_value), order);
     }
@@ -361,7 +360,7 @@ public:
 } /* namespace YT */
 
 using YT::Atomic;
-using YT::MemoryOrder;
-using YT::full_memory_barrier;
 using YT::atomic_signal_fence;
 using YT::atomic_thread_fence;
+using YT::full_memory_barrier;
+using YT::MemoryOrder;

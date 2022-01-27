@@ -25,6 +25,9 @@
 
 #pragma once
 
+#undef IS_ARCH
+#define IS_ARCH(arch) (defined(__##arch##__) && __##arch##__) 
+
 #ifdef __cplusplus
 
 #undef ALWAYS_INLINE
@@ -89,6 +92,13 @@ inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
 #define NORETURN __attribute__((__noreturn__))
 
 #endif /* __cplusplus */
+
+#undef DISALLOW
+#ifdef __clang__
+    #define DISALLOW(message) __attribute__((diagnose_if(1, message, "error")))
+#else
+    #define DISALLOW(message) __attribute__((error(message)))
+#endif
 
 #undef DO_NOT_OPTIMIZE_AWAY
 #define DO_NOT_OPTIMIZE_AWAY(x) asm volatile("" : : "g"(x) : "memory");

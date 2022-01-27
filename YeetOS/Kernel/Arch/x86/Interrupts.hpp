@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Malte Dömer
+ * Copyright 2022 Malte Dömer
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -20,67 +20,58 @@
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
-#include <string.h>
+#pragma once
 
-#include <Slice.hpp>
-#include <Types.hpp>
-#include <Array.hpp>
-#include <Verify.hpp>
-#include <Ranges.hpp>
-#include <Traits.hpp>
-#include <Concepts.hpp>
 #include <Platform.hpp>
-#include <Exceptions.hpp>
 
-#include <Kernel/Kernel.hpp>
-#include <Kernel/DebugLog.hpp>
-#include <Kernel/Locking.hpp>
-
-using namespace YT;
-
-template<WriteableRange Rng, typename T>
-void assign(Rng& range, const T& value)
-{
-    for (auto& elem : range) {
-        elem = value;
-    }
-}
-
-template<Range Rng, typename T>
-bool range_same(const Rng& range, const T& value)
-{
-    for (auto& elem : range) {
-        if (elem != value)
-            return false;
-    }
-
-    return true;
-}
+#include <Kernel/Arch/x86/Asm.hpp>
 
 namespace Kernel {
 
-void kernel_main()
+namespace Interrupts {
+
+ALWAYS_INLINE void disable()
 {
-    auto arr = Array<int, 36>();
+    cli();
+}
 
-    auto slice = arr.slice();
+ALWAYS_INLINE void enable()
+{
+    sti();
+}
 
-    assign(slice, 36);
+ALWAYS_INLINE NODISCARD bool are_enabled()
+{
+    return eflags() & 0x0200; // bit 9 interrupt flag
+}
 
-    bool same = range_same(arr, 36);
+} /* namespace Interrupts */
 
-    if (same) {
-        DebugLog::println("same");
-    } else {
-        DebugLog::println("not same");
+class InterruptDisabler {
+
+public:
+    InterruptDisabler()
+    {
+        m_enabled = Interrupts::are_enabled();
+        Interrupts::disable();
     }
 
-    DebugLog::println("Done with kernel_main() ...");
+    ~InterruptDisabler()
+    {
+        if (m_enabled) {
+            Interrupts::enable();
+        } else {
+            Interrupts::disable();
+        }
+    }
 
-    while (1) {}
-}
+    bool were_enabled() { return m_enabled; }
 
-}
+private:
+    bool m_enabled;
+};
+
+} /* namespace Kernel */

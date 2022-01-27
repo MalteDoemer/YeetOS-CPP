@@ -26,92 +26,100 @@
 #pragma once
 
 #include <Types.hpp>
+#include <Platform.hpp>
 
-static inline void outb(u16 port, u8 data)
+ALWAYS_INLINE void outb(u16 port, u8 data)
 {
     asm volatile("outb %1, %0" ::"dN"(port), "a"(data));
 }
 
-static inline void outw(u16 port, u16 data)
+ALWAYS_INLINE void outw(u16 port, u16 data)
 {
     asm volatile("outw %1, %0" ::"dN"(port), "a"(data));
 }
 
-static inline u8 inb(u16 port)
+ALWAYS_INLINE u8 inb(u16 port)
 {
     u8 ret;
     asm volatile("inb %1, %0" : "=a"(ret) : "dN"(port));
     return ret;
 }
 
-static inline u16 inw(u16 port)
+ALWAYS_INLINE u16 inw(u16 port)
 {
     u16 ret;
     asm volatile("inw %1, %0" : "=a"(ret) : "dN"(port));
     return ret;
 }
 
-static inline void stosb(void* buf, u8 val, u32 count)
+ALWAYS_INLINE void stosb(void* buf, u8 val, u32 count)
 {
     asm("rep stosb" ::"a"(val), "c"(count), "D"(buf));
 }
 
-static inline void stosw(void* buf, u16 val, u32 count)
+ALWAYS_INLINE void stosw(void* buf, u16 val, u32 count)
 {
     asm("rep stosw" ::"a"(val), "c"(count), "D"(buf));
 }
 
-static inline void stosd(void* buf, u32 val, u32 count)
+ALWAYS_INLINE void stosd(void* buf, u32 val, u32 count)
 {
     asm("rep stosl" ::"a"(val), "c"(count), "D"(buf));
 }
 
-static inline void movsb(void* dest, const void* src, u32 count)
+ALWAYS_INLINE void movsb(void* dest, const void* src, u32 count)
 {
     asm("rep movsb" ::"D"(dest), "S"(src), "c"(count));
 }
 
-static inline void movsw(void* dest, const void* src, u32 count)
+ALWAYS_INLINE void movsw(void* dest, const void* src, u32 count)
 {
     asm("rep movsw" ::"D"(dest), "S"(src), "c"(count));
 }
 
-static inline void movsd(void* dest, const void* src, u32 count)
+ALWAYS_INLINE void movsd(void* dest, const void* src, u32 count)
 {
     asm("rep movsl" ::"D"(dest), "S"(src), "c"(count));
 }
 
-static inline void invlpg(FlatPtr addr)
+ALWAYS_INLINE void invlpg(FlatPtr addr)
 {
     asm("invlpg %0" ::"m"(addr));
 }
 
-static inline void set_cr3(u32 val)
+ALWAYS_INLINE void set_cr3(u32 val)
 {
     asm("movl %%eax, %%cr3" ::"a"(val));
 }
 
-static inline void cli()
+ALWAYS_INLINE void cli()
 {
     asm("cli");
 }
 
-static inline void sti()
+ALWAYS_INLINE void sti()
 {
     asm("sti");
 }
 
-static inline void cld()
+ALWAYS_INLINE void cld()
 {
     asm("cld");
 }
 
-static inline void setd()
+ALWAYS_INLINE void setd()
 {
     asm("std");
 }
 
-static inline void hlt()
+ALWAYS_INLINE void hlt()
 {
     asm("hlt");
+}
+
+ALWAYS_INLINE u32 eflags()
+{
+    u32 flags;
+    asm volatile("pushfd \n\t" "popd %%eax \n\t" : "=a"(flags));
+    return flags;
 }
