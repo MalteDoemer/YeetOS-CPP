@@ -33,8 +33,8 @@
 namespace Kernel {
 
 class SpinLock {
-    NON_COPYABLE(SpinLock);
-    NON_MOVABLE(SpinLock);
+    NOT_COPYABLE(SpinLock);
+    NOT_MOVABLE(SpinLock);
 
 public:
     SpinLock() {}
@@ -61,13 +61,15 @@ public:
         m_lock.store(false, MemoryOrder::Release);
     }
 
-    ALWAYS_INLINE NODISCARD bool is_locked() const { return m_lock.load(MemoryOrder::Relaxed) != 0; }
+    NODISCARD ALWAYS_INLINE bool is_locked() const { return m_lock.load(MemoryOrder::Relaxed) != 0; }
 
 private:
     Atomic<bool> m_lock { false };
 };
 
 class SpinLockLocker {
+
+    NOT_MOVABLE(SpinLockLocker);
 
 public:
     SpinLockLocker(SpinLock& lock) : m_lock_ref(lock), m_disabler() { m_lock_ref.lock(); }

@@ -120,6 +120,6 @@ ALWAYS_INLINE void hlt()
 ALWAYS_INLINE u32 eflags()
 {
     u32 flags;
-    asm volatile("pushfd \n\t" "popd %%eax \n\t" : "=a"(flags));
+    asm volatile("pushfd \n\t" "popl %%eax \n\t" : "=a"(flags));
     return flags;
 }

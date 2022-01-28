@@ -43,7 +43,7 @@ ALWAYS_INLINE void enable()
     sti();
 }
 
-ALWAYS_INLINE NODISCARD bool are_enabled()
+NODISCARD ALWAYS_INLINE bool are_enabled()
 {
     return eflags() & 0x0200; // bit 9 interrupt flag
 }

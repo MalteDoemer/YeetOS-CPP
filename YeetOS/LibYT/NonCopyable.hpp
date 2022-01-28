@@ -25,12 +25,12 @@
 
 #pragma once
 
-#define NON_COPYABLE(cls)                                                                                              \
+#define NOT_COPYABLE(cls)                                                                                              \
 private:                                                                                                               \
     cls(const cls&) = delete;                                                                                          \
     cls& operator=(const cls&) = delete;
 
-#define NON_MOVABLE(cls)                                                                                               \
+#define NOT_MOVABLE(cls)                                                                                               \
 private:                                                                                                               \
     cls(cls&&) = delete;                                                                                               \
     cls& operator=(cls&&) = delete;
