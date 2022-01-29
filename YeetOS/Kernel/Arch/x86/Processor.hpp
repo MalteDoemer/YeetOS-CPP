@@ -25,58 +25,14 @@
 
 #pragma once
 
-#include <Atomic.hpp>
-#include <NonCopyable.hpp>
-
-#include <Kernel/Arch/Interrupts.hpp>
-#include <Kernel/Arch/Processor.hpp>
+#include <Platform.hpp>
 
 namespace Kernel {
 
-class SpinLock {
-    NOT_COPYABLE(SpinLock);
-    NOT_MOVABLE(SpinLock);
+class Processor {
 
 public:
-    SpinLock() {}
-
-    ALWAYS_INLINE void lock()
-    {
-        bool current = false;
-
-        while (m_lock.compare_exchange(current, true, MemoryOrder::Acquire, MemoryOrder::Relaxed) == false) {
-            current = false; // reset current because compare_exchange writes to it
-
-            while (m_lock.load(MemoryOrder::Relaxed)) {
-                Processor::spin_loop();
-            }
-        }
-    }
-
-    ALWAYS_INLINE void unlock()
-    {
-        VERIFY(is_locked());
-        m_lock.store(false, MemoryOrder::Release);
-    }
-
-    NODISCARD ALWAYS_INLINE bool is_locked() const { return m_lock.load(MemoryOrder::Relaxed) != 0; }
-
-private:
-    Atomic<bool> m_lock { false };
+    ALWAYS_INLINE static void spin_loop() { asm("pause"); }
 };
 
-class SpinLockLocker {
-
-    NOT_MOVABLE(SpinLockLocker);
-
-public:
-    SpinLockLocker(SpinLock& lock) : m_lock_ref(lock), m_disabler() { m_lock_ref.lock(); }
-
-    ~SpinLockLocker() { m_lock_ref.unlock(); }
-
-private:
-    SpinLock& m_lock_ref;
-    InterruptDisabler m_disabler;
-};
-
-} /* namespace Kernel */
+}
