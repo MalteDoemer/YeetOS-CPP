@@ -32,7 +32,7 @@
 #include <pthread.h>
 
 #include <CxxAbi.hpp>
-#include <Exceptions.hpp>
+#include <Exception.hpp>
 
 #include <Libcxxrt/TypeInfo.hpp>
 #include <Libcxxrt/DwarfEh.hpp>
@@ -267,10 +267,10 @@ static __cxa_exception* realExceptionFromException(__cxa_exception* ex)
 namespace std {
 // Forward declaration of standard library terminate() function used to
 // abort execution.
-void terminate(void);
+void terminate(void) noexcept;
 
 // Forward declaration of standard library unexpected().
-void unexpected(void);
+void unexpected(void) noexcept;
 }
 
 using namespace ABI_NAMESPACE;
@@ -1323,7 +1323,7 @@ namespace pathscale {
 /**
  * Sets whether unexpected and terminate handlers should be thread-local.
  */
-void set_use_thread_local_handlers(bool flag) throw()
+void set_use_thread_local_handlers(bool flag) noexcept
 {
     thread_local_handlers = flag;
 }
@@ -1331,7 +1331,7 @@ void set_use_thread_local_handlers(bool flag) throw()
 /**
  * Sets a thread-local unexpected handler.
  */
-unexpected_handler set_unexpected(unexpected_handler f) throw()
+unexpected_handler set_unexpected(unexpected_handler f) noexcept
 {
     static __cxa_thread_info* info = thread_info();
     unexpected_handler old = info->unexpectedHandler;
@@ -1342,7 +1342,7 @@ unexpected_handler set_unexpected(unexpected_handler f) throw()
 /**
  * Sets a thread-local terminate handler.
  */
-terminate_handler set_terminate(terminate_handler f) throw()
+terminate_handler set_terminate(terminate_handler f) noexcept
 {
     static __cxa_thread_info* info = thread_info();
     terminate_handler old = info->terminateHandler;
@@ -1356,7 +1356,7 @@ namespace std {
  * Sets the function that will be called when an exception specification is
  * violated.
  */
-unexpected_handler set_unexpected(unexpected_handler f) throw()
+unexpected_handler set_unexpected(unexpected_handler f) noexcept
 {
     if (thread_local_handlers) {
         return pathscale::set_unexpected(f);
@@ -1368,7 +1368,7 @@ unexpected_handler set_unexpected(unexpected_handler f) throw()
 /**
  * Sets the function that is called to terminate the program.
  */
-terminate_handler set_terminate(terminate_handler f) throw()
+terminate_handler set_terminate(terminate_handler f) noexcept
 {
     if (thread_local_handlers) {
         return pathscale::set_terminate(f);
@@ -1381,7 +1381,7 @@ terminate_handler set_terminate(terminate_handler f) throw()
  * Terminates the program, calling a custom terminate implementation if
  * required.
  */
-void terminate()
+void terminate() noexcept
 {
     static __cxa_thread_info* info = thread_info();
     if (0 != info && 0 != info->terminateHandler) {
@@ -1398,7 +1398,7 @@ void terminate()
  * violates an exception specification).  This calls abort() unless a
  * custom handler has been set..
  */
-void unexpected()
+void unexpected() noexcept
 {
     static __cxa_thread_info* info = thread_info();
     if (0 != info && 0 != info->unexpectedHandler) {
@@ -1414,7 +1414,7 @@ void unexpected()
  * Returns whether there are any exceptions currently being thrown that
  * have not been caught.  This can occur inside a nested catch statement.
  */
-bool uncaught_exception() throw()
+bool uncaught_exception() noexcept
 {
     __cxa_thread_info* info = thread_info();
     return info->globals.uncaughtExceptions != 0;
@@ -1424,7 +1424,7 @@ bool uncaught_exception() throw()
  * Returns the number of exceptions currently being thrown that have not
  * been caught.  This can occur inside a nested catch statement.
  */
-int uncaught_exceptions() throw()
+int uncaught_exceptions() noexcept
 {
     __cxa_thread_info* info = thread_info();
     return info->globals.uncaughtExceptions;
@@ -1433,7 +1433,7 @@ int uncaught_exceptions() throw()
 /**
  * Returns the current unexpected handler.
  */
-unexpected_handler get_unexpected() throw()
+unexpected_handler get_unexpected() noexcept
 {
     __cxa_thread_info* info = thread_info();
     if (info->unexpectedHandler) {
@@ -1445,7 +1445,7 @@ unexpected_handler get_unexpected() throw()
 /**
  * Returns the current terminate handler.
  */
-terminate_handler get_terminate() throw()
+terminate_handler get_terminate() noexcept
 {
     __cxa_thread_info* info = thread_info();
     if (info->terminateHandler) {

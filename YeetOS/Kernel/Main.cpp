@@ -33,49 +33,42 @@
 #include <Traits.hpp>
 #include <Concepts.hpp>
 #include <Platform.hpp>
-#include <Exceptions.hpp>
+#include <Exception.hpp>
+#include <ScopeGuards.hpp>
 
 #include <Kernel/Kernel.hpp>
 #include <Kernel/DebugLog.hpp>
 #include <Kernel/Locking.hpp>
 
-using namespace YT;
-
-template<WriteableRange Rng, typename T>
-void assign(Rng& range, const T& value)
-{
-    for (auto& elem : range) {
-        elem = value;
-    }
-}
-
-template<Range Rng, typename T>
-bool range_same(const Rng& range, const T& value)
-{
-    for (auto& elem : range) {
-        if (elem != value)
-            return false;
-    }
-
-    return true;
-}
-
 namespace Kernel {
+
+
+
+void test(bool x)
+{
+    SCOPE_EXIT { DebugLog::println("Scope exit!"); }; 
+
+    SCOPE_FAIL { DebugLog::println("Scope fail!"); };
+
+    SCOPE_SUCCESS { DebugLog::println("Scope success!"); };
+
+    if (x) {
+        throw Exception();
+    }
+}
 
 void kernel_main()
 {
-    auto arr = Array<int, 36>();
 
-    auto slice = arr.slice();
+    try {
+        DebugLog::println("test(false):");
+        test(false);
 
-    assign(slice, 36);
-
-    bool same = range_same(arr, 36);
-
-    if (same) {
-        DebugLog::println("same");
-    } else {
-        DebugLog::println("not same");
+        DebugLog::println("test(true):");
+        test(true);
+    } catch (const Exception& e) {
+        DebugLog::println(e.what());
+        throw;
     }
 
     DebugLog::println("Done with kernel_main() ...");

@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <CxxAbi.hpp>
+
 namespace YT {
 
 /**
@@ -44,4 +46,75 @@ public:
 
 } /* namespace YT */
 
+namespace std {
+
+using abi::terminate_handler;
+using abi::unexpected_handler;
+
+/**
+ * Sets the function that will be called when an exception specification is
+ * violated.
+ */
+unexpected_handler set_unexpected(unexpected_handler f) noexcept;
+
+/**
+ * Sets the function that is called to terminate the program.
+ */
+terminate_handler set_terminate(terminate_handler f) noexcept;
+
+/**
+ * Returns the current unexpected handler.
+ */
+unexpected_handler get_unexpected() noexcept;
+
+/**
+ * Returns the current terminate handler.
+ */
+terminate_handler get_terminate() noexcept;
+
+/**
+ * Terminates the program, calling a custom terminate implementation if
+ * required.
+ */
+void terminate() noexcept;
+
+/**
+ * Called when an unexpected exception is encountered (i.e. an exception
+ * violates an exception specification).  This calls abort() unless a
+ * custom handler has been set..
+ */
+void unexpected() noexcept;
+
+/**
+ * Returns whether there are any exceptions currently being thrown that
+ * have not been caught.  This can occur inside a nested catch statement.
+ */
+bool uncaught_exception() noexcept;
+
+/**
+ * Returns the number of exceptions currently being thrown that have not
+ * been caught.  This can occur inside a nested catch statement.
+ */
+int uncaught_exceptions() noexcept;
+
+} /* namespace std */
+
+namespace YT {
+
+using TerminateHandler = abi::terminate_handler;
+
+using std::get_terminate;
+using std::set_terminate;
+using std::terminate;
+using std::uncaught_exception;
+using std::uncaught_exceptions;
+
+} /* namespace YT */
+
 using YT::Exception;
+using YT::get_terminate;
+using YT::set_terminate;
+using YT::terminate;
+using YT::TerminateHandler;
+using YT::uncaught_exception;
+using YT::uncaught_exceptions;

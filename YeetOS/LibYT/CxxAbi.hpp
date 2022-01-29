@@ -23,7 +23,7 @@
 #pragma once
 
 /*
- * The CxxAbi.h header provides a set of public definitions for types and
+ * The CxxAbi.hpp header provides a set of public definitions for types and
  * functions defined by the Itanium C++ ABI specification.  For reference, see
  * the ABI specification here:
  *

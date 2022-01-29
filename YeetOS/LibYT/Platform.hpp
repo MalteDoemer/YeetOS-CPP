@@ -100,5 +100,10 @@ inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
     #define DISALLOW(message) __attribute__((error(message)))
 #endif
 
+#define CONCAT_IMPL(s1, s2) s1##s2
+#define CONCAT(s1, s2) CONCAT_IMPL(s1, s2)
+
+#define ANON_VAR(str) CONCAT(str, __LINE__)
+
 #undef DO_NOT_OPTIMIZE_AWAY
 #define DO_NOT_OPTIMIZE_AWAY(x) asm volatile("" : : "g"(x) : "memory");
