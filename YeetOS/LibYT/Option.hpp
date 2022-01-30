@@ -39,7 +39,7 @@ class NODISCARD Option {
 
 public:
     /**
-     * Construcst an empty Option.
+     * Constructs an empty Option.
      */
     ALWAYS_INLINE constexpr Option() = default;
 
