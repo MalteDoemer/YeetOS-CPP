@@ -28,6 +28,7 @@
 #include <Slice.hpp>
 #include <Types.hpp>
 #include <Array.hpp>
+#include <Option.hpp>
 #include <Verify.hpp>
 #include <Ranges.hpp>
 #include <Traits.hpp>
@@ -42,11 +43,9 @@
 
 namespace Kernel {
 
-
-
 void test(bool x)
 {
-    SCOPE_EXIT { DebugLog::println("Scope exit!"); }; 
+    SCOPE_EXIT { DebugLog::println("Scope exit!"); };
 
     SCOPE_FAIL { DebugLog::println("Scope fail!"); };
 
@@ -57,19 +56,18 @@ void test(bool x)
     }
 }
 
-void kernel_main()
+Option<int> func(bool b)
 {
 
-    try {
-        DebugLog::println("test(false):");
-        test(false);
-
-        DebugLog::println("test(true):");
-        test(true);
-    } catch (const Exception& e) {
-        DebugLog::println(e.what());
-        throw;
+    if (b) {
+        return 36;
+    } else {
+        return {};
     }
+}
+
+void kernel_main()
+{
 
     DebugLog::println("Done with kernel_main() ...");
 
