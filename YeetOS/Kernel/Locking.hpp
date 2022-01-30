@@ -66,7 +66,7 @@ private:
 };
 
 class SpinLockLocker {
-
+    NOT_COPYABLE(SpinLockLocker);
     NOT_MOVABLE(SpinLockLocker);
 
 public:
