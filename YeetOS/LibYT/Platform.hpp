@@ -57,6 +57,16 @@
 #undef NORETURN
 #define NORETURN [[__noreturn__]]
 
+#define NOT_COPYABLE(cls)                                                                                              \
+private:                                                                                                               \
+    cls(const cls&) = delete;                                                                                          \
+    cls& operator=(const cls&) = delete;
+
+#define NOT_MOVABLE(cls)                                                                                               \
+private:                                                                                                               \
+    cls(cls&&) = delete;                                                                                               \
+    cls& operator=(cls&&) = delete;
+
 inline constexpr bool is_little_endian = __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__;
 inline constexpr bool is_big_endian = __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__;
 

@@ -26,7 +26,7 @@
 #pragma once
 
 #include <Atomic.hpp>
-#include <NotCopyable.hpp>
+#include <Platform.hpp>
 
 #include <Kernel/Arch/Interrupts.hpp>
 #include <Kernel/Arch/Processor.hpp>

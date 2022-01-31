@@ -27,7 +27,6 @@
 
 #include <Utility.hpp>
 #include <Platform.hpp>
-#include <NotCopyable.hpp>
 
 namespace YT::Detail {
 
