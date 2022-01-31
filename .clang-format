@@ -7,7 +7,6 @@ AccessModifierOffset: -4
 SortIncludes: false
 
 ColumnLimit: 120
-IndentPPDirectives: BeforeHash
 
 AlwaysBreakTemplateDeclarations: Yes
 
@@ -30,9 +29,7 @@ BreakConstructorInitializers: AfterColon
 AllowAllConstructorInitializersOnNextLine: true
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 
-BreakBeforeBraces: Custom
-BraceWrapping:
-    AfterFunction: true
+BreakBeforeBraces: Attach
 
 SpaceInEmptyBlock: false
-AllowShortFunctionsOnASingleLine: Inline
+AllowShortFunctionsOnASingleLine: None

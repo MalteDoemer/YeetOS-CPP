@@ -75,11 +75,15 @@ public:
     /**
      * Returns true if this is some pointer type, false otherwise.
      */
-    virtual bool __is_pointer_p() const { return false; }
+    virtual bool __is_pointer_p() const {
+        return false;
+    }
     /**
      * Returns true if this is some function type, false otherwise.
      */
-    virtual bool __is_function_p() const { return false; }
+    virtual bool __is_function_p() const {
+        return false;
+    }
     /**
      * Catch function.  Allows external libraries to implement
      * their own basic types.  This is used, for example, in the
@@ -98,8 +102,7 @@ public:
      * upcast is not possible, it returns false and does not adjust
      * the pointer.
      */
-    virtual bool __do_upcast(const ABI_NAMESPACE::__class_type_info* target, void** thrown_object) const
-    {
+    virtual bool __do_upcast(const ABI_NAMESPACE::__class_type_info* target, void** thrown_object) const {
         return false;
     }
 };
@@ -124,7 +127,9 @@ struct __array_type_info : public std::type_info {
  */
 struct __function_type_info : public std::type_info {
     virtual ~__function_type_info();
-    virtual bool __is_function_p() const { return true; }
+    virtual bool __is_function_p() const {
+        return true;
+    }
 };
 /**
  * Type info for enums.
@@ -142,7 +147,9 @@ struct __class_type_info : public std::type_info {
      * Function implementing dynamic casts.
      */
     virtual void* cast_to(void* obj, const struct __class_type_info* other) const;
-    virtual bool __do_upcast(const __class_type_info* target, void** thrown_object) const { return this == target; }
+    virtual bool __do_upcast(const __class_type_info* target, void** thrown_object) const {
+        return this == target;
+    }
 };
 
 /**
@@ -186,19 +193,27 @@ public:
     /**
      * Returns the offset of the base class.
      */
-    long offset() const { return __offset_flags >> __offset_shift; }
+    long offset() const {
+        return __offset_flags >> __offset_shift;
+    }
     /**
      * Returns the flags.
      */
-    long flags() const { return __offset_flags & ((1 << __offset_shift) - 1); }
+    long flags() const {
+        return __offset_flags & ((1 << __offset_shift) - 1);
+    }
     /**
      * Returns whether this is a public base class.
      */
-    bool isPublic() const { return flags() & __public_mask; }
+    bool isPublic() const {
+        return flags() & __public_mask;
+    }
     /**
      * Returns whether this is a virtual base class.
      */
-    bool isVirtual() const { return flags() & __virtual_mask; }
+    bool isVirtual() const {
+        return flags() & __virtual_mask;
+    }
 };
 
 /**
@@ -266,7 +281,9 @@ struct __pbase_type_info : public std::type_info {
  */
 struct __pointer_type_info : public __pbase_type_info {
     virtual ~__pointer_type_info();
-    virtual bool __is_pointer_p() const { return true; }
+    virtual bool __is_pointer_p() const {
+        return true;
+    }
 };
 
 /**

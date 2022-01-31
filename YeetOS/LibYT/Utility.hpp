@@ -32,20 +32,17 @@
 namespace YT {
 
 template<typename T>
-constexpr T min(const T& a, const T& b) noexcept
-{
+constexpr T min(const T& a, const T& b) noexcept {
     return b < a ? b : a;
 }
 
 template<typename T>
-constexpr T max(const T& a, const T& b) noexcept
-{
+constexpr T max(const T& a, const T& b) noexcept {
     return a < b ? b : a;
 }
 
 template<IntegralType T>
-constexpr T log2(T val)
-{
+constexpr T log2(T val) {
     using IntType = TypeSelect<sizeof(T), TypeList<unsigned int, unsigned long, unsigned long long>>;
 
     IntType casted_val = static_cast<IntType>(val);
@@ -64,39 +61,33 @@ constexpr T log2(T val)
 }
 
 template<IntegralType T>
-T align_up(T val, T align)
-{
+T align_up(T val, T align) {
     return (1 + ((val - 1) / align)) * align;
 }
 
 template<IntegralType T>
-T align_down(T val, T align)
-{
+T align_down(T val, T align) {
     return (val / align) * align;
 }
 
 template<typename T>
-constexpr remove_reference<T>&& move(T&& t) noexcept
-{
+constexpr remove_reference<T>&& move(T&& t) noexcept {
     return static_cast<remove_reference<T>&&>(t);
 }
 
 template<typename T>
-constexpr T&& forward(remove_reference<T>& t) noexcept
-{
+constexpr T&& forward(remove_reference<T>& t) noexcept {
     return static_cast<T&&>(t);
 }
 
 template<typename T>
-constexpr T&& forward(remove_reference<T>&& t) noexcept
-{
+constexpr T&& forward(remove_reference<T>&& t) noexcept {
     static_assert(!is_lvalue_reference<T>, "Can't forward an rvalue as an lvalue.");
     return static_cast<T&&>(t);
 }
 
 template<Movable T>
-constexpr void swap(T& a, T& b) noexcept(is_nothrow_movable<T>)
-{
+constexpr void swap(T& a, T& b) noexcept(is_nothrow_movable<T>) {
     T temp = move(a);
     a = move(b);
     b = move(temp);
@@ -104,8 +95,8 @@ constexpr void swap(T& a, T& b) noexcept(is_nothrow_movable<T>)
 
 template<typename T, typename U = T>
 requires is_move_constructible<T> && is_assignable<T&, U&&>
-constexpr T exchange(T& obj, U&& new_value) noexcept(is_nothrow_move_constructible<T>&& is_nothrow_assignable<T&, U&&>)
-{
+constexpr T exchange(T& obj,
+                     U&& new_value) noexcept(is_nothrow_move_constructible<T>&& is_nothrow_assignable<T&, U&&>) {
     T old_value = move(obj);
     obj = forward<U>(new_value);
     return old_value;
@@ -113,8 +104,7 @@ constexpr T exchange(T& obj, U&& new_value) noexcept(is_nothrow_move_constructib
 
 template<typename To, typename From>
 requires is_trivially_copyable<To> && is_trivially_copyable<From>
-constexpr To bit_cast(const From& from)
-{
+constexpr To bit_cast(const From& from) {
     static_assert(sizeof(To) == sizeof(From));
 
     To res;

@@ -35,25 +35,25 @@ NORETURN void assert_fail(const char* expr, const char* file, int line, const ch
 
 __END_DECLS
 
-    #ifdef __cplusplus
-        #define assert(expr)                                                                                           \
-            do {                                                                                                       \
-                if (!(expr)) [[unlikely]]                                                                              \
-                    assert_fail(#expr, __FILE__, __LINE__, __func__);                                                  \
-            } while (0)
-    #else
-        #define assert(expr)                                                                                           \
-            do {                                                                                                       \
-                if (__builtin_expect(expr, 0))                                                                         \
-                    assert_fail(#expr, __FILE__, __LINE__, __func__);                                                  \
-            } while (0)
-    #endif
+#ifdef __cplusplus
+#define assert(expr)                                                                                                   \
+    do {                                                                                                               \
+        if (!(expr)) [[unlikely]]                                                                                      \
+            assert_fail(#expr, __FILE__, __LINE__, __func__);                                                          \
+    } while (0)
+#else
+#define assert(expr)                                                                                                   \
+    do {                                                                                                               \
+        if (__builtin_expect(expr, 0))                                                                                 \
+            assert_fail(#expr, __FILE__, __LINE__, __func__);                                                          \
+    } while (0)
+#endif
 
 #else
-    #ifdef __cplusplus
-        #define assert(x) static_cast<void>(0)
-    #else
-        #define assert(x) (void)(0)
-    #endif
+#ifdef __cplusplus
+#define assert(x) static_cast<void>(0)
+#else
+#define assert(x) (void)(0)
+#endif
 
 #endif

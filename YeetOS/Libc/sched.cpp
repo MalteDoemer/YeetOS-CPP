@@ -26,8 +26,7 @@
 #include <sched.h>
 
 #ifdef YEETOS_KERNEL
-extern "C" int sched_yield()
-{
+extern "C" int sched_yield() {
     return 0;
 }
 #else /* YEETOS_KERNEL */

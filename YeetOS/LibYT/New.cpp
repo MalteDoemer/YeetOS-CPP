@@ -27,44 +27,35 @@
 
 #include <New.hpp>
 
-
-void* operator new(size_t size)
-{
+void* operator new(size_t size) {
     void* mem = malloc(size);
     return mem;
 }
 
-void* operator new[](size_t size)
-{
+void* operator new[](size_t size) {
     return ::operator new(size);
 }
 
-void* operator new(size_t size, nothrow_t) noexcept
-{
+void* operator new(size_t size, nothrow_t) noexcept {
     return malloc(size);
 }
 
-void* operator new[](size_t size, nothrow_t) noexcept
-{
+void* operator new[](size_t size, nothrow_t) noexcept {
     return ::operator new(size, nothrow_t());
 }
 
-void operator delete(void* ptr) noexcept
-{
+void operator delete(void* ptr) noexcept {
     free(ptr);
 }
 
-void operator delete[](void* ptr) noexcept
-{
+void operator delete[](void* ptr) noexcept {
     free(ptr);
 }
 
-void operator delete(void* ptr, size_t size) noexcept
-{
+void operator delete(void* ptr, size_t size) noexcept {
     free(ptr);
 }
 
-void operator delete[](void* ptr, size_t size) noexcept
-{
+void operator delete[](void* ptr, size_t size) noexcept {
     free(ptr);
 }

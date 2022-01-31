@@ -95,9 +95,9 @@ extern unsigned long _Unwind_GetRegionStart(struct _Unwind_Context*);
    if the callback returns any value other than _URC_NO_REASON. */
 typedef _Unwind_Reason_Code (*_Unwind_Trace_Fn)(struct _Unwind_Context*, void*);
 
-    /* See http://gcc.gnu.org/ml/gcc-patches/2001-09/msg00082.html for why
-       _UA_END_OF_STACK exists.  */
-    #define _UA_END_OF_STACK 16
+/* See http://gcc.gnu.org/ml/gcc-patches/2001-09/msg00082.html for why
+   _UA_END_OF_STACK exists.  */
+#define _UA_END_OF_STACK 16
 
 /* If the unwind was initiated due to a forced unwind, resume that
    operation, else re-raise the exception.  This is used by
@@ -150,8 +150,7 @@ extern void* _Unwind_FindEnclosingFunction(void*);
                              _Unwind_Action actions,                                                                   \
                              uint64_t exceptionClass,                                                                  \
                              struct _Unwind_Exception* exceptionObject,                                                \
-                             struct _Unwind_Context* context)                                                          \
-    {
+                             struct _Unwind_Context* context) {
 
 #define CALL_PERSONALITY_FUNCTION(name) name(version, actions, exceptionClass, exceptionObject, context)
 

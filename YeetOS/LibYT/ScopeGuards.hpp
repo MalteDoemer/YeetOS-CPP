@@ -36,28 +36,34 @@ class ScopeExitHelper {
         NOT_COPYABLE(ScopeExitCaller);
 
     public:
-        ScopeExitCaller(Func&& func) noexcept : m_func(move(func)) {}
+        ScopeExitCaller(Func&& func) noexcept : m_func(move(func)) {
+        }
 
-        ScopeExitCaller(ScopeExitCaller&& other) noexcept : m_func(move(other.m_func)) {}
+        ScopeExitCaller(ScopeExitCaller&& other) noexcept : m_func(move(other.m_func)) {
+        }
 
-        ~ScopeExitCaller() noexcept { m_func(); }
+        ~ScopeExitCaller() noexcept {
+            m_func();
+        }
 
     private:
         Func m_func;
     };
 
     template<typename Func>
-    friend ScopeExitCaller<Func> operator+(ScopeExitHelper, Func&& func) noexcept
-    {
+    friend ScopeExitCaller<Func> operator+(ScopeExitHelper, Func&& func) noexcept {
         return ScopeExitCaller<Func>(forward<Func>(func));
     }
 };
 
 class UncaughtExceptionCounter {
 public:
-    UncaughtExceptionCounter() : m_exception_count(uncaught_exceptions()) {}
+    UncaughtExceptionCounter() : m_exception_count(uncaught_exceptions()) {
+    }
 
-    bool has_new_uncaught_exception() noexcept { return uncaught_exceptions() > m_exception_count; }
+    bool has_new_uncaught_exception() noexcept {
+        return uncaught_exceptions() > m_exception_count;
+    }
 
 private:
     int uncaught_exception_count() noexcept;
@@ -71,12 +77,13 @@ class ScopeGuardForNewException {
     NOT_COPYABLE(ScopeGuardForNewException);
 
 public:
-    ScopeGuardForNewException(Func&& func) noexcept : m_func(move(func)) {}
+    ScopeGuardForNewException(Func&& func) noexcept : m_func(move(func)) {
+    }
 
-    ScopeGuardForNewException(ScopeGuardForNewException&& other) noexcept : m_func(move(other.m_func)) {}
+    ScopeGuardForNewException(ScopeGuardForNewException&& other) noexcept : m_func(move(other.m_func)) {
+    }
 
-    ~ScopeGuardForNewException() noexcept(CALL_ON_EXCEPTION)
-    {
+    ~ScopeGuardForNewException() noexcept(CALL_ON_EXCEPTION) {
         if (m_counter.has_new_uncaught_exception() == CALL_ON_EXCEPTION) {
             m_func();
         }
@@ -89,16 +96,14 @@ private:
 
 class ScopeFailHelper {
     template<typename Func>
-    friend ScopeGuardForNewException<Func, true> operator+(ScopeFailHelper, Func&& func) noexcept
-    {
+    friend ScopeGuardForNewException<Func, true> operator+(ScopeFailHelper, Func&& func) noexcept {
         return ScopeGuardForNewException<Func, true>(forward<Func>(func));
     }
 };
 
 class ScopeSuccessHelper {
     template<typename Func>
-    friend ScopeGuardForNewException<Func, false> operator+(ScopeSuccessHelper, Func&& func) noexcept
-    {
+    friend ScopeGuardForNewException<Func, false> operator+(ScopeSuccessHelper, Func&& func) noexcept {
         return ScopeGuardForNewException<Func, false>(forward<Func>(func));
     }
 };

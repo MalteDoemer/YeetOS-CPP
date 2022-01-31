@@ -38,8 +38,7 @@
  * compilers to insert code generating this exception without needing to
  * duplicate the code for throwing the exception in every call site.
  */
-extern "C" void __cxa_bad_cast()
-{
+extern "C" void __cxa_bad_cast() {
     abort();
 }
 
@@ -48,8 +47,7 @@ extern "C" void __cxa_bad_cast()
  * allow compilers to insert code generating this exception without needing to
  * duplicate the code for throwing the exception in every call site.
  */
-extern "C" void __cxa_bad_typeid()
-{
+extern "C" void __cxa_bad_typeid() {
     abort();
 }
 
@@ -59,8 +57,7 @@ extern "C" void __cxa_bad_typeid()
  * users can add a breakpoint on this function to tell if they've accidentally
  * called a pure-virtual function.
  */
-extern "C" void __cxa_pure_virtual()
-{
+extern "C" void __cxa_pure_virtual() {
     abort();
 }
 
@@ -70,7 +67,6 @@ extern "C" void __cxa_pure_virtual()
  * users can add a breakpoint on this function to tell if they've accidentally
  * called a deleted-virtual function.
  */
-extern "C" void __cxa_deleted_virtual()
-{
+extern "C" void __cxa_deleted_virtual() {
     abort();
 }

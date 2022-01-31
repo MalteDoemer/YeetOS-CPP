@@ -30,41 +30,38 @@
 
 #ifdef YEETOS_KERNEL
 
-    #include <Kernel/Kernel.hpp>
-    #include <Kernel/DebugLog.hpp>
+#include <Kernel/Kernel.hpp>
+#include <Kernel/DebugLog.hpp>
 
 static u8 mem[1024 * 1024];
 static FlatPtr malloc_top = 0;
 
-extern "C" void* malloc(size_t size)
-{
+extern "C" void* malloc(size_t size) {
     FlatPtr temp = malloc_top;
     malloc_top += size;
     return &mem[temp];
 }
 
-extern "C" void free(void* ptr) {}
+extern "C" void free(void* ptr) {
+}
 
-extern "C" void* calloc(size_t size, size_t count)
-{
+extern "C" void* calloc(size_t size, size_t count) {
     void* mem = malloc(size * count);
     memset(mem, 0, size * count);
     return mem;
 }
 
-extern "C" void* realloc(void* ptr, size_t size)
-{
+extern "C" void* realloc(void* ptr, size_t size) {
     free(ptr);
     return malloc(size);
 }
 
-extern "C" void abort()
-{
+extern "C" void abort() {
     Kernel::DebugLog::println("abort() has been called!");
 
     while (1) {}
 }
 
 #else /* YEETOS_KERNEL */
-    #error "stdlib not implemented"
+#error "stdlib not implemented"
 #endif /* YEETOS_KERNEL */

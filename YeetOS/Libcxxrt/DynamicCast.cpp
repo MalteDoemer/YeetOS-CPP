@@ -46,8 +46,7 @@ struct vtable_header {
  */
 #define ADD_TO_PTR(x, off) reinterpret_cast<__typeof__(x)>(reinterpret_cast<char*>(x) + off)
 
-bool std::type_info::__do_catch(std::type_info const* ex_type, void** exception_object, unsigned int outer) const
-{
+bool std::type_info::__do_catch(std::type_info const* ex_type, void** exception_object, unsigned int outer) const {
     const type_info* type = this;
 
     if (type == ex_type) {
@@ -59,8 +58,7 @@ bool std::type_info::__do_catch(std::type_info const* ex_type, void** exception_
     return false;
 }
 
-bool __pbase_type_info::__do_catch(std::type_info const* ex_type, void** exception_object, unsigned int outer) const
-{
+bool __pbase_type_info::__do_catch(std::type_info const* ex_type, void** exception_object, unsigned int outer) const {
     if (ex_type == this) {
         return true;
     }
@@ -94,39 +92,34 @@ bool __pbase_type_info::__do_catch(std::type_info const* ex_type, void** excepti
     return __pointee->__do_catch(ptr_type->__pointee, exception_object, outer);
 }
 
-void* __class_type_info::cast_to(void* obj, const struct __class_type_info* other) const
-{
+void* __class_type_info::cast_to(void* obj, const struct __class_type_info* other) const {
     if (this == other) {
         return obj;
     }
     return 0;
 }
 
-void* __si_class_type_info::cast_to(void* obj, const struct __class_type_info* other) const
-{
+void* __si_class_type_info::cast_to(void* obj, const struct __class_type_info* other) const {
     if (this == other) {
         return obj;
     }
     return __base_type->cast_to(obj, other);
 }
-bool __si_class_type_info::__do_upcast(const __class_type_info* target, void** thrown_object) const
-{
+bool __si_class_type_info::__do_upcast(const __class_type_info* target, void** thrown_object) const {
     if (this == target) {
         return true;
     }
     return __base_type->__do_upcast(target, thrown_object);
 }
 
-void* __vmi_class_type_info::cast_to(void* obj, const struct __class_type_info* other) const
-{
+void* __vmi_class_type_info::cast_to(void* obj, const struct __class_type_info* other) const {
     if (__do_upcast(other, &obj)) {
         return obj;
     }
     return 0;
 }
 
-bool __vmi_class_type_info::__do_upcast(const __class_type_info* target, void** thrown_object) const
-{
+bool __vmi_class_type_info::__do_upcast(const __class_type_info* target, void** thrown_object) const {
     if (this == target) {
         return true;
     }
@@ -175,8 +168,7 @@ bool __vmi_class_type_info::__do_upcast(const __class_type_info* target, void** 
 extern "C" void* __dynamic_cast(const void* sub,
                                 const __class_type_info* src,
                                 const __class_type_info* dst,
-                                ptrdiff_t src2dst_offset)
-{
+                                ptrdiff_t src2dst_offset) {
     const char* vtable_location = *static_cast<const char* const*>(sub);
     const vtable_header* header = reinterpret_cast<const vtable_header*>(vtable_location - sizeof(vtable_header));
     void* leaf = ADD_TO_PTR(const_cast<void*>(sub), header->leaf_offset);

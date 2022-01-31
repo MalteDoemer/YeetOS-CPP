@@ -26,7 +26,7 @@
 #pragma once
 
 #undef IS_ARCH
-#define IS_ARCH(arch) (defined(__##arch##__) && __##arch##__) 
+#define IS_ARCH(arch) (defined(__##arch##__) && __##arch##__)
 
 #ifdef __cplusplus
 
@@ -75,7 +75,7 @@ inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
 #else /* __cplusplus */
 
 #undef ALWAYS_INLINE
-#define ALWAYS_INLINE  __attribute__((__always_inline__)) inline
+#define ALWAYS_INLINE __attribute__((__always_inline__)) inline
 
 #undef NEVER_INLINE
 #define NEVER_INLINE __attribute__((__noinline__))
@@ -105,13 +105,13 @@ inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
 
 #undef DISALLOW
 #ifdef __clang__
-    #define DISALLOW(message) __attribute__((diagnose_if(1, message, "error")))
+#define DISALLOW(message) __attribute__((diagnose_if(1, message, "error")))
 #else
-    #define DISALLOW(message) __attribute__((error(message)))
+#define DISALLOW(message) __attribute__((error(message)))
 #endif
 
 #define CONCAT_IMPL(s1, s2) s1##s2
-#define CONCAT(s1, s2) CONCAT_IMPL(s1, s2)
+#define CONCAT(s1, s2)      CONCAT_IMPL(s1, s2)
 
 #define ANON_VAR(str) CONCAT(str, __LINE__)
 

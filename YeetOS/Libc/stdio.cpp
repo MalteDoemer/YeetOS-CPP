@@ -29,18 +29,16 @@
 
 #include <Kernel/Kernel.hpp>
 
-int printf(const char* __restrict fmt, ...)
-{
+int printf(const char* __restrict fmt, ...) {
     // TODO: implement printf
     return 0;
 }
 
-int fprintf(FILE* __restrict stream, const char* __restrict fmt, ...)
-{
+int fprintf(FILE* __restrict stream, const char* __restrict fmt, ...) {
     // TODO: implement fprintf
     return 0;
 }
 
 #else /* YEETOS_KERNEL */
-    #error "stdio not implemented"
+#error "stdio not implemented"
 #endif /* YEETOS_KERNEL */

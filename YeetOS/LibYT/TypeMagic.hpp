@@ -34,8 +34,12 @@ template<typename T, T val>
 struct IntegralConstant {
     using ValueType = T;
     static constexpr T value = val;
-    constexpr operator T() const noexcept { return value; }
-    constexpr T operator()() const noexcept { return value; }
+    constexpr operator T() const noexcept {
+        return value;
+    }
+    constexpr T operator()() const noexcept {
+        return value;
+    }
 };
 
 /// declval
@@ -44,16 +48,13 @@ auto declval() -> T&&;
 
 /// BoolConstant
 template<bool b>
-struct BoolConstant : public IntegralConstant<bool, b> {
-};
+struct BoolConstant : public IntegralConstant<bool, b> {};
 
 /// TrueType
-struct TrueType : public BoolConstant<true> {
-};
+struct TrueType : public BoolConstant<true> {};
 
 /// FalseType
-struct FalseType : public BoolConstant<false> {
-};
+struct FalseType : public BoolConstant<false> {};
 
 namespace Detail {
 
@@ -65,8 +66,7 @@ struct Conditional;
 
 /// TypeList
 template<typename...>
-struct TypeList {
-};
+struct TypeList {};
 
 /// TypeList
 template<typename T, typename... U>
@@ -86,8 +86,7 @@ struct TypeSelect<s, TypeList<UInt, UInts...>, true> {
 
 /// TypeSelect
 template<usize s, typename UInt, typename... UInts>
-struct TypeSelect<s, TypeList<UInt, UInts...>, false> : TypeSelect<s, TypeList<UInts...>> {
-};
+struct TypeSelect<s, TypeList<UInt, UInts...>, false> : TypeSelect<s, TypeList<UInts...>> {};
 
 /// LogicalOr
 template<bool...>
@@ -95,23 +94,19 @@ struct LogicalOr;
 
 /// LogicalOr
 template<>
-struct LogicalOr<> : public FalseType {
-};
+struct LogicalOr<> : public FalseType {};
 
 /// LogicalOr
 template<bool B1>
-struct LogicalOr<B1> : public BoolConstant<B1> {
-};
+struct LogicalOr<B1> : public BoolConstant<B1> {};
 
 /// LogicalOr
 template<bool B1, bool B2>
-struct LogicalOr<B1, B2> : public Conditional<B1, BoolConstant<B1>, BoolConstant<B2>>::Type {
-};
+struct LogicalOr<B1, B2> : public Conditional<B1, BoolConstant<B1>, BoolConstant<B2>>::Type {};
 
 /// LogicalOr
 template<bool B1, bool B2, bool B3, bool... Bn>
-struct LogicalOr<B1, B2, B3, Bn...> : public Conditional<B1, BoolConstant<B1>, LogicalOr<B2, B3, Bn...>>::Type {
-};
+struct LogicalOr<B1, B2, B3, Bn...> : public Conditional<B1, BoolConstant<B1>, LogicalOr<B2, B3, Bn...>>::Type {};
 
 /// LogicalAnd
 template<bool...>
@@ -119,334 +114,267 @@ struct LogicalAnd;
 
 /// LogicalAnd
 template<>
-struct LogicalAnd<> : public TrueType {
-};
+struct LogicalAnd<> : public TrueType {};
 
 /// LogicalAnd
 template<bool B1>
-struct LogicalAnd<B1> : public BoolConstant<B1> {
-};
+struct LogicalAnd<B1> : public BoolConstant<B1> {};
 
 /// LogicalAnd
 template<bool B1, bool B2>
-struct LogicalAnd<B1, B2> : public Conditional<B1, BoolConstant<B2>, BoolConstant<B1>>::Type {
-};
+struct LogicalAnd<B1, B2> : public Conditional<B1, BoolConstant<B2>, BoolConstant<B1>>::Type {};
 
 /// LogicalAnd
 template<bool B1, bool B2, bool B3, bool... Bn>
-struct LogicalAnd<B1, B2, B3, Bn...> : public Conditional<B1, LogicalAnd<B2, B3, Bn...>, BoolConstant<B1>>::Type {
-};
+struct LogicalAnd<B1, B2, B3, Bn...> : public Conditional<B1, LogicalAnd<B2, B3, Bn...>, BoolConstant<B1>>::Type {};
 
 /// LogicalNot
 template<bool B>
-struct LogicalNot : public BoolConstant<!B> {
-};
+struct LogicalNot : public BoolConstant<!B> {};
 
 /// DependantFalse
 template<typename T>
-struct DependantFalse : BoolConstant<false> {
-};
+struct DependantFalse : BoolConstant<false> {};
 
 /// IsVoid
 template<typename T>
-struct IsVoid : public BoolConstant<__is_void(T)> {
-};
+struct IsVoid : public BoolConstant<__is_void(T)> {};
 
 template<typename>
-struct IsNullPointerHelper : public FalseType {
-};
+struct IsNullPointerHelper : public FalseType {};
 
 template<>
-struct IsNullPointerHelper<decltype(nullptr)> : public TrueType {
-};
+struct IsNullPointerHelper<decltype(nullptr)> : public TrueType {};
 
 /// IsNullPointer
 template<typename T>
-struct IsNullPointer : public IsNullPointerHelper<typename RemoveCV<T>::Type> {
-};
+struct IsNullPointer : public IsNullPointerHelper<typename RemoveCV<T>::Type> {};
 
 /// IsIntegral
 template<typename T>
-struct IsIntegral : public BoolConstant<__is_integral(T)> {
-};
+struct IsIntegral : public BoolConstant<__is_integral(T)> {};
 
 /// IsFloatingPoint
 template<typename T>
-struct IsFloatingPoint : public BoolConstant<__is_floating_point(T)> {
-};
+struct IsFloatingPoint : public BoolConstant<__is_floating_point(T)> {};
 
 /// IsArray
 template<typename T>
-struct IsArray : public BoolConstant<__is_array(T)> {
-};
+struct IsArray : public BoolConstant<__is_array(T)> {};
 
 /// IsEnum
 template<typename T>
-struct IsEnum : public BoolConstant<__is_enum(T)> {
-};
+struct IsEnum : public BoolConstant<__is_enum(T)> {};
 
 /// IsUnion
 template<typename T>
-struct IsUnion : public BoolConstant<__is_union(T)> {
-};
+struct IsUnion : public BoolConstant<__is_union(T)> {};
 
 /// IsClass
 template<typename T>
-struct IsClass : public BoolConstant<__is_class(T)> {
-};
+struct IsClass : public BoolConstant<__is_class(T)> {};
 
 /// IsFunction
 template<typename T>
-struct IsFunction : public BoolConstant<__is_function(T)> {
-};
+struct IsFunction : public BoolConstant<__is_function(T)> {};
 
 /// IsPointer
 template<typename T>
-struct IsPointer : public BoolConstant<__is_pointer(T)> {
-};
+struct IsPointer : public BoolConstant<__is_pointer(T)> {};
 
 /// IsLvalueReference
 template<typename T>
-struct IsLvalueReference : public BoolConstant<__is_lvalue_reference(T)> {
-};
+struct IsLvalueReference : public BoolConstant<__is_lvalue_reference(T)> {};
 
 /// IsRvalueReference
 template<typename T>
-struct IsRvalueReference : public BoolConstant<__is_lvalue_reference(T)> {
-};
+struct IsRvalueReference : public BoolConstant<__is_lvalue_reference(T)> {};
 
 /// IsMemberObjectPointer
 template<typename T>
-struct IsMemberObjectPointer : public BoolConstant<__is_member_object_pointer(T)> {
-};
+struct IsMemberObjectPointer : public BoolConstant<__is_member_object_pointer(T)> {};
 
 /// IsMemberFunctionPointer
 template<typename T>
-struct IsMemberFunctionPointer : public BoolConstant<__is_member_function_pointer(T)> {
-};
+struct IsMemberFunctionPointer : public BoolConstant<__is_member_function_pointer(T)> {};
 
 /// IsFundamental
 template<typename T>
-struct IsFundamental : public BoolConstant<__is_fundamental(T)> {
-};
+struct IsFundamental : public BoolConstant<__is_fundamental(T)> {};
 
 /// IsArithmetic
 template<typename T>
-struct IsArithmetic : public BoolConstant<__is_arithmetic(T)> {
-};
+struct IsArithmetic : public BoolConstant<__is_arithmetic(T)> {};
 
 /// IsScalar
 template<typename T>
-struct IsScalar : public BoolConstant<__is_scalar(T)> {
-};
+struct IsScalar : public BoolConstant<__is_scalar(T)> {};
 
 /// IsObject
 template<typename T>
-struct IsObject : public BoolConstant<__is_object(T)> {
-};
+struct IsObject : public BoolConstant<__is_object(T)> {};
 
 /// IsCompound
 template<typename T>
-struct IsCompound : public BoolConstant<__is_compound(T)> {
-};
+struct IsCompound : public BoolConstant<__is_compound(T)> {};
 
 /// IsReference
 template<typename T>
-struct IsReference : public BoolConstant<__is_reference(T)> {
-};
+struct IsReference : public BoolConstant<__is_reference(T)> {};
 
 /// IsMemberPointer
 template<typename T>
-struct IsMemberPointer : public BoolConstant<__is_member_pointer(T)> {
-};
+struct IsMemberPointer : public BoolConstant<__is_member_pointer(T)> {};
 
 /// IsConst
 template<typename T>
-struct IsConst : public BoolConstant<__is_const(T)> {
-};
+struct IsConst : public BoolConstant<__is_const(T)> {};
 
 /// IsVolatile
 template<typename T>
-struct IsVolatile : public BoolConstant<__is_volatile(T)> {
-};
+struct IsVolatile : public BoolConstant<__is_volatile(T)> {};
 
 /// IsTrivial
 template<typename T>
-struct IsTrivial : public BoolConstant<__is_trivial(T)> {
-};
+struct IsTrivial : public BoolConstant<__is_trivial(T)> {};
 
 /// IsTriviallyCopyable
 template<typename T>
-struct IsTriviallyCopyable : public BoolConstant<__is_trivially_copyable(T)> {
-};
+struct IsTriviallyCopyable : public BoolConstant<__is_trivially_copyable(T)> {};
 
 /// IsStandardLayout
 template<typename T>
-struct IsStandardLayout : public BoolConstant<__is_standard_layout(T)> {
-};
+struct IsStandardLayout : public BoolConstant<__is_standard_layout(T)> {};
 
 /// HasUniqueObjectRepresentations
 template<typename T>
-struct HasUniqueObjectRepresentations : public BoolConstant<__has_unique_object_representations(T)> {
-};
+struct HasUniqueObjectRepresentations : public BoolConstant<__has_unique_object_representations(T)> {};
 
 /// IsEmpty
 template<typename T>
-struct IsEmpty : public BoolConstant<__is_empty(T)> {
-};
+struct IsEmpty : public BoolConstant<__is_empty(T)> {};
 
 /// IsPolymorphic
 template<typename T>
-struct IsPolymorphic : public BoolConstant<__is_polymorphic(T)> {
-};
+struct IsPolymorphic : public BoolConstant<__is_polymorphic(T)> {};
 
 /// IsAbstract
 template<typename T>
-struct IsAbstract : public BoolConstant<__is_abstract(T)> {
-};
+struct IsAbstract : public BoolConstant<__is_abstract(T)> {};
 
 /// IsFinal
 template<typename T>
-struct IsFinal : public BoolConstant<__is_final(T)> {
-};
+struct IsFinal : public BoolConstant<__is_final(T)> {};
 
 /// IsAggregate
 template<typename T>
-struct IsAggregate : public BoolConstant<__is_aggregate(T)> {
-};
+struct IsAggregate : public BoolConstant<__is_aggregate(T)> {};
 
 /// IsSigned
 template<typename T>
-struct IsSigned : public BoolConstant<__is_signed(T)> {
-};
+struct IsSigned : public BoolConstant<__is_signed(T)> {};
 
 /// IsUnsigned
 template<typename T>
-struct IsUnsigned : public BoolConstant<__is_unsigned(T)> {
-};
+struct IsUnsigned : public BoolConstant<__is_unsigned(T)> {};
 
 template<typename>
-struct IsBoundedArray : public FalseType {
-};
+struct IsBoundedArray : public FalseType {};
 
 /// IsBoundedArray
 template<typename T, usize N>
-struct IsBoundedArray<T[N]> : public TrueType {
-};
+struct IsBoundedArray<T[N]> : public TrueType {};
 
 template<typename>
-struct IsUnboundedArray : public FalseType {
-};
+struct IsUnboundedArray : public FalseType {};
 
 /// IsUnboundedArray
 template<typename T>
-struct IsUnboundedArray<T[]> : public TrueType {
-};
+struct IsUnboundedArray<T[]> : public TrueType {};
 
 /// IsConstructible
 template<typename T, typename... Args>
-struct IsConstructible : public BoolConstant<__is_constructible(T, Args...)> {
-};
+struct IsConstructible : public BoolConstant<__is_constructible(T, Args...)> {};
 
 /// IsTriviallyConstructible
 template<typename T, typename... Args>
-struct IsTriviallyConstructible : public BoolConstant<__is_trivially_constructible(T, Args...)> {
-};
+struct IsTriviallyConstructible : public BoolConstant<__is_trivially_constructible(T, Args...)> {};
 
 /// IsNothrowConstructible
 template<typename T, typename... Args>
-struct IsNothrowConstructible : public BoolConstant<__is_nothrow_constructible(T, Args...)> {
-};
+struct IsNothrowConstructible : public BoolConstant<__is_nothrow_constructible(T, Args...)> {};
 
 /// IsDefaultConstructible
 template<typename T>
-struct IsDefaultConstructible : public IsConstructible<T> {
-};
+struct IsDefaultConstructible : public IsConstructible<T> {};
 
 /// IsTriviallyDefaultConstructible
 template<typename T>
-struct IsTriviallyDefaultConstructible : public IsTriviallyConstructible<T> {
-};
+struct IsTriviallyDefaultConstructible : public IsTriviallyConstructible<T> {};
 
 /// IsNothrowDefaultConstructible
 template<typename T>
-struct IsNothrowDefaultConstructible : public IsNothrowConstructible<T> {
-};
+struct IsNothrowDefaultConstructible : public IsNothrowConstructible<T> {};
 
 /// IsCopyConstructible
 template<typename T>
-struct IsCopyConstructible : public IsConstructible<T, const T&> {
-};
+struct IsCopyConstructible : public IsConstructible<T, const T&> {};
 
 /// IsTriviallyCopyConstructible
 template<typename T>
-struct IsTriviallyCopyConstructible : public IsTriviallyConstructible<T, const T&> {
-};
+struct IsTriviallyCopyConstructible : public IsTriviallyConstructible<T, const T&> {};
 
 /// IsNothrowCopyConstructible
 template<typename T>
-struct IsNothrowCopyConstructible : public IsNothrowConstructible<T, const T&> {
-};
+struct IsNothrowCopyConstructible : public IsNothrowConstructible<T, const T&> {};
 
 /// IsMoveConstructible
 template<typename T>
-struct IsMoveConstructible : public IsConstructible<T, T&&> {
-};
+struct IsMoveConstructible : public IsConstructible<T, T&&> {};
 
 /// IsTriviallyMoveConstructible
 template<typename T>
-struct IsTriviallyMoveConstructible : public IsTriviallyConstructible<T, T&&> {
-};
+struct IsTriviallyMoveConstructible : public IsTriviallyConstructible<T, T&&> {};
 
 /// IsNothrowMoveConstructible
 template<typename T>
-struct IsNothrowMoveConstructible : public IsNothrowConstructible<T, T&&> {
-};
+struct IsNothrowMoveConstructible : public IsNothrowConstructible<T, T&&> {};
 
 /// IsAssignable
 template<typename T, typename U>
-struct IsAssignable : public BoolConstant<__is_assignable(T, U)> {
-};
+struct IsAssignable : public BoolConstant<__is_assignable(T, U)> {};
 
 /// IsTriviallyAssignable
 template<typename T, typename U>
-struct IsTriviallyAssignable : public BoolConstant<__is_trivially_assignable(T, U)> {
-};
+struct IsTriviallyAssignable : public BoolConstant<__is_trivially_assignable(T, U)> {};
 
 /// IsNothrowAssignable
 template<typename T, typename U>
-struct IsNothrowAssignable : public BoolConstant<__is_nothrow_assignable(T, U)> {
-};
+struct IsNothrowAssignable : public BoolConstant<__is_nothrow_assignable(T, U)> {};
 
 /// IsCopyAssignable
 template<typename T>
-struct IsCopyAssignable : public IsAssignable<T&, const T&> {
-};
+struct IsCopyAssignable : public IsAssignable<T&, const T&> {};
 
 /// IsTriviallyCopyAssignable
 template<typename T>
-struct IsTriviallyCopyAssignable : public IsTriviallyAssignable<T&, const T&> {
-};
+struct IsTriviallyCopyAssignable : public IsTriviallyAssignable<T&, const T&> {};
 
 /// IsNothrowCopyAssignable
 template<typename T>
-struct IsNothrowCopyAssignable : public IsNothrowAssignable<T&, const T&> {
-};
+struct IsNothrowCopyAssignable : public IsNothrowAssignable<T&, const T&> {};
 
 /// IsMoveAssignable
 template<typename T>
-struct IsMoveAssignable : public IsAssignable<T&, T&&> {
-};
+struct IsMoveAssignable : public IsAssignable<T&, T&&> {};
 
 /// IsTriviallyMoveAssignable
 template<typename T>
-struct IsTriviallyMoveAssignable : public IsTriviallyAssignable<T&, T&&> {
-};
+struct IsTriviallyMoveAssignable : public IsTriviallyAssignable<T&, T&&> {};
 
 /// IsNothrowMoveAssignable
 template<typename T>
-struct IsNothrowMoveAssignable : public IsNothrowAssignable<T&, T&&> {
-};
+struct IsNothrowMoveAssignable : public IsNothrowAssignable<T&, T&&> {};
 
 template<typename T, typename U>
 struct IsSame;
@@ -465,27 +393,22 @@ template<typename T,
 struct IsDestructibleHelper;
 
 template<typename T>
-struct IsDestructibleHelper<T, false, false>
-    : public decltype(destruct_test(declval<typename RemoveAllExtents<T>::Type>())) {
-};
+struct IsDestructibleHelper<T, false, false> :
+    public decltype(destruct_test(declval<typename RemoveAllExtents<T>::Type>())) {};
 
 template<typename T>
-struct IsDestructibleHelper<T, true, false> : public FalseType {
-};
+struct IsDestructibleHelper<T, true, false> : public FalseType {};
 
 template<typename T>
-struct IsDestructibleHelper<T, false, true> : public TrueType {
-};
+struct IsDestructibleHelper<T, false, true> : public TrueType {};
 
 /// IsDestructible
 template<typename T>
-struct IsDestructible : public IsDestructibleHelper<T> {
-};
+struct IsDestructible : public IsDestructibleHelper<T> {};
 
 /// IsTriviallyDestructible
 template<typename T>
-struct IsTriviallyDestructible : public BoolConstant<__is_trivially_destructible(T)> {
-};
+struct IsTriviallyDestructible : public BoolConstant<__is_trivially_destructible(T)> {};
 
 template<typename T>
 auto nt_destruct_test(T&&) -> BoolConstant<noexcept(declval<T&>().~T())>;
@@ -497,64 +420,52 @@ template<typename T,
 struct IsNothrowDestructibleHelper;
 
 template<typename T>
-struct IsNothrowDestructibleHelper<T, false, false>
-    : public decltype(nt_destruct_test(declval<typename RemoveAllExtents<T>::Type>())) {
-};
+struct IsNothrowDestructibleHelper<T, false, false> :
+    public decltype(nt_destruct_test(declval<typename RemoveAllExtents<T>::Type>())) {};
 
 template<typename T>
-struct IsNothrowDestructibleHelper<T, true, false> : public FalseType {
-};
+struct IsNothrowDestructibleHelper<T, true, false> : public FalseType {};
 
 template<typename T>
-struct IsNothrowDestructibleHelper<T, false, true> : public TrueType {
-};
+struct IsNothrowDestructibleHelper<T, false, true> : public TrueType {};
 
 /// IsNothrowDestructible
 template<typename T>
-struct IsNothrowDestructible : public IsNothrowDestructibleHelper<T> {
-};
+struct IsNothrowDestructible : public IsNothrowDestructibleHelper<T> {};
 
 /// HasVirtualDestructor
 template<typename T>
-struct HasVirtualDestructor : public BoolConstant<__has_virtual_destructor(T)> {
-};
+struct HasVirtualDestructor : public BoolConstant<__has_virtual_destructor(T)> {};
 
 /// AlignmentOf
 template<typename T>
-struct AlignmentOf : public IntegralConstant<usize, alignof(T)> {
-};
+struct AlignmentOf : public IntegralConstant<usize, alignof(T)> {};
 
 /// Rank
 template<typename T>
-struct Rank : public IntegralConstant<usize, __array_rank(T)> {
-};
+struct Rank : public IntegralConstant<usize, __array_rank(T)> {};
 
 /// Extent
 template<typename T, unsigned N = 0>
-struct Extent : public IntegralConstant<usize, __array_extent(T, N)> {
-};
+struct Extent : public IntegralConstant<usize, __array_extent(T, N)> {};
 
 /// IsSame
 template<typename T, typename U>
-struct IsSame : public BoolConstant<__is_same(T, U)> {
-};
+struct IsSame : public BoolConstant<__is_same(T, U)> {};
 
 /// IsBaseOf
 template<typename Base, typename Derived>
-struct IsBaseOf : public BoolConstant<__is_base_of(Base, Derived)> {
-};
+struct IsBaseOf : public BoolConstant<__is_base_of(Base, Derived)> {};
 
 /// IsConvertible
 template<typename From, typename To>
-struct IsConvertible : public BoolConstant<__is_convertible(From, To)> {
-};
+struct IsConvertible : public BoolConstant<__is_convertible(From, To)> {};
 
 #if __has_builtin(__is_layout_compatible)
 
 /// IsLayoutCompatible
 template<typename T>
-struct IsLayoutCompatible : public BoolConstant<(T)> {
-};
+struct IsLayoutCompatible : public BoolConstant<(T)> {};
 
 #endif
 
@@ -886,8 +797,7 @@ struct MakeSignedHelper<bool>;
 
 /// MakeSigned
 template<typename T>
-struct MakeSigned : public MakeSignedSelector<T> {
-};
+struct MakeSigned : public MakeSignedSelector<T> {};
 
 /// RemoveExtent
 template<typename T>
@@ -927,8 +837,7 @@ struct RemoveAllExtents<T[N]> {
 
 /// EnableIf
 template<bool B, typename T = void>
-struct EnableIf {
-};
+struct EnableIf {};
 
 /// EnableIf
 template<typename T>
@@ -960,8 +869,7 @@ struct UnderlyingType {
 
 /// IsCompileTimeKnown
 template<typename T>
-constexpr bool IsCompileTimeKnown(T value)
-{
+constexpr bool IsCompileTimeKnown(T value) {
     return __builtin_constant_p(value);
 }
 
@@ -1192,14 +1100,12 @@ inline constexpr bool is_copyable = is_copy_constructible<T>&& is_copy_assignabl
 template<typename T>
 inline constexpr bool is_nothrow_copyable = is_nothrow_copy_constructible<T>&& is_nothrow_copy_assignable<T>;
 
-constexpr bool is_constant_evaluated()
-{
+constexpr bool is_constant_evaluated() {
     return __builtin_is_constant_evaluated();
 }
 
 template<typename T>
-constexpr bool is_compile_time_known(T value)
-{
+constexpr bool is_compile_time_known(T value) {
     return __builtin_constant_p(value);
 }
 

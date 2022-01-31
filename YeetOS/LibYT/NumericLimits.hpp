@@ -37,28 +37,34 @@ struct NumericLimitsHelper;
 
 template<>
 struct NumericLimitsHelper<bool> {
-    static constexpr char min() noexcept { return false; }
-    static constexpr char max() noexcept { return true; }
+    static constexpr char min() noexcept {
+        return false;
+    }
+    static constexpr char max() noexcept {
+        return true;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<signed char> {
-    static constexpr signed char min() noexcept { return -__SCHAR_MAX__ - 1; }
-    static constexpr signed char max() noexcept { return __SCHAR_MAX__; }
+    static constexpr signed char min() noexcept {
+        return -__SCHAR_MAX__ - 1;
+    }
+    static constexpr signed char max() noexcept {
+        return __SCHAR_MAX__;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<char> {
-    static constexpr char min() noexcept
-    {
+    static constexpr char min() noexcept {
         if constexpr (is_signed<char>) {
             return -__SCHAR_MAX__ - 1;
         } else {
             return 0;
         }
     }
-    static constexpr char max() noexcept
-    {
+    static constexpr char max() noexcept {
         if constexpr (is_signed<char>) {
             return __SCHAR_MAX__;
         } else {
@@ -69,98 +75,162 @@ struct NumericLimitsHelper<char> {
 
 template<>
 struct NumericLimitsHelper<unsigned char> {
-    static constexpr unsigned char min() noexcept { return 0; }
-    static constexpr unsigned char max() noexcept { return -1; }
+    static constexpr unsigned char min() noexcept {
+        return 0;
+    }
+    static constexpr unsigned char max() noexcept {
+        return -1;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<wchar_t> {
-    static constexpr wchar_t min() noexcept { return 0; }
-    static constexpr wchar_t max() noexcept { return __WCHAR_MAX__; }
+    static constexpr wchar_t min() noexcept {
+        return 0;
+    }
+    static constexpr wchar_t max() noexcept {
+        return __WCHAR_MAX__;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<char8_t> {
-    static constexpr char8_t min() noexcept { return 0; }
-    static constexpr char8_t max() noexcept { return -1; }
+    static constexpr char8_t min() noexcept {
+        return 0;
+    }
+    static constexpr char8_t max() noexcept {
+        return -1;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<char16_t> {
-    static constexpr char16_t min() noexcept { return 0; }
-    static constexpr char16_t max() noexcept { return -1; }
+    static constexpr char16_t min() noexcept {
+        return 0;
+    }
+    static constexpr char16_t max() noexcept {
+        return -1;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<char32_t> {
-    static constexpr char32_t min() noexcept { return 0; }
-    static constexpr char32_t max() noexcept { return -1; }
+    static constexpr char32_t min() noexcept {
+        return 0;
+    }
+    static constexpr char32_t max() noexcept {
+        return -1;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<short> {
-    static constexpr short min() noexcept { return -__SHRT_MAX__ - 1; }
-    static constexpr short max() noexcept { return __SHRT_MAX__; }
+    static constexpr short min() noexcept {
+        return -__SHRT_MAX__ - 1;
+    }
+    static constexpr short max() noexcept {
+        return __SHRT_MAX__;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<unsigned short> {
-    static constexpr unsigned short min() noexcept { return 0; }
-    static constexpr unsigned short max() noexcept { return -1; }
+    static constexpr unsigned short min() noexcept {
+        return 0;
+    }
+    static constexpr unsigned short max() noexcept {
+        return -1;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<int> {
-    static constexpr int min() noexcept { return -__INT_MAX__ - 1; }
-    static constexpr int max() noexcept { return __INT_MAX__; }
+    static constexpr int min() noexcept {
+        return -__INT_MAX__ - 1;
+    }
+    static constexpr int max() noexcept {
+        return __INT_MAX__;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<unsigned int> {
-    static constexpr unsigned min() noexcept { return 0; }
-    static constexpr unsigned max() noexcept { return -1; }
+    static constexpr unsigned min() noexcept {
+        return 0;
+    }
+    static constexpr unsigned max() noexcept {
+        return -1;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<long> {
-    static constexpr long min() noexcept { return -__LONG_MAX__ - 1; }
-    static constexpr long max() noexcept { return __LONG_MAX__; }
+    static constexpr long min() noexcept {
+        return -__LONG_MAX__ - 1;
+    }
+    static constexpr long max() noexcept {
+        return __LONG_MAX__;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<unsigned long> {
-    static constexpr unsigned long min() noexcept { return 0; }
-    static constexpr unsigned long max() noexcept { return -1; }
+    static constexpr unsigned long min() noexcept {
+        return 0;
+    }
+    static constexpr unsigned long max() noexcept {
+        return -1;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<long long> {
-    static constexpr long long min() noexcept { return -__LONG_LONG_MAX__ - 1; }
-    static constexpr long long max() noexcept { return __LONG_LONG_MAX__; }
+    static constexpr long long min() noexcept {
+        return -__LONG_LONG_MAX__ - 1;
+    }
+    static constexpr long long max() noexcept {
+        return __LONG_LONG_MAX__;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<unsigned long long> {
-    static constexpr unsigned long long min() noexcept { return 0; }
-    static constexpr unsigned long long max() noexcept { return -1; }
+    static constexpr unsigned long long min() noexcept {
+        return 0;
+    }
+    static constexpr unsigned long long max() noexcept {
+        return -1;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<float> {
-    static constexpr float min() noexcept { return __FLT_MIN__; }
-    static constexpr float max() noexcept { return __FLT_MAX__; }
+    static constexpr float min() noexcept {
+        return __FLT_MIN__;
+    }
+    static constexpr float max() noexcept {
+        return __FLT_MAX__;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<double> {
-    static constexpr double min() noexcept { return __DBL_MIN__; }
-    static constexpr double max() noexcept { return __DBL_MAX__; }
+    static constexpr double min() noexcept {
+        return __DBL_MIN__;
+    }
+    static constexpr double max() noexcept {
+        return __DBL_MAX__;
+    }
 };
 
 template<>
 struct NumericLimitsHelper<long double> {
-    static constexpr long double min() noexcept { return __LDBL_MIN__; }
-    static constexpr long double max() noexcept { return __LDBL_MAX__; }
+    static constexpr long double min() noexcept {
+        return __LDBL_MIN__;
+    }
+    static constexpr long double max() noexcept {
+        return __LDBL_MAX__;
+    }
 };
 
 }
@@ -168,8 +238,12 @@ struct NumericLimitsHelper<long double> {
 template<typename T>
 struct NumericLimits : public Detail::NumericLimitsHelper<remove_cvref<T>> {
 
-    static constexpr bool is_signed() noexcept { return YT::is_signed<remove_cvref<T>>; }
-    static constexpr bool is_unsigned() noexcept { return YT::is_unsigned<remove_cvref<T>>; }
+    static constexpr bool is_signed() noexcept {
+        return YT::is_signed<remove_cvref<T>>;
+    }
+    static constexpr bool is_unsigned() noexcept {
+        return YT::is_unsigned<remove_cvref<T>>;
+    }
 };
 
 } /* namespace YT */

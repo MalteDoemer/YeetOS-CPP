@@ -25,9 +25,6 @@
 
 #pragma once
 
-namespace YT {
-
-
 using FlatPtr = __UINTPTR_TYPE__;
 
 using u8 = __UINT8_TYPE__;
@@ -47,22 +44,6 @@ using isize = __SIZE_TYPE__;
 #undef unsigned
 
 enum Byte : unsigned char {};
-
-} /* namespace YT */
-
-using YT::FlatPtr;
-using YT::usize;
-using YT::isize;
-using YT::u8;
-using YT::u16;
-using YT::u32;
-using YT::u64;
-using YT::i8;
-using YT::i16;
-using YT::i32;
-using YT::i64;
-using YT::Byte;
-
 
 namespace std {
 using nullptr_t = decltype(nullptr);

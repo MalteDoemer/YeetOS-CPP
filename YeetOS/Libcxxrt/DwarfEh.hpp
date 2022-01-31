@@ -47,11 +47,11 @@
 // that we want.  If it isn't, then we define it and undefine it to make sure
 // that it doesn't impact the rest of the program.
 #ifndef _GNU_SOURCE
-    #define _GNU_SOURCE 1
-    #include <Libcxxrt/unwind.h>
-    #undef _GNU_SOURCE
+#define _GNU_SOURCE 1
+#include <Libcxxrt/unwind.h>
+#undef _GNU_SOURCE
 #else
-    #include <Libcxxrt/unwind.h>
+#include <Libcxxrt/unwind.h>
 #endif
 
 /// Type used for pointers into DWARF data
@@ -85,8 +85,7 @@ enum dwarf_data_encoding {
  * Returns the encoding for a DWARF EH table entry.  The encoding is stored in
  * the low four of an octet.  The high four bits store the addressing mode.
  */
-static inline enum dwarf_data_encoding get_encoding(unsigned char x)
-{
+static inline enum dwarf_data_encoding get_encoding(unsigned char x) {
     return static_cast<enum dwarf_data_encoding>(x & 0xf);
 }
 
@@ -116,15 +115,13 @@ enum dwarf_data_relative {
 /**
  * Returns the addressing mode component of this encoding.
  */
-static inline enum dwarf_data_relative get_base(unsigned char x)
-{
+static inline enum dwarf_data_relative get_base(unsigned char x) {
     return static_cast<enum dwarf_data_relative>(x & 0x70);
 }
 /**
  * Returns whether an encoding represents an indirect address.
  */
-static int is_indirect(unsigned char x)
-{
+static int is_indirect(unsigned char x) {
     return ((x & DW_EH_PE_indirect) == DW_EH_PE_indirect);
 }
 
@@ -132,8 +129,7 @@ static int is_indirect(unsigned char x)
  * Returns the size of a fixed-size encoding.  This function will abort if
  * called with a value that is not a fixed-size encoding.
  */
-static inline int dwarf_size_of_fixed_size_field(unsigned char type)
-{
+static inline int dwarf_size_of_fixed_size_field(unsigned char type) {
     switch (get_encoding(type)) {
     default:
         abort();
@@ -160,8 +156,7 @@ static inline int dwarf_size_of_fixed_size_field(unsigned char type)
  * This function is not intended to be called directly.  Use read_sleb128() or
  * read_uleb128() for reading signed and unsigned versions, respectively.
  */
-static uint64_t read_leb128(dw_eh_ptr_t* data, int* b)
-{
+static uint64_t read_leb128(dw_eh_ptr_t* data, int* b) {
     uint64_t uleb = 0;
     unsigned int bit = 0;
     unsigned char digit = 0;
@@ -192,8 +187,7 @@ static uint64_t read_leb128(dw_eh_ptr_t* data, int* b)
  * pointed to by *data.  Updates *data to point to the next byte after the end
  * of the variable-length value.
  */
-static int64_t read_uleb128(dw_eh_ptr_t* data)
-{
+static int64_t read_uleb128(dw_eh_ptr_t* data) {
     int b;
     return read_leb128(data, &b);
 }
@@ -203,8 +197,7 @@ static int64_t read_uleb128(dw_eh_ptr_t* data)
  * to by *data.  Updates *data to point to the next byte after the end of the
  * variable-length value.
  */
-static int64_t read_sleb128(dw_eh_ptr_t* data)
-{
+static int64_t read_sleb128(dw_eh_ptr_t* data) {
     int bits;
     // Read as if it's signed
     uint64_t uleb = read_leb128(data, &bits);
@@ -220,8 +213,7 @@ static int64_t read_sleb128(dw_eh_ptr_t* data)
  * *data.  Updates the value of *data to point to the next byte after the end
  * of the data.
  */
-static uint64_t read_value(char encoding, dw_eh_ptr_t* data)
-{
+static uint64_t read_value(char encoding, dw_eh_ptr_t* data) {
     enum dwarf_data_encoding type = get_encoding(encoding);
     switch (type) {
         // Read fixed-length types
@@ -257,8 +249,7 @@ static uint64_t read_value(char encoding, dw_eh_ptr_t* data)
  *
  * If the encoding does not specify an indirect value, then this returns v.
  */
-static uint64_t resolve_indirect_value(_Unwind_Context* c, unsigned char encoding, int64_t v, dw_eh_ptr_t start)
-{
+static uint64_t resolve_indirect_value(_Unwind_Context* c, unsigned char encoding, int64_t v, dw_eh_ptr_t start) {
     switch (get_base(encoding)) {
     case DW_EH_PE_pcrel:
         v += reinterpret_cast<uint64_t>(start);
@@ -287,8 +278,7 @@ static uint64_t resolve_indirect_value(_Unwind_Context* c, unsigned char encodin
 /**
  * Reads an encoding and a value, updating *data to point to the next byte.
  */
-static inline void read_value_with_encoding(_Unwind_Context* context, dw_eh_ptr_t* data, uint64_t* out)
-{
+static inline void read_value_with_encoding(_Unwind_Context* context, dw_eh_ptr_t* data, uint64_t* out) {
     dw_eh_ptr_t start = *data;
     unsigned char encoding = *((*data)++);
     // If this value is omitted, skip it and don't touch the output value
@@ -332,8 +322,7 @@ struct dwarf_eh_lsda {
  * Parse the header on the language-specific data area and return a structure
  * containing the addresses and encodings of the various tables.
  */
-static inline struct dwarf_eh_lsda parse_lsda(_Unwind_Context* context, unsigned char* data)
-{
+static inline struct dwarf_eh_lsda parse_lsda(_Unwind_Context* context, unsigned char* data) {
     struct dwarf_eh_lsda lsda;
 
     lsda.region_start = reinterpret_cast<dw_eh_ptr_t>(_Unwind_GetRegionStart(context));
@@ -398,8 +387,7 @@ struct dwarf_eh_action {
  */
 static bool dwarf_eh_find_callsite(struct _Unwind_Context* context,
                                    struct dwarf_eh_lsda* lsda,
-                                   struct dwarf_eh_action* result)
-{
+                                   struct dwarf_eh_action* result) {
     result->action_record = 0;
     result->landing_pad = 0;
     // The current instruction pointer offset within the region

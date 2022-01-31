@@ -43,21 +43,25 @@
 
 namespace Kernel {
 
-void test(bool x)
-{
-    SCOPE_EXIT { DebugLog::println("Scope exit!"); };
+void test(bool x) {
+    SCOPE_EXIT {
+        DebugLog::println("Scope exit!");
+    };
 
-    SCOPE_FAIL { DebugLog::println("Scope fail!"); };
+    SCOPE_FAIL {
+        DebugLog::println("Scope fail!");
+    };
 
-    SCOPE_SUCCESS { DebugLog::println("Scope success!"); };
+    SCOPE_SUCCESS {
+        DebugLog::println("Scope success!");
+    };
 
     if (x) {
         throw Exception();
     }
 }
 
-Option<int> func(bool b)
-{
+Option<int> func(bool b) {
 
     if (b) {
         return 36;
@@ -66,8 +70,7 @@ Option<int> func(bool b)
     }
 }
 
-void kernel_main()
-{
+void kernel_main() {
 
     DebugLog::println("Done with kernel_main() ...");
 

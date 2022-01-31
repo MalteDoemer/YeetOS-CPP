@@ -82,8 +82,7 @@ template<typename T>
 using ConstValuePointer = typename UnderlyingTypeTraits<remove_cvref<T>>::ConstValuePointer;
 
 template<typename T>
-concept HasUnderlyingTypeTraits = requires
-{
+concept HasUnderlyingTypeTraits = requires {
     typename ValueType<T>;
     typename ValueReference<T>;
     typename ValuePointer<T>;

@@ -59,8 +59,7 @@ constexpr HashCode hash_code(const T& object) noexcept(noexcept(object.hash_code
 
 namespace Detail {
 
-constexpr u32 hash32(u32 key) noexcept
-{
+constexpr u32 hash32(u32 key) noexcept {
     key += ~(key << 15);
     key ^= (key >> 10);
     key += (key << 3);
@@ -70,8 +69,7 @@ constexpr u32 hash32(u32 key) noexcept
     return key;
 }
 
-constexpr u64 hash64(u64 key) noexcept
-{
+constexpr u64 hash64(u64 key) noexcept {
     key += ~(key << 15);
     key ^= (key >> 10);
     key += (key << 3);
@@ -87,8 +85,7 @@ constexpr u64 hash64(u64 key) noexcept
     return key;
 }
 
-constexpr u32 combine_hash32(u32 key1, u32 key2) noexcept
-{
+constexpr u32 combine_hash32(u32 key1, u32 key2) noexcept {
     return hash32((hash32(key1) * 209) ^ (hash32(key2 * 413)));
 }
 
@@ -98,8 +95,7 @@ constexpr u32 combine_hash32(u32 key1, u32 key2) noexcept
  * Calculates the hash code of an integer.
  */
 template<IntegralType T>
-constexpr HashCode hash_code(T key) noexcept
-{
+constexpr HashCode hash_code(T key) noexcept {
     if constexpr (sizeof(HashCode) == 4) {
 
         if constexpr (sizeof(T) <= 4) {
@@ -125,8 +121,7 @@ constexpr HashCode hash_code(T key) noexcept
  * Calculates the hash code of a pointer.
  */
 template<PointerType T>
-constexpr HashCode hash_code(T key) noexcept
-{
+constexpr HashCode hash_code(T key) noexcept {
     FlatPtr ptr = reinterpret_cast<FlatPtr>(key);
     return hash_code(ptr);
 }
@@ -135,8 +130,7 @@ constexpr HashCode hash_code(T key) noexcept
  * Calculates the hash code of a floating point number.
  */
 template<FloatingPointType T>
-constexpr HashCode hash_code(T key) noexcept
-{
+constexpr HashCode hash_code(T key) noexcept {
     using IntType = TypeSelect<sizeof(T), TypeList<u8, u16, u32, u64>>;
     IntType val = bit_cast<IntType>(key);
     return hash_code(val);
@@ -146,8 +140,7 @@ constexpr HashCode hash_code(T key) noexcept
  * Calls hash_code() on all arguments and combines them into a single HashCode.
  */
 template<typename T>
-constexpr HashCode combined_hash(T to_hash) noexcept(noexcept(hash_code(to_hash)))
-{
+constexpr HashCode combined_hash(T to_hash) noexcept(noexcept(hash_code(to_hash))) {
     return hash_code(to_hash);
 }
 

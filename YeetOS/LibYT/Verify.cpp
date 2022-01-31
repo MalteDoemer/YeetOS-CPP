@@ -30,14 +30,12 @@
 
 namespace YT {
 
-NORETURN void verify_fail(const char* expr, const char* file, int line, const char* func)
-{
+NORETURN void verify_fail(const char* expr, const char* file, int line, const char* func) {
     fprintf(stderr, "%s:%d: %s\nVERIFY() failed: %s\n", file, line, func, expr);
     abort();
 }
 
-NORETURN void verify_not_reached_fail(const char* file, int line, const char* func)
-{
+NORETURN void verify_not_reached_fail(const char* file, int line, const char* func) {
     fprintf(stderr, "%s:%d: %s\naVERIFY_NOT_REACHED() was called!\n", file, line, func);
     abort();
 }

@@ -38,10 +38,10 @@ class SpinLock {
     NOT_MOVABLE(SpinLock);
 
 public:
-    SpinLock() {}
+    SpinLock() {
+    }
 
-    ALWAYS_INLINE void lock()
-    {
+    ALWAYS_INLINE void lock() {
         bool current = false;
 
         while (m_lock.compare_exchange(current, true, MemoryOrder::Acquire, MemoryOrder::Relaxed) == false) {
@@ -53,13 +53,14 @@ public:
         }
     }
 
-    ALWAYS_INLINE void unlock()
-    {
+    ALWAYS_INLINE void unlock() {
         VERIFY(is_locked());
         m_lock.store(false, MemoryOrder::Release);
     }
 
-    NODISCARD ALWAYS_INLINE bool is_locked() const { return m_lock.load(MemoryOrder::Relaxed) != 0; }
+    NODISCARD ALWAYS_INLINE bool is_locked() const {
+        return m_lock.load(MemoryOrder::Relaxed) != 0;
+    }
 
 private:
     Atomic<bool> m_lock { false };
@@ -70,9 +71,13 @@ class SpinLockLocker {
     NOT_MOVABLE(SpinLockLocker);
 
 public:
-    SpinLockLocker(SpinLock& lock) : m_lock_ref(lock), m_disabler() { m_lock_ref.lock(); }
+    SpinLockLocker(SpinLock& lock) : m_lock_ref(lock), m_disabler() {
+        m_lock_ref.lock();
+    }
 
-    ~SpinLockLocker() { m_lock_ref.unlock(); }
+    ~SpinLockLocker() {
+        m_lock_ref.unlock();
+    }
 
 private:
     SpinLock& m_lock_ref;

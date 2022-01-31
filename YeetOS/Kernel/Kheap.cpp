@@ -45,10 +45,10 @@ public:
 
 public:
     constexpr FreeList() noexcept = default;
-    FreeList(Node* node) noexcept : m_node(node) {}
+    FreeList(Node* node) noexcept : m_node(node) {
+    }
 
-    void add_front(Node* new_node) noexcept
-    {
+    void add_front(Node* new_node) noexcept {
         if (m_node) {
             m_node->prev = new_node;
         }
@@ -59,8 +59,7 @@ public:
         m_node = new_node;
     }
 
-    Node* pop_front() noexcept
-    {
+    Node* pop_front() noexcept {
         Node* ret = m_node;
 
         if (m_node) {
@@ -70,8 +69,7 @@ public:
         return ret;
     }
 
-    void remove_from_list(Node* node)
-    {
+    void remove_from_list(Node* node) {
         VERIFY(node != nullptr);
 
         Node* prev = node->prev;
@@ -94,15 +92,17 @@ struct alignas(usize) PACKED BlockInfo {
 
     BlockInfo() noexcept = default;
 
-    BlockInfo(usize size) noexcept : used_flag(0), upper_bits(size >> 1) {}
+    BlockInfo(usize size) noexcept : used_flag(0), upper_bits(size >> 1) {
+    }
 
-    BlockInfo& operator=(usize size) noexcept
-    {
+    BlockInfo& operator=(usize size) noexcept {
         upper_bits = size >> 1;
         return *this;
     }
 
-    operator usize() const noexcept { return upper_bits << 1; }
+    operator usize() const noexcept {
+        return upper_bits << 1;
+    }
 };
 
 struct alignas(usize) PACKED HeapBlock {
@@ -124,13 +124,11 @@ private:
     constexpr static usize num_bins = 32;
 
 private:
-
     /**
      * Returns the index of the bin to size.
      * Size must be non-zero and aligned to min_align
      */
-    constexpr usize bin_index(usize size)
-    {
+    constexpr usize bin_index(usize size) {
         usize idx = log2(size) - log2(min_align);
 
         if (idx >= num_bins)
@@ -139,29 +137,28 @@ private:
         return idx;
     }
 
-    
-
 public:
-    constexpr KernelHeap() noexcept
-    {
+    constexpr KernelHeap() noexcept {
         /* Constructor should never be called, since the KernelHeap has to exsist before constructors are called. */
         if (!YT::is_constant_evaluated()) {
             VERIFY_NOT_REACHED();
         }
     }
 
-    void initialize(Slice<Byte> memory) { m_memory = memory; }
+    void initialize(Slice<Byte> memory) {
+        m_memory = memory;
+    }
 
 private:
     Array<FreeList, num_bins> m_bins {};
     Slice<Byte> m_memory {};
 };
 
-void* allocate(usize size) noexcept
-{
+void* allocate(usize size) noexcept {
     return nullptr;
 }
 
-void deallocate(void* ptr) noexcept {}
+void deallocate(void* ptr) noexcept {
+}
 
 } /* namespace Kernel::Kheap */

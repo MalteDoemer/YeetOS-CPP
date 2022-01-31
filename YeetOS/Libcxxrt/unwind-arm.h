@@ -51,10 +51,10 @@ static const _Unwind_State _US_UNWIND_FRAME_STARTING = 1;
 static const _Unwind_State _US_UNWIND_FRAME_RESUME = 2;
 static const _Unwind_State _US_ACTION_MASK = 3;
 #else // GCC fails at knowing what a constant expression is
-    #define _US_VIRTUAL_UNWIND_FRAME  0
-    #define _US_UNWIND_FRAME_STARTING 1
-    #define _US_UNWIND_FRAME_RESUME   2
-    #define _US_ACTION_MASK           3
+#define _US_VIRTUAL_UNWIND_FRAME  0
+#define _US_UNWIND_FRAME_STARTING 1
+#define _US_UNWIND_FRAME_RESUME   2
+#define _US_ACTION_MASK           3
 #endif
 
 typedef struct _Unwind_Context _Unwind_Context;
@@ -145,23 +145,19 @@ extern _Unwind_Reason_Code _Unwind_Resume_or_Rethrow(struct _Unwind_Exception*);
 #define _UA_HANDLER_FRAME 4
 #define _UA_FORCE_UNWIND  8
 
-static inline unsigned long _Unwind_GetGR(struct _Unwind_Context* context, int reg)
-{
+static inline unsigned long _Unwind_GetGR(struct _Unwind_Context* context, int reg) {
     unsigned long val;
     _Unwind_VRS_Get(context, _UVRSC_CORE, reg, _UVRSD_UINT32, &val);
     return val;
 }
-static inline void _Unwind_SetGR(struct _Unwind_Context* context, int reg, unsigned long val)
-{
+static inline void _Unwind_SetGR(struct _Unwind_Context* context, int reg, unsigned long val) {
     _Unwind_VRS_Set(context, _UVRSC_CORE, reg, _UVRSD_UINT32, &val);
 }
-static inline unsigned long _Unwind_GetIP(_Unwind_Context* context)
-{
+static inline unsigned long _Unwind_GetIP(_Unwind_Context* context) {
     // Low bit store the thumb state - discard it
     return _Unwind_GetGR(context, 15) & ~1;
 }
-static inline void _Unwind_SetIP(_Unwind_Context* context, unsigned long val)
-{
+static inline void _Unwind_SetIP(_Unwind_Context* context, unsigned long val) {
     // The lowest bit of the instruction pointer indicates whether we're in
     // thumb or ARM mode.  This is assumed to be fixed throughout a function,
     // so must be propagated when setting the program counter.
@@ -180,8 +176,7 @@ _Unwind_Reason_Code __gnu_unwind_frame(struct _Unwind_Exception*, struct _Unwind
 #define BEGIN_PERSONALITY_FUNCTION(name)                                                                               \
     _Unwind_Reason_Code name(_Unwind_State state,                                                                      \
                              struct _Unwind_Exception* exceptionObject,                                                \
-                             struct _Unwind_Context* context)                                                          \
-    {                                                                                                                  \
+                             struct _Unwind_Context* context) {                                                        \
         int version = 1;                                                                                               \
         uint64_t exceptionClass = exceptionObject->exception_class;                                                    \
         int actions;                                                                                                   \

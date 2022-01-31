@@ -46,30 +46,26 @@ public:
     template<typename U = T>
     ALWAYS_INLINE explicit(!is_convertible<U&&, T>) Option(U&& value) noexcept(noexcept(T(forward<U>(value)))) requires(
         !is_same<remove_cvref<U>, Option<T>> && is_constructible<T, U&&>) :
-        m_has_value(true)
-    {
+        m_has_value(true) {
         new (&m_storage) T(forward<U>(value));
     }
 
     ALWAYS_INLINE constexpr Option(const Option& other) noexcept(noexcept(T(other.value()))) :
-        m_has_value(other.m_has_value)
-    {
+        m_has_value(other.m_has_value) {
         if (m_has_value) {
             new (&m_storage) T(other.value());
         }
     }
 
     ALWAYS_INLINE constexpr Option(Option&& other) noexcept(noexcept(T(other.release()))) :
-        m_has_value(other.m_has_value)
-    {
+        m_has_value(other.m_has_value) {
         if (has_value()) {
             // use release here to invalidate other
             new (&m_storage) T(other.release());
         }
     }
 
-    ALWAYS_INLINE constexpr Option& operator=(const Option& other) noexcept(noexcept(T(other.value())))
-    {
+    ALWAYS_INLINE constexpr Option& operator=(const Option& other) noexcept(noexcept(T(other.value()))) {
         if (this != &other) {
             clear();
             m_has_value = other.has_value();
@@ -80,8 +76,7 @@ public:
         return *this;
     }
 
-    ALWAYS_INLINE constexpr Option& operator=(Option&& other) noexcept(noexcept(T(other.release())))
-    {
+    ALWAYS_INLINE constexpr Option& operator=(Option&& other) noexcept(noexcept(T(other.release()))) {
         if (this != &other) {
             clear();
             m_has_value = other.has_value();
@@ -92,18 +87,20 @@ public:
         return *this;
     }
 
-    NODISCARD ALWAYS_INLINE constexpr bool has_value() const noexcept { return m_has_value; }
+    NODISCARD ALWAYS_INLINE constexpr bool has_value() const noexcept {
+        return m_has_value;
+    }
 
-    ALWAYS_INLINE constexpr operator bool() const noexcept { return m_has_value; }
+    ALWAYS_INLINE constexpr operator bool() const noexcept {
+        return m_has_value;
+    }
 
-    NODISCARD ALWAYS_INLINE constexpr T& value() & noexcept
-    {
+    NODISCARD ALWAYS_INLINE constexpr T& value() & noexcept {
         VERIFY(has_value());
         return *__builtin_launder(reinterpret_cast<T*>(&m_storage));
     }
 
-    NODISCARD ALWAYS_INLINE constexpr const T& value() const& noexcept
-    {
+    NODISCARD ALWAYS_INLINE constexpr const T& value() const& noexcept {
         VERIFY(has_value());
         return *__builtin_launder(reinterpret_cast<const T*>(&m_storage));
     }
@@ -111,8 +108,7 @@ public:
     /**
      * Moves the contained value out of the Option and returns it.
      */
-    NODISCARD ALWAYS_INLINE constexpr T release() noexcept(is_nothrow_move_constructible<T>)
-    {
+    NODISCARD ALWAYS_INLINE constexpr T release() noexcept(is_nothrow_move_constructible<T>) {
         VERIFY(has_value());
         T temp = move(value());
         clear_unchecked();
@@ -120,27 +116,23 @@ public:
     }
 
     template<typename O>
-    ALWAYS_INLINE bool operator==(Option<O> const& other) const noexcept(noexcept(value() == other.value()))
-    {
+    ALWAYS_INLINE bool operator==(Option<O> const& other) const noexcept(noexcept(value() == other.value())) {
         return has_value() == other.has_value() && (!has_value() || value() == other.value());
     }
 
     template<typename O>
-    ALWAYS_INLINE bool operator==(O const& other) const noexcept(noexcept(value() == other))
-    {
+    ALWAYS_INLINE bool operator==(O const& other) const noexcept(noexcept(value() == other)) {
         return has_value() && value() == other;
     }
 
 private:
-    ALWAYS_INLINE void clear() noexcept(noexcept(clear_unchecked()))
-    {
+    ALWAYS_INLINE void clear() noexcept(noexcept(clear_unchecked())) {
         if (has_value()) {
             clear_unchecked();
         }
     }
 
-    ALWAYS_INLINE void clear_unchecked() noexcept(noexcept(value().~T()))
-    {
+    ALWAYS_INLINE void clear_unchecked() noexcept(noexcept(value().~T())) {
         value().~T();
         m_has_value = false;
     }

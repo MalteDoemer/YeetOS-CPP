@@ -31,5 +31,4 @@ namespace Kernel {
 void kernel_main();
 }
 
-namespace Kernel::Arch {
-}
+namespace Kernel::Arch {}

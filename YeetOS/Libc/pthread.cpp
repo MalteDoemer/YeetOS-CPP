@@ -33,8 +33,7 @@ int free_entry = 0;
 
 }
 
-int pthread_key_create(pthread_key_t* key, void (*)(void*))
-{
+int pthread_key_create(pthread_key_t* key, void (*)(void*)) {
     assert(free_entry < 64);
 
     *key = free_entry;
@@ -42,8 +41,7 @@ int pthread_key_create(pthread_key_t* key, void (*)(void*))
     return 0;
 }
 
-int pthread_once(pthread_once_t* control, void (*init)(void))
-{
+int pthread_once(pthread_once_t* control, void (*init)(void)) {
     if (*control == 0) {
         (*init)();
         *control = 1;
@@ -51,43 +49,36 @@ int pthread_once(pthread_once_t* control, void (*init)(void))
     return 0;
 }
 
-void* pthread_getspecific(pthread_key_t key)
-{
+void* pthread_getspecific(pthread_key_t key) {
     return thread_data_table[key];
 }
 
-int pthread_setspecific(pthread_key_t key, const void* data)
-{
+int pthread_setspecific(pthread_key_t key, const void* data) {
     thread_data_table[key] = (void*)data;
     return 0;
 }
 
-int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t*)
-{
+int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t*) {
     *mutex = 0;
     return 0;
 }
 
-int pthread_mutex_lock(pthread_mutex_t* mutex)
-{
+int pthread_mutex_lock(pthread_mutex_t* mutex) {
     assert(*mutex == 0);
     *mutex = 1;
     return 0;
 }
 
-int pthread_mutex_unlock(pthread_mutex_t* mutex)
-{
+int pthread_mutex_unlock(pthread_mutex_t* mutex) {
     assert(*mutex != 0);
     *mutex = 0;
     return 0;
 }
 
-int pthread_cond_wait(pthread_cond_t*, pthread_mutex_t*)
-{
+int pthread_cond_wait(pthread_cond_t*, pthread_mutex_t*) {
     return 0;
 }
 
-int pthread_cond_signal(pthread_cond_t*)
-{
+int pthread_cond_signal(pthread_cond_t*) {
     return 0;
 }

@@ -27,8 +27,7 @@
 
 #include <stddef.h>
 
-struct nothrow_t {
-};
+struct nothrow_t {};
 
 void* operator new(size_t size);
 void* operator new[](size_t size);
@@ -42,15 +41,15 @@ void operator delete[](void* ptr) noexcept;
 void operator delete(void* ptr, size_t size) noexcept;
 void operator delete[](void* ptr, size_t size) noexcept;
 
-inline void* operator new(size_t, void* ptr) noexcept
-{
+inline void* operator new(size_t, void* ptr) noexcept {
     return ptr;
 }
 
-inline void* operator new[](size_t, void* ptr) noexcept
-{
+inline void* operator new[](size_t, void* ptr) noexcept {
     return ptr;
 }
 
-inline void operator delete(void*, void*) noexcept {}
-inline void operator delete[](void*, void*) noexcept {}
+inline void operator delete(void*, void*) noexcept {
+}
+inline void operator delete[](void*, void*) noexcept {
+}

@@ -41,7 +41,9 @@ public:
 
     virtual ~Exception() noexcept = default;
 
-    virtual const char* what() const noexcept { return "Exception"; }
+    virtual const char* what() const noexcept {
+        return "Exception";
+    }
 };
 
 } /* namespace YT */

@@ -40,11 +40,11 @@
 // that we want.  If it isn't, then we define it and undefine it to make sure
 // that it doesn't impact the rest of the program.
 #ifndef _GNU_SOURCE
-    #define _GNU_SOURCE 1
-    #include <Libcxxrt/unwind.h>
-    #undef _GNU_SOURCE
+#define _GNU_SOURCE 1
+#include <Libcxxrt/unwind.h>
+#undef _GNU_SOURCE
 #else
-    #include <Libcxxrt/unwind.h>
+#include <Libcxxrt/unwind.h>
 #endif
 
 /**

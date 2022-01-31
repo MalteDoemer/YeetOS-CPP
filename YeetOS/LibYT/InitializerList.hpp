@@ -49,46 +49,59 @@ public:
     using ConstIterator = const T*;
 
 public:
-    constexpr initializer_list(ConstValuePointer data, usize size) noexcept : m_data(data), m_size(size) {}
-    constexpr initializer_list() noexcept : m_data(nullptr), m_size(0) {}
+    constexpr initializer_list(ConstValuePointer data, usize size) noexcept : m_data(data), m_size(size) {
+    }
+    constexpr initializer_list() noexcept : m_data(nullptr), m_size(0) {
+    }
 
     /**
      * Returns the number of elements.
      */
-    constexpr usize count() const noexcept { return m_size; }
+    constexpr usize count() const noexcept {
+        return m_size;
+    }
 
     /**
      * Checks wether the initializer_list is empty.
      */
-    constexpr bool is_empty() const noexcept { return count() == 0; }
+    constexpr bool is_empty() const noexcept {
+        return count() == 0;
+    }
 
     /**
      * Checks wether the initializer_list points to nullptr.
      */
-    constexpr bool is_null() const noexcept { return data() == nullptr; }
+    constexpr bool is_null() const noexcept {
+        return data() == nullptr;
+    }
 
     /**
      * Returns a pointer to the underlying data.
      */
-    constexpr ConstValuePointer data() const noexcept { return m_data; }
+    constexpr ConstValuePointer data() const noexcept {
+        return m_data;
+    }
 
     /**
      * Returns an iterator to the begin of the initializer_list.
      */
-    constexpr ConstIterator begin() const noexcept { return ConstIterator { data() }; }
+    constexpr ConstIterator begin() const noexcept {
+        return ConstIterator { data() };
+    }
 
     /**
      * Returns an iterator to the end of the initializer_list.
      */
-    constexpr ConstIterator end() const noexcept { return begin() + count(); }
+    constexpr ConstIterator end() const noexcept {
+        return begin() + count();
+    }
 
     /**
      * Returns the element at the specified index.
      *
      * UB if the index is out of bounds.
      */
-    constexpr ConstValueReference operator[](usize index) const noexcept
-    {
+    constexpr ConstValueReference operator[](usize index) const noexcept {
         VERIFY(index < count());
         return data()[index];
     }
@@ -96,12 +109,16 @@ public:
     /**
      * Returns a mutable slice over the whole array.
      */
-    constexpr Slice<T> slice() noexcept { return Slice<T>(data(), count()); }
+    constexpr Slice<T> slice() noexcept {
+        return Slice<T>(data(), count());
+    }
 
     /**
      * Returns a const slice over the whole array.
      */
-    constexpr Slice<const T> slice() const noexcept { return Slice<T>(data(), count()); }
+    constexpr Slice<const T> slice() const noexcept {
+        return Slice<T>(data(), count());
+    }
 
 private:
     ConstValuePointer m_data;

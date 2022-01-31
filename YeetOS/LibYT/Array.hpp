@@ -56,50 +56,65 @@ public:
     /**
      * Returns the number of elements.
      */
-    constexpr usize count() const noexcept { return N; }
+    constexpr usize count() const noexcept {
+        return N;
+    }
 
     /**
      * Checks wether the Array is empty.
      */
-    constexpr usize is_empty() const noexcept { return false; }
+    constexpr usize is_empty() const noexcept {
+        return false;
+    }
 
     /**
      * Returns a pointer to the underlying data.
      */
-    constexpr ConstValuePointer data() const noexcept { return m_data; }
+    constexpr ConstValuePointer data() const noexcept {
+        return m_data;
+    }
 
     /**
      * Returns a pointer to the underlying data.
      */
-    constexpr ValuePointer data() noexcept { return m_data; }
+    constexpr ValuePointer data() noexcept {
+        return m_data;
+    }
 
     /**
      * Returns an iterator to the begin of the Array.
      */
-    constexpr Iterator begin() noexcept { return Iterator { m_data }; }
+    constexpr Iterator begin() noexcept {
+        return Iterator { m_data };
+    }
 
     /**
      * Returns an iterator to the begin of the Array.
      */
-    constexpr ConstIterator begin() const noexcept { return ConstIterator { m_data }; }
+    constexpr ConstIterator begin() const noexcept {
+        return ConstIterator { m_data };
+    }
 
     /**
      * Returns an iterator to the end of the Array.
      */
-    constexpr Iterator end() noexcept { return begin() + N; }
+    constexpr Iterator end() noexcept {
+        return begin() + N;
+    }
 
     /**
      * Returns an iterator to the end of the Array.
      */
-    constexpr ConstIterator end() const noexcept { return begin() + N; }
+    constexpr ConstIterator end() const noexcept {
+        return begin() + N;
+    }
 
     /**
      * Returns the element at index.
      *
      * UB if the index is out of bounds.
      */
-    constexpr ConstValueReference operator[](usize index) const noexcept
-    {
+    constexpr ConstValueReference operator[](usize index) const noexcept {
         VERIFY(index < count());
         return m_data[index];
     }
@@ -109,8 +124,7 @@ public:
      *
      * UB if the index is out of bounds.
      */
-    constexpr ValueReference operator[](usize index) noexcept
-    {
+    constexpr ValueReference operator[](usize index) noexcept {
         VERIFY(index < count());
         return m_data[index];
     }
@@ -120,38 +134,50 @@ public:
      *
      * UB if the Array is empty.
      */
-    constexpr ConstValueReference front() const noexcept { return operator[](0); }
+    constexpr ConstValueReference front() const noexcept {
+        return operator[](0);
+    }
 
     /**
      * Returns the first element.
      *
      * UB if the Array is empty.
      */
-    constexpr ValueReference front() noexcept { return operator[](0); }
+    constexpr ValueReference front() noexcept {
+        return operator[](0);
+    }
 
     /**
      * Returns the last element.
      *
      * UB if the Array is empty.
      */
-    constexpr ConstValueReference back() const noexcept { return operator[](count() - 1); }
+    constexpr ConstValueReference back() const noexcept {
+        return operator[](count() - 1);
+    }
 
     /**
      * Returns the last element.
      *
      * UB if the Array is empty.
      */
-    constexpr ValueReference back() noexcept { return operator[](count() - 1); }
+    constexpr ValueReference back() noexcept {
+        return operator[](count() - 1);
+    }
 
     /**
      * Returns a mutable slice over the whole array.
      */
-    constexpr Slice<T> slice() noexcept { return Slice<T>(data(), count()); }
+    constexpr Slice<T> slice() noexcept {
+        return Slice<T>(data(), count());
+    }
 
     /**
      * Returns a const slice over the whole array.
      */
-    constexpr Slice<const T> slice() const noexcept { return Slice<T>(data(), count()); }
+    constexpr Slice<const T> slice() const noexcept {
+        return Slice<T>(data(), count());
+    }
 
     T m_data[N];
 };

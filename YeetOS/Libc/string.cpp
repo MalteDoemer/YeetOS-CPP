@@ -25,8 +25,7 @@
 
 #include <string.h>
 
-extern "C" void* memcpy(void* dest, const void* src, size_t num)
-{
+extern "C" void* memcpy(void* dest, const void* src, size_t num) {
     unsigned char* d = static_cast<unsigned char*>(dest);
     const unsigned char* s = static_cast<const unsigned char*>(src);
 
@@ -38,8 +37,7 @@ extern "C" void* memcpy(void* dest, const void* src, size_t num)
     return dest;
 }
 
-extern "C" void* memset(void* dest, int c, size_t num)
-{
+extern "C" void* memset(void* dest, int c, size_t num) {
     unsigned char* d = static_cast<unsigned char*>(dest);
     unsigned char val = static_cast<unsigned char>(c);
 
@@ -51,8 +49,7 @@ extern "C" void* memset(void* dest, int c, size_t num)
     return dest;
 }
 
-extern "C" int strcmp(const char* str1, const char* str2)
-{
+extern "C" int strcmp(const char* str1, const char* str2) {
     for (;; str1++, str2++) {
         if (*str1 != *str2)
             break;
@@ -64,8 +61,7 @@ extern "C" int strcmp(const char* str1, const char* str2)
     return *str1 - *str2;
 }
 
-extern "C" size_t strlen(const char* str)
-{
+extern "C" size_t strlen(const char* str) {
     const char* start = str;
     while (*str) {
         str++;
@@ -73,8 +69,7 @@ extern "C" size_t strlen(const char* str)
     return str - start;
 }
 
-extern "C" int strncmp(const char* str1, const char* str2, size_t n)
-{
+extern "C" int strncmp(const char* str1, const char* str2, size_t n) {
     for (; n--; str1++, str2++) {
         if (*str1 != *str2)
             return *str1 - *str2;
