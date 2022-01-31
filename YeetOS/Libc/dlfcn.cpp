@@ -25,8 +25,7 @@
 
 #include <dlfcn.h>
 
-extern "C" int dladdr(const void* address, Dl_info* info)
-{
+extern "C" int dladdr(const void* address, Dl_info* info) {
     *info = { nullptr, nullptr, nullptr, nullptr };
     return 0;
 }
