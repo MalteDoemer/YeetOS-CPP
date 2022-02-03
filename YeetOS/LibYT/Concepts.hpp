@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <Invoke.hpp>
 #include <TypeMagic.hpp>
 
 namespace yt {
@@ -134,19 +135,12 @@ template<typename T>
 concept Regular = Semiregular<T> && EqualityCompareable<T>;
 
 template<typename F, typename Ret, typename... Args>
-concept Function = requires(F&& f, Args&&... args) {
-    { f(forward<Args>(args)...) } -> SameAs<Ret>;
-};
-
-template<typename P, typename... Args>
-concept Predicate = Function<P, bool, Args...>;
-
-template<typename F, typename... Args>
-concept VoidCallback = Function<F, void, Args...>;
+concept Callable = is_invocable<F, Args...> && is_same<invoke_result<F, Args...>, Ret>;
 
 } /* namespace yt */
 
 using yt::AssignableFrom;
+using yt::Callable;
 using yt::Compareable;
 using yt::CompareableWith;
 using yt::ConstructibleFrom;
@@ -159,15 +153,12 @@ using yt::Destructible;
 using yt::EqualityCompareable;
 using yt::EqualityCompareableWith;
 using yt::FloatingPoint;
-using yt::Function;
 using yt::Integral;
 using yt::Movable;
 using yt::MoveConstructible;
-using yt::Predicate;
 using yt::Regular;
 using yt::SameAs;
 using yt::Scalar;
 using yt::Semiregular;
 using yt::SignedIntegral;
 using yt::UnsignedIntegral;
-using yt::VoidCallback;
