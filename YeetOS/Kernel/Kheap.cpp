@@ -140,7 +140,7 @@ private:
 public:
     constexpr KernelHeap() noexcept {
         /* Constructor should never be called, since the KernelHeap has to exsist before constructors are called. */
-        if (!YT::is_constant_evaluated()) {
+        if (!yt::is_constant_evaluated()) {
             VERIFY_NOT_REACHED();
         }
     }

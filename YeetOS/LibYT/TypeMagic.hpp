@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Malte Dömer
+ * Copyright 2022 Malte Dömer
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -20,16 +20,15 @@
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
 #pragma once
 
 #include <Types.hpp>
 
-namespace YT {
+namespace yt {
 
-/// IntegralConstant
 template<typename T, T val>
 struct IntegralConstant {
     using ValueType = T;
@@ -42,558 +41,308 @@ struct IntegralConstant {
     }
 };
 
-/// declval
-template<typename T>
-auto declval() -> T&&;
-
-/// BoolConstant
 template<bool b>
-struct BoolConstant : public IntegralConstant<bool, b> {};
+using BoolConstant = IntegralConstant<bool, b>;
 
-/// TrueType
-struct TrueType : public BoolConstant<true> {};
+using TrueType = BoolConstant<true>;
+using FalseType = BoolConstant<false>;
 
-/// FalseType
-struct FalseType : public BoolConstant<false> {};
+template<typename T>
+struct TypeIdentity {
+    using Type = T;
+};
+
+/** primary type categories **/
+#pragma region
+
+template<typename T>
+inline constexpr bool is_void = __is_void(T);
 
 namespace Detail {
 
-template<typename>
-struct RemoveCV;
+template<typename T>
+struct IsNullptr : public FalseType {};
 
-template<bool condition, typename TypeIfTrue, typename TypeIfFalse>
+template<>
+struct IsNullptr<decltype(nullptr)> : public TrueType {};
+
+}
+
+template<typename T>
+inline constexpr bool is_null_pointer = Detail::IsNullptr<T>::value;
+
+template<typename T>
+inline constexpr bool is_integral = __is_integral(T);
+
+template<typename T>
+inline constexpr bool is_floating_point = __is_floating_point(T);
+
+template<typename T>
+inline constexpr bool is_array = __is_array(T);
+
+template<typename T>
+inline constexpr bool is_pointer = __is_pointer(T);
+
+template<typename T>
+inline constexpr bool is_lvalue_reference = __is_lvalue_reference(T);
+
+template<typename T>
+inline constexpr bool is_rvalue_reference = __is_rvalue_reference(T);
+
+template<typename T>
+inline constexpr bool is_member_object_pointer = __is_member_object_pointer(T);
+
+template<typename T>
+inline constexpr bool is_member_function_pointer = __is_member_function_pointer(T);
+
+template<typename T>
+inline constexpr bool is_enum = __is_enum(T);
+
+template<typename T>
+inline constexpr bool is_union = __is_union(T);
+
+template<typename T>
+inline constexpr bool is_class = __is_class(T);
+
+template<typename T>
+inline constexpr bool is_function = __is_function(T);
+
+#pragma endregion
+
+/** composite type categories **/
+#pragma region
+
+template<typename T>
+inline constexpr bool is_reference = is_lvalue_reference<T> || is_rvalue_reference<T>;
+
+template<typename T>
+inline constexpr bool is_arithmetic = __is_arithmetic(T);
+
+template<typename T>
+inline constexpr bool is_fundamental = __is_fundamental(T);
+
+template<typename T>
+inline constexpr bool is_object = __is_object(T);
+
+template<typename T>
+inline constexpr bool is_scalar = __is_scalar(T);
+
+template<typename T>
+inline constexpr bool is_compound = __is_compound(T);
+
+template<typename T>
+inline constexpr bool is_member_pointer = __is_member_pointer(T);
+
+#pragma endregion
+
+/** miscellaneuous helpers **/
+#pragma region
+
+namespace Detail {
+
+template<bool B, typename T = void>
+struct EnableIf {};
+
+template<typename T>
+struct EnableIf<true, T> {
+    using Type = T;
+};
+
+template<bool Cond, typename TypeIfTrue, typename TypeIfFalse>
 struct Conditional;
 
-/// TypeList
+template<typename TypeIfTrue, typename TypeIfFalse>
+struct Conditional<true, TypeIfTrue, TypeIfFalse> {
+    using Type = TypeIfTrue;
+};
+
+template<typename TypeIfTrue, typename TypeIfFalse>
+struct Conditional<false, TypeIfTrue, TypeIfFalse> {
+    using Type = TypeIfFalse;
+};
+
+}
+
+template<bool B, typename T = void>
+using enable_if = typename Detail::EnableIf<B, T>::Type;
+
+template<bool Cond, typename TypeIfTrue, typename TypeIfFalse>
+using conditional = typename Detail::Conditional<Cond, TypeIfTrue, TypeIfFalse>::Type;
+
+namespace Detail {
+
 template<typename...>
 struct TypeList {};
 
-/// TypeList
-template<typename T, typename... U>
-struct TypeList<T, U...> {
+template<typename T, typename... Ints>
+struct TypeList<T, Ints...> {
     static constexpr usize size = sizeof(T);
 };
 
-/// TypeSelect
-template<usize s, typename T, bool = (s <= T::size)>
+template<usize S, typename TList, bool = (S <= TList::size)>
 struct TypeSelect;
 
-/// TypeSelect
-template<usize s, typename UInt, typename... UInts>
-struct TypeSelect<s, TypeList<UInt, UInts...>, true> {
+template<usize S, typename UInt, typename... UInts>
+struct TypeSelect<S, TypeList<UInt, UInts...>, true> {
     using Type = UInt;
 };
 
-/// TypeSelect
-template<usize s, typename UInt, typename... UInts>
-struct TypeSelect<s, TypeList<UInt, UInts...>, false> : TypeSelect<s, TypeList<UInts...>> {};
+template<usize S, typename UInt, typename... UInts>
+struct TypeSelect<S, TypeList<UInt, UInts...>, false> : TypeSelect<S, TypeList<UInts...>> {};
 
-/// LogicalOr
+}
+
+// using Detail::TypeList;
+// using Detail::TypeSelect;
+
+template<usize S, typename... Ints>
+using type_select = typename Detail::TypeSelect<S, Detail::TypeList<Ints...>>::Type;
+
+
+#pragma endregion
+
+/** logical operations **/
+#pragma region
+
+namespace Detail {
+
 template<bool...>
 struct LogicalOr;
 
-/// LogicalOr
 template<>
 struct LogicalOr<> : public FalseType {};
 
-/// LogicalOr
 template<bool B1>
 struct LogicalOr<B1> : public BoolConstant<B1> {};
 
-/// LogicalOr
 template<bool B1, bool B2>
 struct LogicalOr<B1, B2> : public Conditional<B1, BoolConstant<B1>, BoolConstant<B2>>::Type {};
 
-/// LogicalOr
 template<bool B1, bool B2, bool B3, bool... Bn>
 struct LogicalOr<B1, B2, B3, Bn...> : public Conditional<B1, BoolConstant<B1>, LogicalOr<B2, B3, Bn...>>::Type {};
 
-/// LogicalAnd
 template<bool...>
 struct LogicalAnd;
 
-/// LogicalAnd
 template<>
 struct LogicalAnd<> : public TrueType {};
 
-/// LogicalAnd
 template<bool B1>
 struct LogicalAnd<B1> : public BoolConstant<B1> {};
 
-/// LogicalAnd
 template<bool B1, bool B2>
 struct LogicalAnd<B1, B2> : public Conditional<B1, BoolConstant<B2>, BoolConstant<B1>>::Type {};
 
-/// LogicalAnd
 template<bool B1, bool B2, bool B3, bool... Bn>
 struct LogicalAnd<B1, B2, B3, Bn...> : public Conditional<B1, LogicalAnd<B2, B3, Bn...>, BoolConstant<B1>>::Type {};
 
-/// LogicalNot
 template<bool B>
 struct LogicalNot : public BoolConstant<!B> {};
 
-/// DependantFalse
-template<typename T>
-struct DependantFalse : BoolConstant<false> {};
-
-/// IsVoid
-template<typename T>
-struct IsVoid : public BoolConstant<__is_void(T)> {};
-
-template<typename>
-struct IsNullPointerHelper : public FalseType {};
-
-template<>
-struct IsNullPointerHelper<decltype(nullptr)> : public TrueType {};
-
-/// IsNullPointer
-template<typename T>
-struct IsNullPointer : public IsNullPointerHelper<typename RemoveCV<T>::Type> {};
-
-/// IsIntegral
-template<typename T>
-struct IsIntegral : public BoolConstant<__is_integral(T)> {};
-
-/// IsFloatingPoint
-template<typename T>
-struct IsFloatingPoint : public BoolConstant<__is_floating_point(T)> {};
-
-/// IsArray
-template<typename T>
-struct IsArray : public BoolConstant<__is_array(T)> {};
-
-/// IsEnum
-template<typename T>
-struct IsEnum : public BoolConstant<__is_enum(T)> {};
-
-/// IsUnion
-template<typename T>
-struct IsUnion : public BoolConstant<__is_union(T)> {};
-
-/// IsClass
-template<typename T>
-struct IsClass : public BoolConstant<__is_class(T)> {};
-
-/// IsFunction
-template<typename T>
-struct IsFunction : public BoolConstant<__is_function(T)> {};
-
-/// IsPointer
-template<typename T>
-struct IsPointer : public BoolConstant<__is_pointer(T)> {};
-
-/// IsLvalueReference
-template<typename T>
-struct IsLvalueReference : public BoolConstant<__is_lvalue_reference(T)> {};
-
-/// IsRvalueReference
-template<typename T>
-struct IsRvalueReference : public BoolConstant<__is_lvalue_reference(T)> {};
-
-/// IsMemberObjectPointer
-template<typename T>
-struct IsMemberObjectPointer : public BoolConstant<__is_member_object_pointer(T)> {};
-
-/// IsMemberFunctionPointer
-template<typename T>
-struct IsMemberFunctionPointer : public BoolConstant<__is_member_function_pointer(T)> {};
-
-/// IsFundamental
-template<typename T>
-struct IsFundamental : public BoolConstant<__is_fundamental(T)> {};
-
-/// IsArithmetic
-template<typename T>
-struct IsArithmetic : public BoolConstant<__is_arithmetic(T)> {};
-
-/// IsScalar
-template<typename T>
-struct IsScalar : public BoolConstant<__is_scalar(T)> {};
-
-/// IsObject
-template<typename T>
-struct IsObject : public BoolConstant<__is_object(T)> {};
-
-/// IsCompound
-template<typename T>
-struct IsCompound : public BoolConstant<__is_compound(T)> {};
-
-/// IsReference
-template<typename T>
-struct IsReference : public BoolConstant<__is_reference(T)> {};
-
-/// IsMemberPointer
-template<typename T>
-struct IsMemberPointer : public BoolConstant<__is_member_pointer(T)> {};
-
-/// IsConst
-template<typename T>
-struct IsConst : public BoolConstant<__is_const(T)> {};
-
-/// IsVolatile
-template<typename T>
-struct IsVolatile : public BoolConstant<__is_volatile(T)> {};
-
-/// IsTrivial
-template<typename T>
-struct IsTrivial : public BoolConstant<__is_trivial(T)> {};
-
-/// IsTriviallyCopyable
-template<typename T>
-struct IsTriviallyCopyable : public BoolConstant<__is_trivially_copyable(T)> {};
-
-/// IsStandardLayout
-template<typename T>
-struct IsStandardLayout : public BoolConstant<__is_standard_layout(T)> {};
-
-/// HasUniqueObjectRepresentations
-template<typename T>
-struct HasUniqueObjectRepresentations : public BoolConstant<__has_unique_object_representations(T)> {};
-
-/// IsEmpty
-template<typename T>
-struct IsEmpty : public BoolConstant<__is_empty(T)> {};
-
-/// IsPolymorphic
-template<typename T>
-struct IsPolymorphic : public BoolConstant<__is_polymorphic(T)> {};
-
-/// IsAbstract
-template<typename T>
-struct IsAbstract : public BoolConstant<__is_abstract(T)> {};
-
-/// IsFinal
-template<typename T>
-struct IsFinal : public BoolConstant<__is_final(T)> {};
-
-/// IsAggregate
-template<typename T>
-struct IsAggregate : public BoolConstant<__is_aggregate(T)> {};
-
-/// IsSigned
-template<typename T>
-struct IsSigned : public BoolConstant<__is_signed(T)> {};
-
-/// IsUnsigned
-template<typename T>
-struct IsUnsigned : public BoolConstant<__is_unsigned(T)> {};
-
-template<typename>
-struct IsBoundedArray : public FalseType {};
-
-/// IsBoundedArray
-template<typename T, usize N>
-struct IsBoundedArray<T[N]> : public TrueType {};
-
-template<typename>
-struct IsUnboundedArray : public FalseType {};
-
-/// IsUnboundedArray
-template<typename T>
-struct IsUnboundedArray<T[]> : public TrueType {};
-
-/// IsConstructible
-template<typename T, typename... Args>
-struct IsConstructible : public BoolConstant<__is_constructible(T, Args...)> {};
-
-/// IsTriviallyConstructible
-template<typename T, typename... Args>
-struct IsTriviallyConstructible : public BoolConstant<__is_trivially_constructible(T, Args...)> {};
+}
 
-/// IsNothrowConstructible
-template<typename T, typename... Args>
-struct IsNothrowConstructible : public BoolConstant<__is_nothrow_constructible(T, Args...)> {};
+using Detail::LogicalAnd;
+using Detail::LogicalNot;
+using Detail::LogicalOr;
 
-/// IsDefaultConstructible
-template<typename T>
-struct IsDefaultConstructible : public IsConstructible<T> {};
-
-/// IsTriviallyDefaultConstructible
-template<typename T>
-struct IsTriviallyDefaultConstructible : public IsTriviallyConstructible<T> {};
-
-/// IsNothrowDefaultConstructible
-template<typename T>
-struct IsNothrowDefaultConstructible : public IsNothrowConstructible<T> {};
-
-/// IsCopyConstructible
-template<typename T>
-struct IsCopyConstructible : public IsConstructible<T, const T&> {};
-
-/// IsTriviallyCopyConstructible
-template<typename T>
-struct IsTriviallyCopyConstructible : public IsTriviallyConstructible<T, const T&> {};
-
-/// IsNothrowCopyConstructible
-template<typename T>
-struct IsNothrowCopyConstructible : public IsNothrowConstructible<T, const T&> {};
-
-/// IsMoveConstructible
-template<typename T>
-struct IsMoveConstructible : public IsConstructible<T, T&&> {};
-
-/// IsTriviallyMoveConstructible
-template<typename T>
-struct IsTriviallyMoveConstructible : public IsTriviallyConstructible<T, T&&> {};
-
-/// IsNothrowMoveConstructible
-template<typename T>
-struct IsNothrowMoveConstructible : public IsNothrowConstructible<T, T&&> {};
-
-/// IsAssignable
-template<typename T, typename U>
-struct IsAssignable : public BoolConstant<__is_assignable(T, U)> {};
-
-/// IsTriviallyAssignable
-template<typename T, typename U>
-struct IsTriviallyAssignable : public BoolConstant<__is_trivially_assignable(T, U)> {};
-
-/// IsNothrowAssignable
-template<typename T, typename U>
-struct IsNothrowAssignable : public BoolConstant<__is_nothrow_assignable(T, U)> {};
-
-/// IsCopyAssignable
-template<typename T>
-struct IsCopyAssignable : public IsAssignable<T&, const T&> {};
-
-/// IsTriviallyCopyAssignable
-template<typename T>
-struct IsTriviallyCopyAssignable : public IsTriviallyAssignable<T&, const T&> {};
-
-/// IsNothrowCopyAssignable
-template<typename T>
-struct IsNothrowCopyAssignable : public IsNothrowAssignable<T&, const T&> {};
-
-/// IsMoveAssignable
-template<typename T>
-struct IsMoveAssignable : public IsAssignable<T&, T&&> {};
-
-/// IsTriviallyMoveAssignable
-template<typename T>
-struct IsTriviallyMoveAssignable : public IsTriviallyAssignable<T&, T&&> {};
-
-/// IsNothrowMoveAssignable
-template<typename T>
-struct IsNothrowMoveAssignable : public IsNothrowAssignable<T&, T&&> {};
-
-template<typename T, typename U>
-struct IsSame;
-
-template<typename T>
-struct RemoveAllExtents;
-
-template<typename T>
-auto destruct_test(T&&) -> decltype(declval<T&>().~T(), TrueType());
-
-auto destruct_test(...) -> FalseType;
-
-template<typename T,
-         bool = LogicalOr<IsVoid<T>::value, IsFunction<T>::value, IsUnboundedArray<T>::value>::value,
-         bool = LogicalOr<IsReference<T>::value, IsScalar<T>::value>::value>
-struct IsDestructibleHelper;
+#pragma endregion
 
-template<typename T>
-struct IsDestructibleHelper<T, false, false> :
-    public decltype(destruct_test(declval<typename RemoveAllExtents<T>::Type>())) {};
-
-template<typename T>
-struct IsDestructibleHelper<T, true, false> : public FalseType {};
-
-template<typename T>
-struct IsDestructibleHelper<T, false, true> : public TrueType {};
-
-/// IsDestructible
-template<typename T>
-struct IsDestructible : public IsDestructibleHelper<T> {};
-
-/// IsTriviallyDestructible
-template<typename T>
-struct IsTriviallyDestructible : public BoolConstant<__is_trivially_destructible(T)> {};
-
-template<typename T>
-auto nt_destruct_test(T&&) -> BoolConstant<noexcept(declval<T&>().~T())>;
-auto nt_destruct_test(...) -> FalseType;
-
-template<typename T,
-         bool = LogicalOr<IsVoid<T>::value, IsFunction<T>::value, IsUnboundedArray<T>::value>::value,
-         bool = LogicalOr<IsReference<T>::value, IsScalar<T>::value>::value>
-struct IsNothrowDestructibleHelper;
-
-template<typename T>
-struct IsNothrowDestructibleHelper<T, false, false> :
-    public decltype(nt_destruct_test(declval<typename RemoveAllExtents<T>::Type>())) {};
-
-template<typename T>
-struct IsNothrowDestructibleHelper<T, true, false> : public FalseType {};
-
-template<typename T>
-struct IsNothrowDestructibleHelper<T, false, true> : public TrueType {};
-
-/// IsNothrowDestructible
-template<typename T>
-struct IsNothrowDestructible : public IsNothrowDestructibleHelper<T> {};
+/** reference modification **/
+#pragma region
+namespace Detail {
 
-/// HasVirtualDestructor
 template<typename T>
-struct HasVirtualDestructor : public BoolConstant<__has_virtual_destructor(T)> {};
-
-/// AlignmentOf
-template<typename T>
-struct AlignmentOf : public IntegralConstant<usize, alignof(T)> {};
-
-/// Rank
-template<typename T>
-struct Rank : public IntegralConstant<usize, __array_rank(T)> {};
-
-/// Extent
-template<typename T, unsigned N = 0>
-struct Extent : public IntegralConstant<usize, __array_extent(T, N)> {};
-
-/// IsSame
-template<typename T, typename U>
-struct IsSame : public BoolConstant<__is_same(T, U)> {};
-
-/// IsBaseOf
-template<typename Base, typename Derived>
-struct IsBaseOf : public BoolConstant<__is_base_of(Base, Derived)> {};
-
-/// IsConvertible
-template<typename From, typename To>
-struct IsConvertible : public BoolConstant<__is_convertible(From, To)> {};
-
-#if __has_builtin(__is_layout_compatible)
-
-/// IsLayoutCompatible
+auto try_add_lvalue_reference(int) -> TypeIdentity<T&>;
 template<typename T>
-struct IsLayoutCompatible : public BoolConstant<(T)> {};
+auto try_add_lvalue_reference(...) -> TypeIdentity<T>;
 
-#endif
-
-/// RemoveConst
-template<typename T>
-struct RemoveConst {
-    using Type = T;
-};
-
-/// RemoveConst
-template<typename T>
-struct RemoveConst<const T> {
-    using Type = T;
-};
-
-/// RemoveVolatile
 template<typename T>
-struct RemoveVolatile {
-    using Type = T;
-};
-
-/// RemoveVolatile
-template<typename T>
-struct RemoveVolatile<volatile T> {
-    using Type = T;
-};
-
-/// RemoveCV
-template<typename T>
-struct RemoveCV {
-    using Type = typename RemoveVolatile<typename RemoveConst<T>::Type>::Type;
-};
-
-/// AddConst
+auto try_add_rvalue_reference(int) -> TypeIdentity<T&&>;
 template<typename T>
-struct AddConst {
-    using Type = const T;
-};
+auto try_add_rvalue_reference(...) -> TypeIdentity<T>;
 
-/// AddVolatile
 template<typename T>
-struct AddVolatile {
-    using Type = volatile T;
-};
+struct AddLvalueReference : decltype(try_add_lvalue_reference<T>(0)) {};
 
-/// AddCV
 template<typename T>
-struct AddCV {
-    using Type = const volatile T;
-};
+struct AddRvalueReference : decltype(try_add_rvalue_reference<T>(0)) {};
 
-/// RemoveReference
 template<typename T>
 struct RemoveReference {
     using Type = T;
 };
-
-/// RemoveReference
 template<typename T>
 struct RemoveReference<T&> {
     using Type = T;
 };
-
-/// RemoveReference
 template<typename T>
 struct RemoveReference<T&&> {
     using Type = T;
 };
 
-/// AddLvalueReference
-template<typename T>
-struct AddLvalueReference {
-    using Type = T&;
-};
+}
 
-/// AddRvalueReference
 template<typename T>
-struct AddRvalueReference {
-    using Type = T&&;
-};
+using add_lvalue_reference = typename Detail::AddLvalueReference<T>::Type;
 
-/// RemovePointer
 template<typename T>
-struct RemovePointer {
+using add_rvalue_reference = typename Detail::AddRvalueReference<T>::Type;
+
+template<typename T>
+using remove_reference = typename Detail::RemoveReference<T>::Type;
+
+#pragma endregion
+
+/** const-volatile modifications **/
+#pragma region
+
+template<typename T>
+using add_const = const T;
+
+template<typename T>
+using add_volatile = volatile T;
+
+template<typename T>
+using add_cv = add_volatile<add_const<T>>;
+
+namespace Detail {
+
+template<typename T>
+struct RemoveConst {
     using Type = T;
 };
 
-/// RemovePointer
 template<typename T>
-struct RemovePointer<T*> {
+struct RemoveConst<const T> {
     using Type = T;
 };
 
-/// AddPointer
+}
+
 template<typename T>
-struct AddPointer {
-    using Type = T*;
+using remove_const = typename Detail::RemoveConst<T>::Type;
+
+namespace Detail {
+
+template<typename T>
+struct RemoveVolatile {
+    using Type = T;
 };
 
-/// RemoveCVRef
 template<typename T>
-struct RemoveCVRef {
-    using Type = typename RemoveCV<typename RemoveReference<T>::Type>::Type;
+struct RemoveVolatile<volatile T> {
+    using Type = T;
 };
 
-/// LValueReferenceOf
-template<typename T>
-struct LValueReferenceOf {
-    using Type = typename RemoveCVRef<T>::Type&;
-};
+}
 
-/// RValueReferenceOf
 template<typename T>
-struct RValueReferenceOf {
-    using Type = typename RemoveCVRef<T>::Type&&;
-};
+using remove_volatile = typename Detail::RemoveVolatile<T>::Type;
 
-/// ConstLValueReferenceOf
 template<typename T>
-struct ConstLValueReferenceOf {
-    using Type = const typename RemoveCVRef<T>::Type&;
-};
+using remove_cv = remove_volatile<remove_const<T>>;
 
-/// ConstRValueReferenceOf
-template<typename T>
-struct ConstRValueReferenceOf {
-    using Type = const typename RemoveCVRef<T>::Type&&;
-};
+namespace Detail {
 
 template<typename T, bool have_const, bool have_volatile>
 struct CVSelector;
@@ -620,8 +369,65 @@ struct CVSelector<T, true, true> {
 
 template<typename Qualified, typename Unqalified>
 struct MatchCV {
-    using Type = typename CVSelector<Unqalified, IsConst<Qualified>::value, IsVolatile<Qualified>::value>::Type;
+    using Type = typename CVSelector<Unqalified, __is_const(Qualified), __is_volatile(Qualified)>::Type;
 };
+
+}
+
+template<typename Qualified, typename Unqualified>
+using match_cv = typename Detail::MatchCV<Qualified, Unqualified>::Type;
+
+#pragma endregion
+
+/** array modification **/
+#pragma region
+
+namespace Detail {
+
+template<typename T>
+struct RemoveExtent {
+    using Type = T;
+};
+
+template<typename T>
+struct RemoveExtent<T[]> {
+    using Type = T;
+};
+
+template<typename T, usize N>
+struct RemoveExtent<T[N]> {
+    using Type = T;
+};
+
+template<typename T>
+struct RemoveAllExtents {
+    using Type = T;
+};
+
+template<typename T>
+struct RemoveAllExtents<T[]> {
+    using Type = typename RemoveAllExtents<T>::Type;
+};
+
+template<typename T, usize N>
+struct RemoveAllExtents<T[N]> {
+    using Type = typename RemoveAllExtents<T>::Type;
+};
+
+}
+
+template<typename T>
+using remove_extent = typename Detail::RemoveExtent<T>::Type;
+
+template<typename T>
+using remove_all_extents = typename Detail::RemoveAllExtents<T>::Type;
+
+#pragma endregion
+
+/** sign modification **/
+#pragma region
+
+namespace Detail {
 
 template<typename T>
 struct MakeUnsignedHelper {
@@ -658,26 +464,26 @@ struct MakeUnsignedHelper<long long> {
     using Type = unsigned long long;
 };
 
-template<typename T, bool is_int = IsIntegral<T>::value, bool is_enum = IsEnum<T>::value>
+template<typename T, bool is_int = is_integral<T>, bool is_enum = is_enum<T>>
 struct MakeUnsignedSelector;
 
 template<typename T>
 struct MakeUnsignedSelector<T, true, false> {
 private:
-    using UnsignedType = typename MakeUnsignedHelper<typename RemoveCV<T>::Type>::Type;
+    using UnsignedType = typename MakeUnsignedHelper<remove_cv<T>>::Type;
 
 public:
-    using Type = typename MatchCV<T, UnsignedType>::Type;
+    using Type = match_cv<T, UnsignedType>;
 };
 
 template<typename T>
 struct MakeUnsignedSelector<T, false, true> {
 private:
-    using Uints = TypeList<unsigned char, unsigned short, unsigned long, unsigned long long>;
+    using Uints = TypeList<unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long>;
     using UnsignedType = typename TypeSelect<sizeof(T), Uints>::Type;
 
 public:
-    using Type = typename MatchCV<T, UnsignedType>::Type;
+    using Type = match_cv<T, UnsignedType>;
 };
 
 // wchar_t, char8_t, char16_t, char32_t must be converted to a unsigned type of the same size
@@ -704,16 +510,19 @@ struct MakeUnsignedHelper<char32_t> {
 };
 
 // MakeUnsigned with bool isn't allowed
-
 template<>
 struct MakeUnsignedHelper<bool>;
 
-/// MakeUnsigned
 template<typename T>
 struct MakeUnsigned {
     using Type = typename MakeUnsignedSelector<T>::Type;
 };
+}
 
+template<typename T>
+using make_unsigned = typename Detail::MakeUnsigned<T>::Type;
+
+namespace Detail {
 template<typename T>
 struct MakeSignedHelper {
     using Type = T;
@@ -749,16 +558,16 @@ struct MakeSignedHelper<unsigned long long> {
     using Type = signed long long;
 };
 
-template<typename T, bool is_int = IsIntegral<T>::value, bool is_enum = IsEnum<T>::value>
+template<typename T, bool is_int = is_integral<T>, bool is_enum = is_enum<T>>
 struct MakeSignedSelector;
 
 template<typename T>
 struct MakeSignedSelector<T, true, false> {
 private:
-    using SignedType = typename MakeSignedHelper<typename RemoveCV<T>::Type>::Type;
+    using SignedType = typename MakeSignedHelper<remove_cv<T>>::Type;
 
 public:
-    using Type = typename MatchCV<T, SignedType>::Type;
+    using Type = match_cv<T, SignedType>;
 };
 
 template<typename T>
@@ -795,199 +604,125 @@ struct MakeSignedHelper<char32_t> {
 template<>
 struct MakeSignedHelper<bool>;
 
-/// MakeSigned
 template<typename T>
 struct MakeSigned : public MakeSignedSelector<T> {};
 
-/// RemoveExtent
-template<typename T>
-struct RemoveExtent {
-    using Type = T;
-};
-
-/// RemoveExtent
-template<typename T>
-struct RemoveExtent<T[]> {
-    using Type = T;
-};
-
-/// RemoveExtent
-template<typename T, usize N>
-struct RemoveExtent<T[N]> {
-    using Type = T;
-};
-
-/// RemoveAllExtents
-template<typename T>
-struct RemoveAllExtents {
-    using Type = T;
-};
-
-/// RemoveAllExtents
-template<typename T>
-struct RemoveAllExtents<T[]> {
-    using Type = typename RemoveAllExtents<T>::Type;
-};
-
-/// RemoveAllExtents
-template<typename T, usize N>
-struct RemoveAllExtents<T[N]> {
-    using Type = typename RemoveAllExtents<T>::Type;
-};
-
-/// EnableIf
-template<bool B, typename T = void>
-struct EnableIf {};
-
-/// EnableIf
-template<typename T>
-struct EnableIf<true, T> {
-    using Type = T;
-};
-
-/// Conditional
-template<typename TypeIfTrue, typename TypeIfFalse>
-struct Conditional<true, TypeIfTrue, TypeIfFalse> {
-    using Type = TypeIfTrue;
-};
-
-/// Conditional
-template<typename TypeIfTrue, typename TypeIfFalse>
-struct Conditional<false, TypeIfTrue, TypeIfFalse> {
-    using Type = TypeIfFalse;
-};
-
-/// Void
-template<typename...>
-using Void = void;
-
-/// UnderlyingType
-template<typename T>
-struct UnderlyingType {
-    using Type = __underlying_type(T);
-};
-
-/// IsCompileTimeKnown
-template<typename T>
-constexpr bool IsCompileTimeKnown(T value) {
-    return __builtin_constant_p(value);
 }
 
-} // namespace Detail
+template<typename T>
+using make_signed = typename Detail::MakeSigned<T>::Type;
 
-template<bool... B>
-inline constexpr bool logical_or = Detail::LogicalOr<B...>::value;
+#pragma endregion
 
-template<bool... B>
-inline constexpr bool logical_and = Detail::LogicalAnd<B...>::value;
+/** pointer modifications **/
+#pragma region
 
-template<bool B>
-inline constexpr bool logical_not = Detail::LogicalNot<B>::value;
+namespace Detail {
 
 template<typename T>
-inline constexpr bool dependant_false = Detail::DependantFalse<T>::value;
+struct RemovePointer {
+    using Type = T;
+};
 
 template<typename T>
-inline constexpr bool is_void = Detail::IsVoid<T>::value;
+struct RemovePointer<T*> {
+    using Type = T;
+};
+
+}
 
 template<typename T>
-inline constexpr bool is_null_pointer = Detail::IsNullPointer<T>::value;
+using remove_pointer = typename Detail::RemovePointer<remove_cv<T>>::Type;
+
+namespace Detail {
 
 template<typename T>
-inline constexpr bool is_integral = Detail::IsIntegral<T>::value;
+auto try_add_pointer(int) -> TypeIdentity<remove_reference<T>*>;
+template<typename T>
+auto try_add_pointer(...) -> TypeIdentity<T>;
+
+}
 
 template<typename T>
-inline constexpr bool is_floating_point = Detail::IsFloatingPoint<T>::value;
+using add_pointer = typename decltype(Detail::try_add_pointer<T>(0))::Type;
+
+#pragma endregion
+
+/** utility functions **/
+#pragma region
 
 template<typename T>
-inline constexpr bool is_array = Detail::IsArray<T>::value;
+add_rvalue_reference<T> declval() noexcept;
 
 template<typename T>
-inline constexpr bool is_enum = Detail::IsEnum<T>::value;
+constexpr remove_reference<T>&& move(T&& t) noexcept {
+    return static_cast<remove_reference<T>&&>(t);
+}
 
 template<typename T>
-inline constexpr bool is_union = Detail::IsUnion<T>::value;
+constexpr T&& forward(remove_reference<T>& t) noexcept {
+    return static_cast<T&&>(t);
+}
 
 template<typename T>
-inline constexpr bool is_class = Detail::IsClass<T>::value;
+constexpr T&& forward(remove_reference<T>&& t) noexcept {
+    static_assert(!is_lvalue_reference<T>, "Can't forward an rvalue as an lvalue.");
+    return static_cast<T&&>(t);
+}
+
+#pragma endregion
+
+/** type properties **/
+#pragma region
 
 template<typename T>
-inline constexpr bool is_function = Detail::IsFunction<T>::value;
+inline constexpr bool is_const = __is_const(T);
 
 template<typename T>
-inline constexpr bool is_pointer = Detail::IsPointer<T>::value;
+inline constexpr bool is_volatile = __is_volatile(T);
 
 template<typename T>
-inline constexpr bool is_lvalue_reference = Detail::IsLvalueReference<T>::value;
+inline constexpr bool is_trivial = __is_trivial(T);
 
 template<typename T>
-inline constexpr bool is_rvalue_reference = Detail::IsRvalueReference<T>::value;
+inline constexpr bool is_trivially_copyable = __is_trivially_copyable(T);
 
 template<typename T>
-inline constexpr bool is_member_object_pointer = Detail::IsMemberObjectPointer<T>::value;
+inline constexpr bool is_standard_layout = __is_standard_layout(T);
 
 template<typename T>
-inline constexpr bool is_member_function_pointer = Detail::IsMemberFunctionPointer<T>::value;
+inline constexpr bool is_empty = __is_empty(T);
 
 template<typename T>
-inline constexpr bool is_fundamental = Detail::IsFundamental<T>::value;
+inline constexpr bool is_polymorphic = __is_polymorphic(T);
 
 template<typename T>
-inline constexpr bool is_arithmetic = Detail::IsArithmetic<T>::value;
+inline constexpr bool is_abstract = __is_abstract(T);
 
 template<typename T>
-inline constexpr bool is_scalar = Detail::IsScalar<T>::value;
+inline constexpr bool is_final = __is_aggregate(T);
 
 template<typename T>
-inline constexpr bool is_object = Detail::IsObject<T>::value;
+inline constexpr bool is_signed = __is_signed(T);
 
 template<typename T>
-inline constexpr bool is_compound = Detail::IsCompound<T>::value;
+inline constexpr bool is_unsigned = __is_unsigned(T);
+
+namespace Detail {
+
+template<typename>
+struct IsBoundedArray : public FalseType {};
+
+template<typename T, usize N>
+struct IsBoundedArray<T[N]> : public TrueType {};
+
+template<typename>
+struct IsUnboundedArray : public FalseType {};
 
 template<typename T>
-inline constexpr bool is_reference = Detail::IsReference<T>::value;
+struct IsUnboundedArray<T[]> : public TrueType {};
 
-template<typename T>
-inline constexpr bool is_member_pointer = Detail::IsMemberPointer<T>::value;
-
-template<typename T>
-inline constexpr bool is_const = Detail::IsConst<T>::value;
-
-template<typename T>
-inline constexpr bool is_volatile = Detail::IsVolatile<T>::value;
-
-template<typename T>
-inline constexpr bool is_trivial = Detail::IsTrivial<T>::value;
-
-template<typename T>
-inline constexpr bool is_trivially_copyable = Detail::IsTriviallyCopyable<T>::value;
-
-template<typename T>
-inline constexpr bool is_standard_layout = Detail::IsStandardLayout<T>::value;
-
-template<typename T>
-inline constexpr bool has_unique_object_representations = Detail::HasUniqueObjectRepresentations<T>::value;
-
-template<typename T>
-inline constexpr bool is_empty = Detail::IsEmpty<T>::value;
-
-template<typename T>
-inline constexpr bool is_polymorphic = Detail::IsPolymorphic<T>::value;
-
-template<typename T>
-inline constexpr bool is_abstract = Detail::IsAbstract<T>::value;
-
-template<typename T>
-inline constexpr bool is_final = Detail::IsFinal<T>::value;
-
-template<typename T>
-inline constexpr bool is_aggregate = Detail::IsAggregate<T>::value;
-
-template<typename T>
-inline constexpr bool is_signed = Detail::IsSigned<T>::value;
-
-template<typename T>
-inline constexpr bool is_unsigned = Detail::IsUnsigned<T>::value;
+}
 
 template<typename T>
 inline constexpr bool is_bounded_array = Detail::IsBoundedArray<T>::value;
@@ -995,223 +730,210 @@ inline constexpr bool is_bounded_array = Detail::IsBoundedArray<T>::value;
 template<typename T>
 inline constexpr bool is_unbounded_array = Detail::IsUnboundedArray<T>::value;
 
-template<typename T, typename... Args>
-inline constexpr bool is_constructible = Detail::IsConstructible<T, Args...>::value;
+// TODO: is_scoped_enum
 
 template<typename T, typename... Args>
-inline constexpr bool is_trivially_constructible = Detail::IsTriviallyConstructible<T, Args...>::value;
+inline constexpr bool is_constructible = __is_constructible(T, Args...);
+
+template<typename T>
+inline constexpr bool is_default_constructible = is_constructible<T>;
+
+template<typename T>
+inline constexpr bool is_copy_constructible = is_constructible<T, const T&>;
+
+template<typename T>
+inline constexpr bool is_move_constructible = is_constructible<T, T&&>;
 
 template<typename T, typename... Args>
-inline constexpr bool is_nothrow_constructible = Detail::IsNothrowConstructible<T, Args...>::value;
+inline constexpr bool is_trivially_constructible = __is_trivially_constructible(T, Args...);
 
 template<typename T>
-inline constexpr bool is_default_constructible = Detail::IsDefaultConstructible<T>::value;
+inline constexpr bool is_trivially_default_constructible = is_trivially_constructible<T>;
 
 template<typename T>
-inline constexpr bool is_trivially_default_constructible = Detail::IsTriviallyDefaultConstructible<T>::value;
+inline constexpr bool is_trivially_copy_constructible = is_trivially_constructible<T, const T&>;
 
 template<typename T>
-inline constexpr bool is_nothrow_default_constructible = Detail::IsNothrowDefaultConstructible<T>::value;
+inline constexpr bool is_trivially_move_constructible = is_trivially_constructible<T, T&&>;
+
+template<typename T, typename... Args>
+inline constexpr bool is_nothrow_constructible = __is_nothrow_constructible(T, Args...);
 
 template<typename T>
-inline constexpr bool is_copy_constructible = Detail::IsCopyConstructible<T>::value;
+inline constexpr bool is_nothrow_default_constructible = is_nothrow_constructible<T>;
 
 template<typename T>
-inline constexpr bool is_trivially_copy_constructible = Detail::IsTriviallyCopyConstructible<T>::value;
+inline constexpr bool is_nothrow_copy_constructible = is_nothrow_constructible<T, const T&>;
 
 template<typename T>
-inline constexpr bool is_nothrow_copy_constructible = Detail::IsNothrowCopyConstructible<T>::value;
+inline constexpr bool is_nothrow_move_constructible = is_nothrow_constructible<T, T&&>;
+
+template<typename U, typename V>
+inline constexpr bool is_assignable = __is_assignable(U, V);
 
 template<typename T>
-inline constexpr bool is_move_constructible = Detail::IsMoveConstructible<T>::value;
+inline constexpr bool is_copy_assignable = is_assignable<T&, const T&>;
 
 template<typename T>
-inline constexpr bool is_trivially_move_constructible = Detail::IsTriviallyMoveConstructible<T>::value;
+inline constexpr bool is_move_assignable = is_assignable<T&, T&&>;
+
+template<typename U, typename V>
+inline constexpr bool is_trivially_assignable = __is_trivially_assignable(U, V);
 
 template<typename T>
-inline constexpr bool is_nothrow_move_constructible = Detail::IsNothrowMoveConstructible<T>::value;
-
-template<typename T, typename U>
-inline constexpr bool is_assignable = Detail::IsAssignable<T, U>::value;
-
-template<typename T, typename U>
-inline constexpr bool is_trivially_assignable = Detail::IsTriviallyAssignable<T, U>::value;
-
-template<typename T, typename U>
-inline constexpr bool is_nothrow_assignable = Detail::IsNothrowAssignable<T, U>::value;
+inline constexpr bool is_trivially_copy_assignable = is_trivially_assignable<T&, const T&>;
 
 template<typename T>
-inline constexpr bool is_copy_assignable = Detail::IsCopyAssignable<T>::value;
+inline constexpr bool is_trivially_move_assignable = is_trivially_assignable<T&, T&&>;
+
+template<typename U, typename V>
+inline constexpr bool is_nothrow_assignable = __is_nothrow_assignable(U, V);
 
 template<typename T>
-inline constexpr bool is_trivially_copy_assignable = Detail::IsTriviallyCopyAssignable<T>::value;
+inline constexpr bool is_nothrow_copy_assignable = is_nothrow_assignable<T&, const T&>;
 
 template<typename T>
-inline constexpr bool is_nothrow_copy_assignable = Detail::IsNothrowCopyAssignable<T>::value;
+inline constexpr bool is_nothrow_move_assignable = is_nothrow_assignable<T&, T&&>;
 
 template<typename T>
-inline constexpr bool is_move_assignable = Detail::IsMoveAssignable<T>::value;
+inline constexpr bool is_nothrow_copyable = is_nothrow_copy_constructible<T>&& is_nothrow_copy_assignable<T>;
 
 template<typename T>
-inline constexpr bool is_trivially_move_assignable = Detail::IsTriviallyMoveAssignable<T>::value;
+inline constexpr bool is_nothrow_movable = is_nothrow_move_constructible<T>&& is_nothrow_move_assignable<T>;
+
+// TODO: is_swappable_with
+// TODO: is_swappable
+// TODO: is_nothrow_swappable_with
+// TODO: is_nothrow_swappable
 
 template<typename T>
-inline constexpr bool is_nothrow_move_assignable = Detail::IsNothrowMoveAssignable<T>::value;
+inline constexpr bool has_virtual_destructor = __has_virtual_destructor(T);
+
+template<typename T>
+inline constexpr bool has_unique_object_representations = __has_unique_object_representations(T);
+
+namespace Detail {
+
+template<typename T>
+auto destruct_test(T&&) -> decltype(declval<T&>().~T(), TrueType());
+
+auto destruct_test(...) -> FalseType;
+
+template<typename T, bool = LogicalOr<is_void<T>, is_function<T>, is_unbounded_array<T>>::value, bool = is_reference<T>>
+struct IsDestructible;
+
+template<typename T>
+struct IsDestructible<T, false, false> : public decltype(destruct_test(declval<remove_all_extents<T>>())) {};
+
+template<typename T>
+struct IsDestructible<T, true, false> : public FalseType {};
+
+template<typename T>
+struct IsDestructible<T, false, true> : public TrueType {};
+}
 
 template<typename T>
 inline constexpr bool is_destructible = Detail::IsDestructible<T>::value;
 
+namespace Detail {
 template<typename T>
-inline constexpr bool is_trivially_destructible = Detail::IsTriviallyDestructible<T>::value;
+auto nt_destruct_test(T&&) -> BoolConstant<noexcept(declval<T&>().~T())>;
+
+auto nt_destruct_test(...) -> FalseType;
+
+template<typename T, bool = LogicalOr<is_void<T>, is_function<T>, is_unbounded_array<T>>::value, bool = is_reference<T>>
+struct IsNothrowDestructible;
+
+template<typename T>
+struct IsNothrowDestructible<T, false, false> : public decltype(nt_destruct_test(declval<remove_all_extents<T>>())) {};
+
+template<typename T>
+struct IsNothrowDestructible<T, true, false> : public FalseType {};
+
+template<typename T>
+struct IsNothrowDestructible<T, false, true> : public TrueType {};
+
+}
 
 template<typename T>
 inline constexpr bool is_nothrow_destructible = Detail::IsNothrowDestructible<T>::value;
 
 template<typename T>
-inline constexpr bool has_virtual_destructor = Detail::HasVirtualDestructor<T>::value;
+inline constexpr bool is_trivially_destructible = __is_trivially_destructible(T);
 
-template<typename T>
-inline constexpr usize alignment_of = Detail::AlignmentOf<T>::value;
+#pragma endregion
 
-template<typename T>
-inline constexpr usize rank = Detail::Rank<T>::value;
+/** type relations **/
+#pragma region
 
-template<typename T>
-inline constexpr usize extent = Detail::Extent<T>::value;
-
-template<typename T, typename U>
-inline constexpr bool is_same = Detail::IsSame<T, U>::value;
+template<typename U, typename V>
+inline constexpr bool is_same = __is_same(U, V);
 
 template<typename Base, typename Derived>
-inline constexpr bool is_base_of = Detail::IsBaseOf<Base, Derived>::value;
+inline constexpr bool is_base_of = __is_base_of(Base, Derived);
 
 template<typename From, typename To>
-inline constexpr bool is_convertible = Detail::IsConvertible<From, To>::value;
+inline constexpr bool is_convertible = __is_convertible(From, To);
+
+namespace Detail {
+
+template<typename From, typename To>
+struct IsNothrowConvertible : public LogicalAnd<is_same<From, void>, is_same<To, void>> {};
+
+template<typename From, typename To>
+requires requires {
+    static_cast<To (*)()>(nullptr);
+    { declval<void (&)(To) noexcept>()(declval<From>()) }
+    noexcept;
+}
+struct IsNothrowConvertible<From, To> : public TrueType {};
+
+}
+
+template<typename From, typename To>
+inline constexpr bool is_nothrow_convertible = Detail::IsNothrowConvertible<From, To>::value;
+
+// TODO: is_layout_compatible
+// TODO: is_pointer_interconvertible_base_of
+// TODO: is_invocable
+// TODO: is_invocable_r
+// TODO: is_nothrow_invocable
+// TODO: is_nothrow_invocable_r
+
+#pragma endregion
+
+/** other transformations **/
+#pragma region
 
 template<typename T>
-inline constexpr bool is_movable = is_move_constructible<T>&& is_move_assignable<T>;
+using remove_cvref = remove_cv<remove_reference<T>>;
 
 template<typename T>
-inline constexpr bool is_nothrow_movable = is_nothrow_move_constructible<T>&& is_nothrow_move_assignable<T>;
+using underlying_type = __underlying_type(T);
+
+namespace Detail {
 
 template<typename T>
-inline constexpr bool is_copyable = is_copy_constructible<T>&& is_copy_assignable<T>;
+struct Decay {
+private:
+    using U = remove_reference<T>;
+
+public:
+    using Type = conditional<is_array<U>, remove_extent<U>*, conditional<is_function<U>, add_pointer<U>, remove_cv<U>>>;
+};
+
+}
 
 template<typename T>
-inline constexpr bool is_nothrow_copyable = is_nothrow_copy_constructible<T>&& is_nothrow_copy_assignable<T>;
+using decay = typename Detail::Decay<T>::Type;
 
-constexpr bool is_constant_evaluated() {
+#pragma endregion
+
+constexpr bool is_constant_evaluated() noexcept {
     return __builtin_is_constant_evaluated();
 }
 
-template<typename T>
-constexpr bool is_compile_time_known(T value) {
-    return __builtin_constant_p(value);
-}
-
-template<typename T>
-using remove_const = typename Detail::RemoveConst<T>::Type;
-
-template<typename T>
-using remove_volatile = typename Detail::RemoveVolatile<T>::Type;
-
-template<typename T>
-using remove_cv = typename Detail::RemoveCV<T>::Type;
-
-template<typename T>
-using add_const = typename Detail::AddConst<T>::Type;
-
-template<typename T>
-using add_volatile = typename Detail::AddVolatile<T>::Type;
-
-template<typename T>
-using add_cv = typename Detail::AddCV<T>::Type;
-
-template<typename T>
-using remove_reference = typename Detail::RemoveReference<T>::Type;
-
-template<typename T>
-using add_lvalue_reference = typename Detail::AddLvalueReference<T>::Type;
-
-template<typename T>
-using add_rvalue_reference = typename Detail::AddRvalueReference<T>::Type;
-
-template<typename T>
-using remove_pointer = typename Detail::RemovePointer<T>::Type;
-
-template<typename T>
-using add_pointer = typename Detail::AddPointer<T>::Type;
-
-template<typename T>
-using remove_cvref = typename Detail::RemoveCVRef<T>::Type;
-
-template<typename T>
-using lvalue_reference_of = typename Detail::LValueReferenceOf<T>::Type;
-
-template<typename T>
-using rvalue_reference_of = typename Detail::RValueReferenceOf<T>::Type;
-
-template<typename T>
-using const_lvalue_reference_of = typename Detail::ConstLValueReferenceOf<T>::Type;
-
-template<typename T>
-using const_rvalue_reference_of = typename Detail::ConstRValueReferenceOf<T>::Type;
-
-template<typename T>
-using make_unsigned = typename Detail::MakeUnsigned<T>::Type;
-
-template<typename T>
-using make_signed = typename Detail::MakeSigned<T>::Type;
-
-template<typename T>
-using remove_extent = typename Detail::RemoveExtent<T>::Type;
-
-template<typename T>
-using remove_all_extents = typename Detail::RemoveAllExtents<T>::Type;
-
-template<bool condition, typename T = void>
-using enable_if = typename Detail::EnableIf<condition, T>::Type;
-
-template<bool condition, typename TypeIfTrue, typename TypeIfFalse>
-using conditional = typename Detail::Conditional<condition, TypeIfTrue, TypeIfFalse>::Type;
-
 template<typename...>
-using void_t = void;
+constexpr bool dependant_false = false;
 
-template<typename T>
-using underlying_type = typename Detail::UnderlyingType<T>::Type;
-
-template<typename... T>
-using TypeList = Detail::TypeList<T...>;
-
-template<usize size, typename List>
-using TypeSelect = typename Detail::TypeSelect<size, List>::Type;
-
-} /* namespace YT */
-
-/*
-xxxx is_scoped_enum xxxx
-xxxx is_swappable_with xxxx
-xxxx is_swappable xxxx
-xxxx is_nothrow_swappable_with xxxx
-xxxx is_nothrow_swappable xxxx
----- is_nothrow_convertible ----
-xxxx is_invocable xxxx
-xxxx is_invocable_r xxxx
-xxxx is_nothrow_invocable xxxx
-xxxx is_nothrow_invocable_r xxxx
-
-xxxx is_pointer_interconvertible_base_of xxxx
-xxxx is_pointer_interconvertible_with_class xxxx
-xxxx is_corresponding_member xxxx
-
-xxxx aligned_storage xxxx
-xxxx aligned_union xxxx
-xxxx decay xxxx
-xxxx common_type xxxx
-xxxx common_reference xxxx
-xxxx basic_common_reference xxxx
-xxxx result_of xxxx
-xxxx invoke_result xxxx
-xxxx type_identity xxxx
-*/
+} /* namespace yt */

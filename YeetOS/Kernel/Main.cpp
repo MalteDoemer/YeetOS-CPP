@@ -61,16 +61,32 @@ void test(bool x) {
     }
 }
 
-Option<int> func(bool b) {
+class Test {
 
+    NOT_COPYABLE(Test);
+    NOT_MOVABLE(Test);
+
+public:
+    Test(int d) : data(d) {
+    }
+
+    int data;
+
+    ~Test() {
+        DebugLog::println("~Test()");
+    }
+};
+
+Option<Test> func(bool b) {
     if (b) {
-        return 36;
+        return 5;
     } else {
         return {};
     }
 }
 
 void kernel_main() {
+
 
     DebugLog::println("Done with kernel_main() ...");
 

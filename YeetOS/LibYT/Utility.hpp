@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Malte Dömer
+ * Copyright 2022 Malte Dömer
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -20,16 +20,17 @@
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
 #pragma once
 
-#include <Types.hpp>
+#include <Builtins.hpp>
+#include <Platform.hpp>
 #include <Concepts.hpp>
 #include <TypeMagic.hpp>
 
-namespace YT {
+namespace yt {
 
 template<typename T>
 constexpr T min(const T& a, const T& b) noexcept {
@@ -41,49 +42,14 @@ constexpr T max(const T& a, const T& b) noexcept {
     return a < b ? b : a;
 }
 
-template<IntegralType T>
-constexpr T log2(T val) {
-    using IntType = TypeSelect<sizeof(T), TypeList<unsigned int, unsigned long, unsigned long long>>;
-
-    IntType casted_val = static_cast<IntType>(val);
-
-    int clz_res;
-
-    if constexpr (is_same<IntType, unsigned int>) {
-        clz_res = __builtin_clz(casted_val);
-    } else if constexpr (is_same<IntType, unsigned long>) {
-        clz_res = __builtin_clzl(casted_val);
-    } else {
-        clz_res = __builtin_clzll(casted_val);
-    }
-
-    return static_cast<T>(((sizeof(IntType) * char_bits) - 1) - clz_res);
-}
-
-template<IntegralType T>
-T align_up(T val, T align) {
+template<Integral T>
+constexpr T align_up(T val, T align) noexcept {
     return (1 + ((val - 1) / align)) * align;
 }
 
-template<IntegralType T>
-T align_down(T val, T align) {
+template<Integral T>
+constexpr T align_down(T val, T align) noexcept {
     return (val / align) * align;
-}
-
-template<typename T>
-constexpr remove_reference<T>&& move(T&& t) noexcept {
-    return static_cast<remove_reference<T>&&>(t);
-}
-
-template<typename T>
-constexpr T&& forward(remove_reference<T>& t) noexcept {
-    return static_cast<T&&>(t);
-}
-
-template<typename T>
-constexpr T&& forward(remove_reference<T>&& t) noexcept {
-    static_assert(!is_lvalue_reference<T>, "Can't forward an rvalue as an lvalue.");
-    return static_cast<T&&>(t);
 }
 
 template<Movable T>
@@ -94,7 +60,7 @@ constexpr void swap(T& a, T& b) noexcept(is_nothrow_movable<T>) {
 }
 
 template<typename T, typename U = T>
-requires is_move_constructible<T> && is_assignable<T&, U&&>
+requires MoveConstructible<T> && AssignableFrom<T&, U&&>
 constexpr T exchange(T& obj,
                      U&& new_value) noexcept(is_nothrow_move_constructible<T>&& is_nothrow_assignable<T&, U&&>) {
     T old_value = move(obj);
@@ -102,31 +68,38 @@ constexpr T exchange(T& obj,
     return old_value;
 }
 
+/* clang-format off */
 template<typename To, typename From>
-requires is_trivially_copyable<To> && is_trivially_copyable<From>
-constexpr To bit_cast(const From& from) {
-    static_assert(sizeof(To) == sizeof(From));
+requires (is_trivially_copyable<To> && is_trivially_copyable<From> && sizeof(To) == sizeof(From))
+ALWAYS_INLINE constexpr To bit_cast(const From& val) noexcept {
+    return __builtin_bit_cast(To, val);
+}
+/* clang-format on */
 
-    To res;
-    __builtin_memcpy(&res, &from, sizeof(To));
-    return res;
+template<typename T>
+ALWAYS_INLINE constexpr T* addr_of(T& val) noexcept {
+    return __builtin_addressof(val);
 }
 
-} /* namespace YT */
+template<UnsignedIntegral T>
+constexpr T log2(T value) {
+    using IntType = type_select<sizeof(T), unsigned int, unsigned long, unsigned long long>;
 
-using YT::align_down;
-using YT::align_up;
-using YT::bit_cast;
-using YT::exchange;
-using YT::forward;
-using YT::log2;
-using YT::max;
-using YT::min;
-using YT::move;
-using YT::swap;
+    int clz = count_leading_zeros(value);
+    return static_cast<T>(((sizeof(IntType) * char_bits) - 1) - clz);
+}
+
+} /* namespace yt */
+
+using yt::align_down;
+using yt::align_up;
+using yt::bit_cast;
+using yt::exchange;
+using yt::forward;
+using yt::log2;
+using yt::move;
+using yt::swap;
 
 namespace std {
-
-using YT::move;
-
-} /* namespace std */
+using yt::move;
+}

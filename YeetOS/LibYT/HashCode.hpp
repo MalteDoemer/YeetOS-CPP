@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2018-2020, Andreas Kling <kling@serenityos.org>
  * Copyright 2021 Malte Dömer
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,34 +29,28 @@
 #include <Types.hpp>
 #include <Utility.hpp>
 #include <Concepts.hpp>
+#include <TypeMagic.hpp>
 
-namespace YT {
+namespace yt {
 
 using HashCode = __UINTPTR_TYPE__;
 
-/* clang-format off */
-
-/**
- * Calculates the hash code of a object.
- */
+namespace Detail {
 template<typename T>
-requires requires (T& object) { { object.hash_code() } -> SameAs<HashCode>; }
-constexpr HashCode hash_code(T& object) noexcept(noexcept(object.hash_code()))
-{
-    return object.hash_code();
+concept DotHashCodeCallable = requires(T& object) {
+    { object.hash_code() } -> SameAs<HashCode>;
+};
+
 }
 
 /**
- * Calculates the hash code of a object.
+ * Calculates the hash code of `obj`.
  */
 template<typename T>
-requires requires (const T& object) { { object.hash_code() } -> SameAs<HashCode>; }
-constexpr HashCode hash_code(const T& object) noexcept(noexcept(object.hash_code()))
-{
-    return object.hash_code();
+requires Detail::DotHashCodeCallable<T>
+constexpr HashCode hash_code(T& obj) noexcept(noexcept(obj.hash_code())) {
+    return obj.hash_code();
 }
-
-/* clang-format on */
 
 namespace Detail {
 
@@ -94,33 +89,28 @@ constexpr u32 combine_hash32(u32 key1, u32 key2) noexcept {
 /**
  * Calculates the hash code of an integer.
  */
-template<IntegralType T>
+template<Integral T>
 constexpr HashCode hash_code(T key) noexcept {
-    if constexpr (sizeof(HashCode) == 4) {
 
-        if constexpr (sizeof(T) <= 4) {
+    static_assert(sizeof(T) <= sizeof(u64), "T is to large!");
+    using IntType = type_select<sizeof(T), u32, u64>;
+
+    if constexpr (sizeof(HashCode) == sizeof(u32)) {
+        if constexpr (is_same<T, u32>) {
             return Detail::hash32(key);
-        } else if constexpr (sizeof(T) <= 8) {
+        } else {
             return Detail::combine_hash32(key & 0xFFFFFFFF, key >> 32);
-        } else {
-            static_assert(DependantFalse<T>(), "Type of key is to large");
         }
-
-    } else if constexpr (sizeof(HashCode) == 8) {
-        if constexpr (sizeof(T) <= 8) {
-            return Detail::hash64(key);
-        } else {
-            static_assert(DependantFalse<T>(), "Type of key is to large");
-        }
-    } else {
-        static_assert(DependantFalse<T>(), "HashCode has a unknown size");
+    } else if constexpr (sizeof(HashCode) == sizeof(u64)) {
+        return Detail::hash64(key);
     }
 }
 
 /**
  * Calculates the hash code of a pointer.
  */
-template<PointerType T>
+template<typename T>
+requires is_pointer<T>
 constexpr HashCode hash_code(T key) noexcept {
     FlatPtr ptr = reinterpret_cast<FlatPtr>(key);
     return hash_code(ptr);
@@ -129,48 +119,44 @@ constexpr HashCode hash_code(T key) noexcept {
 /**
  * Calculates the hash code of a floating point number.
  */
-template<FloatingPointType T>
+template<FloatingPoint T>
 constexpr HashCode hash_code(T key) noexcept {
-    using IntType = TypeSelect<sizeof(T), TypeList<u8, u16, u32, u64>>;
+    static_assert(sizeof(T) <= sizeof(u64), "T is to large!");
+    using IntType = type_select<sizeof(T), u32, u64>;
     IntType val = bit_cast<IntType>(key);
     return hash_code(val);
 }
 
 /**
- * Calls hash_code() on all arguments and combines them into a single HashCode.
+ * Calls `hash_code()` on all arguments and combines them into a single `HashCode`.
  */
 template<typename T>
-constexpr HashCode combined_hash(T to_hash) noexcept(noexcept(hash_code(to_hash))) {
+constexpr HashCode combined_hash(T& to_hash) noexcept(noexcept(hash_code(to_hash))) {
     return hash_code(to_hash);
 }
 
-/* clang-format off */
-
 /**
- * Calls hash_code() on all arguments and combines them into a single HashCode.
+ * Calls `hash_code()` on all arguments and combines them into a single `HashCode`.
  */
-template<typename T, typename... Vargs>
-constexpr HashCode combined_hash(T to_hash, Vargs... vargs) noexcept(noexcept(hash_code(to_hash)) && (... && noexcept(hash_code(vargs))))
-{
-    return (hash_code(to_hash) * 209) ^ (combined_hash(vargs...) * 413);
+template<typename T, typename... Args>
+constexpr HashCode combined_hash(T& to_hash, Args&... args) noexcept(noexcept(hash_code(to_hash))
+                                                                     && (...&& noexcept(hash_code(args)))) {
+    return (hash_code(to_hash) * 209) ^ (combined_hash(args...) * 413);
 }
 
-using YT::hash_code;
+using yt::hash_code;
 
 /**
  * A concept wich defines if a type is hashable.
  */
 template<typename T>
-concept Hashable = requires(T a)
-{
+concept Hashable = requires(T a) {
     { hash_code(a) } -> SameAs<HashCode>;
 };
 
-/* clang-format on */
+} /* namespace yt */
 
-} /* namespace YT */
-
-using YT::combined_hash;
-using YT::hash_code;
-using YT::Hashable;
-using YT::HashCode;
+using yt::combined_hash;
+using yt::hash_code;
+using yt::Hashable;
+using yt::HashCode;

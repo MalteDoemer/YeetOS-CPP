@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Malte Dömer
+ * Copyright 2022 Malte Dömer
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,7 @@
 #include <Verify.hpp>
 #include <Platform.hpp>
 
-namespace YT {
+namespace yt {
 
 namespace Detail {
 
@@ -39,12 +39,10 @@ class SliceBase {
 public:
     ALWAYS_INLINE constexpr SliceBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SliceBase(T* values, usize count) noexcept : m_values(values), m_count(count) {
-    }
+    ALWAYS_INLINE constexpr SliceBase(T* values, usize count) noexcept : m_values(values), m_count(count) {}
 
     template<usize N>
-    ALWAYS_INLINE constexpr SliceBase(T (&values)[N]) noexcept : m_values(values), m_count(N) {
-    }
+    ALWAYS_INLINE constexpr SliceBase(T (&values)[N]) noexcept : m_values(values), m_count(N) {}
 
 protected:
     T* m_values = nullptr;
@@ -57,43 +55,34 @@ class SliceBase<Byte> {
 public:
     ALWAYS_INLINE constexpr SliceBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SliceBase(Byte* values, usize count) noexcept : m_values(values), m_count(count) {
-    }
+    ALWAYS_INLINE constexpr SliceBase(Byte* values, usize count) noexcept : m_values(values), m_count(count) {}
 
     ALWAYS_INLINE SliceBase(void* values, usize count) noexcept :
-        m_values(reinterpret_cast<Byte*>(values)), m_count(count) {
-    }
+        m_values(reinterpret_cast<Byte*>(values)), m_count(count) {}
 
     ALWAYS_INLINE SliceBase(char* values, usize count) noexcept :
-        m_values(reinterpret_cast<Byte*>(values)), m_count(count) {
-    }
+        m_values(reinterpret_cast<Byte*>(values)), m_count(count) {}
 
     ALWAYS_INLINE SliceBase(signed char* values, usize count) noexcept :
-        m_values(reinterpret_cast<Byte*>(values)), m_count(count) {
-    }
+        m_values(reinterpret_cast<Byte*>(values)), m_count(count) {}
 
     ALWAYS_INLINE SliceBase(unsigned char* values, usize count) noexcept :
-        m_values(reinterpret_cast<Byte*>(values)), m_count(count) {
-    }
+        m_values(reinterpret_cast<Byte*>(values)), m_count(count) {}
 
     template<usize N>
-    ALWAYS_INLINE constexpr SliceBase(Byte (&values)[N]) noexcept : m_values(values), m_count(N) {
-    }
+    ALWAYS_INLINE constexpr SliceBase(Byte (&values)[N]) noexcept : m_values(values), m_count(N) {}
 
     template<usize N>
     ALWAYS_INLINE constexpr SliceBase(char (&values)[N]) noexcept :
-        m_values(reinterpret_cast<Byte*>(values)), m_count(N) {
-    }
+        m_values(reinterpret_cast<Byte*>(values)), m_count(N) {}
 
     template<usize N>
     ALWAYS_INLINE constexpr SliceBase(signed char (&values)[N]) noexcept :
-        m_values(reinterpret_cast<Byte*>(values)), m_count(N) {
-    }
+        m_values(reinterpret_cast<Byte*>(values)), m_count(N) {}
 
     template<usize N>
     ALWAYS_INLINE constexpr SliceBase(unsigned char (&values)[N]) noexcept :
-        m_values(reinterpret_cast<Byte*>(values)), m_count(N) {
-    }
+        m_values(reinterpret_cast<Byte*>(values)), m_count(N) {}
 
 protected:
     Byte* m_values = nullptr;
@@ -106,43 +95,34 @@ class SliceBase<const Byte> {
 public:
     ALWAYS_INLINE constexpr SliceBase() noexcept = default;
 
-    ALWAYS_INLINE constexpr SliceBase(const Byte* values, usize count) noexcept : m_values(values), m_count(count) {
-    }
+    ALWAYS_INLINE constexpr SliceBase(const Byte* values, usize count) noexcept : m_values(values), m_count(count) {}
 
     ALWAYS_INLINE SliceBase(const void* values, usize count) noexcept :
-        m_values(reinterpret_cast<const Byte*>(values)), m_count(count) {
-    }
+        m_values(reinterpret_cast<const Byte*>(values)), m_count(count) {}
 
     ALWAYS_INLINE SliceBase(const char* values, usize count) noexcept :
-        m_values(reinterpret_cast<const Byte*>(values)), m_count(count) {
-    }
+        m_values(reinterpret_cast<const Byte*>(values)), m_count(count) {}
 
     ALWAYS_INLINE SliceBase(const signed char* values, usize count) noexcept :
-        m_values(reinterpret_cast<const Byte*>(values)), m_count(count) {
-    }
+        m_values(reinterpret_cast<const Byte*>(values)), m_count(count) {}
 
     ALWAYS_INLINE SliceBase(const unsigned char* values, usize count) noexcept :
-        m_values(reinterpret_cast<const Byte*>(values)), m_count(count) {
-    }
+        m_values(reinterpret_cast<const Byte*>(values)), m_count(count) {}
 
     template<usize N>
-    ALWAYS_INLINE constexpr SliceBase(const Byte (&values)[N]) noexcept : m_values(values), m_count(N) {
-    }
+    ALWAYS_INLINE constexpr SliceBase(const Byte (&values)[N]) noexcept : m_values(values), m_count(N) {}
 
     template<usize N>
     ALWAYS_INLINE constexpr SliceBase(const char (&values)[N]) noexcept :
-        m_values(reinterpret_cast<const Byte*>(values)), m_count(N) {
-    }
+        m_values(reinterpret_cast<const Byte*>(values)), m_count(N) {}
 
     template<usize N>
     ALWAYS_INLINE constexpr SliceBase(const signed char (&values)[N]) noexcept :
-        m_values(reinterpret_cast<const Byte*>(values)), m_count(N) {
-    }
+        m_values(reinterpret_cast<const Byte*>(values)), m_count(N) {}
 
     template<usize N>
     ALWAYS_INLINE constexpr SliceBase(const unsigned char (&values)[N]) noexcept :
-        m_values(reinterpret_cast<const Byte*>(values)), m_count(N) {
-    }
+        m_values(reinterpret_cast<const Byte*>(values)), m_count(N) {}
 
 protected:
     const Byte* m_values = nullptr;
@@ -163,21 +143,16 @@ class Slice : public Detail::SliceBase<T> {
 
 public:
     using ValueType = T;
-    using ValueReference = T&;
-    using ValuePointer = T*;
-    using ConstValueReference = const T&;
-    using ConstValuePointer = const T*;
 
     using IteratorType = T*;
     using ConstIteratorType = const T*;
 
 public:
-    constexpr Slice() noexcept = default;
+    ALWAYS_INLINE constexpr Slice() noexcept = default;
 
-    constexpr Slice(const Slice& other) noexcept : Detail::SliceBase<T>(other.m_values, other.m_count) {
-    }
+    ALWAYS_INLINE constexpr Slice(const Slice& other) noexcept : Detail::SliceBase<T>(other.m_values, other.m_count) {}
 
-    constexpr Slice& operator=(const Slice& other) noexcept {
+    ALWAYS_INLINE constexpr Slice& operator=(const Slice& other) noexcept {
         this->m_values = other.m_values;
         this->m_count = other.m_count;
         return *this;
@@ -186,140 +161,115 @@ public:
     /**
      * Returns the number of elements.
      */
-    constexpr usize count() const noexcept {
+    NODISCARD ALWAYS_INLINE constexpr usize size() const noexcept {
         return this->m_count;
     }
 
-    /**
-     * Checks wether the Span is empty.
-     */
-    constexpr bool is_empty() const noexcept {
-        return count() == 0;
+    NODISCARD ALWAYS_INLINE constexpr bool is_empty() const noexcept {
+        return size() == 0;
     }
 
-    /**
-     * Checks wether the Span points to nullptr.
-     */
-    constexpr bool is_null() const noexcept {
+    NODISCARD ALWAYS_INLINE constexpr bool is_null() const noexcept {
         return data() == nullptr;
     }
 
-    /**
-     * Returns a pointer to the underlying data.
-     */
-    constexpr ValuePointer data() noexcept {
+    NODISCARD ALWAYS_INLINE constexpr T* data() noexcept {
         return this->m_values;
     }
 
-    /**
-     * Returns a pointer to the underlying data.
-     */
-    constexpr ConstValuePointer data() const noexcept {
+    NODISCARD ALWAYS_INLINE constexpr const T* data() const noexcept {
         return this->m_values;
     }
 
-    /**
-     * Returns an iterator to the begin of the Span.
-     */
-    constexpr IteratorType begin() noexcept {
+    NODISCARD ALWAYS_INLINE constexpr IteratorType begin() noexcept {
         return IteratorType { data() };
     }
 
-    /**
-     * Returns an iterator to the begin of the Span.
-     */
-    constexpr ConstIteratorType begin() const noexcept {
+    NODISCARD ALWAYS_INLINE constexpr ConstIteratorType begin() const noexcept {
         return ConstIteratorType { data() };
     }
 
-    /**
-     * Returns an iterator to the end of the Span.
-     */
-    constexpr IteratorType end() noexcept {
-        return IteratorType { data() } + count();
+    NODISCARD ALWAYS_INLINE constexpr IteratorType end() noexcept {
+        return IteratorType { data() } + size();
+    }
+
+    NODISCARD ALWAYS_INLINE constexpr ConstIteratorType end() const noexcept {
+        return ConstIteratorType { data() } + size();
     }
 
     /**
-     * Returns an iterator to the end of the Span.
-     */
-    constexpr ConstIteratorType end() const noexcept {
-        return ConstIteratorType { data() } + count();
-    }
-
-    /**
-     * Returns the element at the specified index.
+     * Returns the element at `index`.
      *
-     * UB if the index is out of bounds.
+     * UB if `index` is out of bounds.
      */
-    constexpr ValueReference operator[](usize index) noexcept {
-        VERIFY(index < count());
+    NODISCARD ALWAYS_INLINE constexpr T& operator[](usize index) noexcept {
+        VERIFY(index < size());
         return data()[index];
     }
 
     /**
-     * Returns the element at the specified index.
+     * Returns the element at `index`.
      *
-     * UB if the index is out of bounds.
+     * UB if `index` is out of bounds.
      */
-    constexpr ConstValueReference operator[](usize index) const noexcept {
-        VERIFY(index < count());
+    NODISCARD ALWAYS_INLINE constexpr const T& operator[](usize index) const noexcept {
+        VERIFY(index < size());
         return data()[index];
     }
 
     /**
      * Returns the first element.
      *
-     * UB if the Span is empty.
+     * UB if the slice is empty.
      */
-    constexpr ValueReference front() noexcept {
+    NODISCARD ALWAYS_INLINE constexpr T& front() noexcept {
         return operator[](0);
     }
 
     /**
      * Returns the first element.
      *
-     * UB if the Span is empty.
+     * UB if the slice is empty.
      */
-    constexpr ConstValueReference front() const noexcept {
+    NODISCARD ALWAYS_INLINE constexpr const T& front() const noexcept {
         return operator[](0);
     }
 
     /**
      * Returns the last element.
      *
-     * UB if the Span is empty.
+     * UB if the slice is empty.
      */
-    constexpr ValueReference back() noexcept {
-        return operator[](count() - 1);
+    NODISCARD ALWAYS_INLINE constexpr T& back() noexcept {
+        return operator[](size() - 1);
     }
 
     /**
      * Returns the last element.
      *
-     * UB if the Span is empty.
+     * UB if the slice is empty.
      */
-    constexpr ConstValueReference back() const noexcept {
-        return operator[](count() - 1);
+    NODISCARD ALWAYS_INLINE constexpr const T& back() const noexcept {
+        return operator[](size() - 1);
     }
 
     /**
-     *  Retruns a Span beginning at the specified start and with the specified length.
+     * Retruns a slice beginning at the specified start index and with the specified size.
      *
-     * UB if start + length > count()
+     * UB if `start + size > this->size()`
      */
-    NODISCARD constexpr Slice subspan(usize start, usize length) const noexcept {
-        VERIFY(start + length <= count());
-        return Slice { data() + start, length };
-    }
-
-    /**
-     * Converts the Span into a Span with const elements.
-     */
-    constexpr operator Slice<const T>() const {
-        return Slice<const T> { data(), count() };
+    NODISCARD ALWAYS_INLINE constexpr Slice subslice(usize start, usize size) const noexcept {
+        VERIFY(start + size <= this->size());
+        return Slice { data() + start, size };
     }
 };
 
-} /* namespace YT */
+template<typename T>
+Slice(T*, usize) -> Slice<T>;
 
-using YT::Slice;
+template<typename T>
+Slice(T[]) -> Slice<T>;
+
+} /* namespace yt */
+
+using yt::Slice;

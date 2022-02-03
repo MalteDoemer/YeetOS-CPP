@@ -29,48 +29,36 @@
 #include <Slice.hpp>
 #include <Verify.hpp>
 
-namespace std {
+namespace yt {
 
 /**
  * Container used by the compiler for the initializer list syntax.
  *
  * @tparam T the type of the elements
  */
-template<class T>
-class initializer_list {
+template<typename T>
+class InitializerList {
 public:
     using ValueType = T;
-    using ValueReference = T&;
-    using ValuePointer = T*;
-    using ConstValueReference = const T&;
-    using ConstValuePointer = const T*;
 
     using Iterator = T*;
     using ConstIterator = const T*;
 
 public:
-    constexpr initializer_list(ConstValuePointer data, usize size) noexcept : m_data(data), m_size(size) {
-    }
-    constexpr initializer_list() noexcept : m_data(nullptr), m_size(0) {
-    }
+    constexpr InitializerList(const T* data, usize size) noexcept : m_data(data), m_size(size) {}
+    constexpr InitializerList() noexcept : m_data(nullptr), m_size(0) {}
 
     /**
      * Returns the number of elements.
      */
-    constexpr usize count() const noexcept {
+    constexpr usize size() const noexcept {
         return m_size;
     }
 
-    /**
-     * Checks wether the initializer_list is empty.
-     */
     constexpr bool is_empty() const noexcept {
-        return count() == 0;
+        return size() == 0;
     }
 
-    /**
-     * Checks wether the initializer_list points to nullptr.
-     */
     constexpr bool is_null() const noexcept {
         return data() == nullptr;
     }
@@ -78,60 +66,53 @@ public:
     /**
      * Returns a pointer to the underlying data.
      */
-    constexpr ConstValuePointer data() const noexcept {
+    constexpr const T* data() const noexcept {
         return m_data;
     }
 
     /**
-     * Returns an iterator to the begin of the initializer_list.
+     * Returns an iterator to the begin of the `InitializerList`.
      */
     constexpr ConstIterator begin() const noexcept {
         return ConstIterator { data() };
     }
 
     /**
-     * Returns an iterator to the end of the initializer_list.
+     * Returns an iterator to the end of the `InitializerList`.
      */
     constexpr ConstIterator end() const noexcept {
-        return begin() + count();
+        return begin() + size();
     }
 
     /**
-     * Returns the element at the specified index.
+     * Returns the element at `index`.
      *
-     * UB if the index is out of bounds.
+     * UB if `index` is out of bounds.
      */
-    constexpr ConstValueReference operator[](usize index) const noexcept {
-        VERIFY(index < count());
+    constexpr const T& operator[](usize index) const noexcept {
+        VERIFY(index < size());
         return data()[index];
     }
 
     /**
-     * Returns a mutable slice over the whole array.
+     * Returns a const slice over the whole `InitializerList`.
      */
-    constexpr Slice<T> slice() noexcept {
-        return Slice<T>(data(), count());
-    }
-
-    /**
-     * Returns a const slice over the whole array.
-     */
-    constexpr Slice<const T> slice() const noexcept {
-        return Slice<T>(data(), count());
+    constexpr const Slice<T> slice() const noexcept {
+        return Slice<T>(data(), size());
     }
 
 private:
-    ConstValuePointer m_data;
+    const T* m_data;
     usize m_size;
 };
 
-} /* namespace std */
+} /* namespace yt */
 
-namespace YT {
+namespace std {
 
 template<typename T>
-using InitializerList = std::initializer_list<T>;
+using initializer_list = yt::InitializerList<T>;
 
-} /* namespace YT */
+} /* namespace std */
 
-using YT::InitializerList;
+using yt::InitializerList;

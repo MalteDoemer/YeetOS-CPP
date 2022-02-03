@@ -28,7 +28,7 @@
 #include <Utility.hpp>
 #include <Platform.hpp>
 
-namespace YT::Detail {
+namespace yt::Detail {
 
 class ScopeExitHelper {
     template<typename Func>
@@ -108,8 +108,8 @@ class ScopeSuccessHelper {
     }
 };
 
-} /* namespace YT::Detail */
+} /* namespace yt::Detail */
 
-#define SCOPE_EXIT    auto ANON_VAR(SCOPE_EXIT_) = YT::Detail::ScopeExitHelper() + [&]() noexcept
-#define SCOPE_FAIL    auto ANON_VAR(SCOPE_FAIL_) = YT::Detail::ScopeFailHelper() + [&]() noexcept
-#define SCOPE_SUCCESS auto ANON_VAR(SCOPE_SUCCESS_) = YT::Detail::ScopeSuccessHelper() + [&]()
+#define SCOPE_EXIT    auto ANON_VAR(SCOPE_EXIT_) = yt::Detail::ScopeExitHelper() + [&]() noexcept
+#define SCOPE_FAIL    auto ANON_VAR(SCOPE_FAIL_) = yt::Detail::ScopeFailHelper() + [&]() noexcept
+#define SCOPE_SUCCESS auto ANON_VAR(SCOPE_SUCCESS_) = yt::Detail::ScopeSuccessHelper() + [&]()

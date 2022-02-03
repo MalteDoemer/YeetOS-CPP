@@ -30,118 +30,196 @@
 #include <Verify.hpp>
 #include <Utility.hpp>
 #include <Platform.hpp>
-#include <TypeMagic.hpp>
+#include <Concepts.hpp>
 
-namespace YT {
+namespace yt {
+
+namespace Detail {
+struct InPlaceTag {};
+}
 
 template<typename T>
+requires Destructible<T>
+class NODISCARD Option;
+
+template<typename T>
+requires Destructible<T>
 class NODISCARD Option {
 
 public:
-    /**
-     * Constructs an empty Option.
-     */
-    ALWAYS_INLINE constexpr Option() = default;
+    using ValueType = T;
+
+    ALWAYS_INLINE constexpr Option() noexcept = default;
+
+    ALWAYS_INLINE constexpr Option(const Option& other) noexcept(is_nothrow_copy_constructible<T>) requires
+        CopyConstructible<T> {
+        if (other.has_value()) {
+            init(other.value());
+        }
+    }
+
+    ALWAYS_INLINE constexpr Option(Option&& other) noexcept(is_nothrow_move_constructible<T>) requires
+        MoveConstructible<T> {
+        if (other.has_value()) {
+            init(move(other.value()));
+        }
+    }
 
     template<typename U = T>
-    ALWAYS_INLINE explicit(!is_convertible<U&&, T>) Option(U&& value) noexcept(noexcept(T(forward<U>(value)))) requires(
-        !is_same<remove_cvref<U>, Option<T>> && is_constructible<T, U&&>) :
-        m_has_value(true) {
-        new (&m_storage) T(forward<U>(value));
+    ALWAYS_INLINE explicit(!is_convertible<U&&, T>) constexpr Option(U&& value) noexcept(
+        is_nothrow_constructible<T, U&&>) requires(!SameAs<remove_cvref<U>, Option<T>> && ConstructibleFrom<T, U&&>) {
+        init(forward<U>(value));
     }
 
-    ALWAYS_INLINE constexpr Option(const Option& other) noexcept(noexcept(T(other.value()))) :
-        m_has_value(other.m_has_value) {
-        if (m_has_value) {
-            new (&m_storage) T(other.value());
-        }
-    }
-
-    ALWAYS_INLINE constexpr Option(Option&& other) noexcept(noexcept(T(other.release()))) :
-        m_has_value(other.m_has_value) {
-        if (has_value()) {
-            // use release here to invalidate other
-            new (&m_storage) T(other.release());
-        }
-    }
-
-    ALWAYS_INLINE constexpr Option& operator=(const Option& other) noexcept(noexcept(T(other.value()))) {
-        if (this != &other) {
+    constexpr Option& operator=(const Option& other) noexcept(is_nothrow_copyable<T>) requires Copyable<T> {
+        if (has_value() == true && other.has_value() == false)
             clear();
-            m_has_value = other.has_value();
-            if (has_value()) {
-                new (&m_storage) T(other.value());
-            }
-        }
+        else if (has_value() == false && other.has_value() == true)
+            init(other.value());
+        else if (has_value() == true && other.has_value() == true)
+            value() = other.value();
         return *this;
     }
 
-    ALWAYS_INLINE constexpr Option& operator=(Option&& other) noexcept(noexcept(T(other.release()))) {
-        if (this != &other) {
+    constexpr Option& operator=(Option&& other) noexcept(is_nothrow_movable<T>) requires Movable<T> {
+        if (has_value() == true && other.has_value() == false)
             clear();
-            m_has_value = other.has_value();
-            if (has_value()) {
-                new (&m_storage) T(other.release());
-            }
-        }
+        else if (has_value() == false && other.has_value() == true)
+            init(move(other.value()));
+        else if (has_value() == true && other.has_value() == true)
+            value() = move(other.value());
         return *this;
+    }
+
+    template<typename... Args>
+    ALWAYS_INLINE void emplace(Args&&... args) noexcept(is_nothrow_constructible<T, Args...>) requires
+        ConstructibleFrom<T, Args...> {
+        clear();
+        init(forward<Args>(args)...);
     }
 
     NODISCARD ALWAYS_INLINE constexpr bool has_value() const noexcept {
-        return m_has_value;
+        return m_init;
     }
 
-    ALWAYS_INLINE constexpr operator bool() const noexcept {
-        return m_has_value;
+    ALWAYS_INLINE constexpr explicit operator bool() const noexcept {
+        return has_value();
     }
 
     NODISCARD ALWAYS_INLINE constexpr T& value() & noexcept {
         VERIFY(has_value());
-        return *__builtin_launder(reinterpret_cast<T*>(&m_storage));
+        return *get_ptr();
     }
 
     NODISCARD ALWAYS_INLINE constexpr const T& value() const& noexcept {
         VERIFY(has_value());
-        return *__builtin_launder(reinterpret_cast<const T*>(&m_storage));
+        return *get_ptr();
     }
 
-    /**
-     * Moves the contained value out of the Option and returns it.
-     */
+    ALWAYS_INLINE constexpr T& operator*() noexcept {
+        return value();
+    }
+
+    ALWAYS_INLINE constexpr const T& operator*() const noexcept {
+        return value();
+    }
+
+    ALWAYS_INLINE constexpr T* operator->() noexcept {
+        return &value();
+    }
+
+    ALWAYS_INLINE constexpr const T* operator->() const noexcept {
+        return &value();
+    }
+
     NODISCARD ALWAYS_INLINE constexpr T release() noexcept(is_nothrow_move_constructible<T>) {
-        VERIFY(has_value());
         T temp = move(value());
-        clear_unchecked();
+        value().~T();
+        m_init = false;
         return temp;
     }
 
-    template<typename O>
-    ALWAYS_INLINE bool operator==(Option<O> const& other) const noexcept(noexcept(value() == other.value())) {
-        return has_value() == other.has_value() && (!has_value() || value() == other.value());
-    }
-
-    template<typename O>
-    ALWAYS_INLINE bool operator==(O const& other) const noexcept(noexcept(value() == other)) {
-        return has_value() && value() == other;
-    }
-
-private:
-    ALWAYS_INLINE void clear() noexcept(noexcept(clear_unchecked())) {
+    ALWAYS_INLINE constexpr void clear() noexcept {
         if (has_value()) {
-            clear_unchecked();
+            value().~T();
+            m_init = false;
         }
     }
 
-    ALWAYS_INLINE void clear_unchecked() noexcept(noexcept(value().~T())) {
-        value().~T();
-        m_has_value = false;
+    ~Option() {
+        clear();
+    }
+
+    /// ONLY INTERNAL USE !!!
+    template<typename... Args>
+    ALWAYS_INLINE constexpr explicit Option(Detail::InPlaceTag, Args&&... args) noexcept(
+        is_nothrow_constructible<T, Args...>) requires ConstructibleFrom<T, Args...> {
+        init(forward<Args>(args)...);
+    }
+
+private :
+
+    template<typename... Args>
+    ALWAYS_INLINE constexpr void
+    init(Args&&... args) {
+        VERIFY(!has_value());
+        new (get_ptr()) T(forward<Args>(args)...);
+        m_init = true;
+    }
+
+    ALWAYS_INLINE constexpr T* get_ptr() noexcept {
+        return __builtin_launder(reinterpret_cast<T*>(addr_of(m_storage)));
+    }
+
+    ALWAYS_INLINE constexpr const T* get_ptr() const noexcept {
+        return __builtin_launder(reinterpret_cast<const T*>(addr_of(m_storage)));
     }
 
 private:
     alignas(T) Byte m_storage[sizeof(T)];
-    bool m_has_value { false };
+    bool m_init { false };
 };
 
-} /* namespace YT */
+template<typename T>
+Option(T) -> Option<T>;
 
-using YT::Option;
+template<typename T, typename... Args>
+requires ConstructibleFrom<T, Args...> Option<T> make_option(Args&&... args)
+noexcept(is_nothrow_constructible<T, Args...>) {
+    return Option<T>(Detail::InPlaceTag {}, forward<Args>(args)...);
+}
+
+template<class T>
+constexpr bool operator==(const Option<T>& x, const Option<T>& y) {
+    return x.has_value() != y.has_value() ? false : x.has_value() == false ? true : x.value() == y.value();
+}
+
+template<class T>
+constexpr bool operator!=(const Option<T>& x, const Option<T>& y) {
+    return !(x == y);
+}
+
+template<class T>
+constexpr bool operator==(const Option<T>& x, const T& v) {
+    return x.has_value() ? x.value() == v : false;
+}
+
+template<class T>
+constexpr bool operator==(const T& v, const Option<T>& x) {
+    return x.has_value() ? v == x.value() : false;
+}
+
+template<class T>
+constexpr bool operator!=(const Option<T>& x, const T& v) {
+    return x.has_value() ? x.value() != v : true;
+}
+
+template<class T>
+constexpr bool operator!=(const T& v, const Option<T>& x) {
+    return x.has_value() ? v != x.value() : true;
+}
+
+} /* namespace yt */
+
+using yt::Option;
+using yt::make_option;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Malte Dömer
+ * Copyright 2022 Malte Dömer
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -20,63 +20,95 @@
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
 #pragma once
 
-#include <Types.hpp>
 #include <TypeMagic.hpp>
 
-namespace YT {
+namespace yt {
 
-template<typename T, typename U>
-concept SameAs = is_same<T, U>;
-
-template<typename From, typename To>
-concept ConvertibleTo = is_convertible<From, To>;
-
-template<typename T, typename U>
-concept AssignableFrom = is_assignable<T, U>;
-
-template<typename T, typename U>
-concept ConstructibleFrom = is_constructible<T, U>;
+template<typename U, typename V>
+concept SameAs = is_same<U, V> && is_same<V, U>;
 
 template<typename Derived, typename Base>
-concept DerivedFrom = is_base_of<Base, Derived>;
+concept DerivedFrom = is_base_of<Base, Derived> && is_convertible<const volatile Derived*, const volatile Base*>;
+
+template<typename From, typename To>
+concept ConvertibleTo = is_convertible<From, To> && requires {
+    static_cast<To>(declval<From>());
+};
 
 template<typename T>
-concept Movable = is_object<T> && is_movable<T>;
+concept Integral = is_integral<T>;
 
 template<typename T>
-concept Copyable = Movable<T> && is_copyable<T>;
+concept SignedIntegral = Integral<T> && is_signed<T>;
 
 template<typename T>
-concept Semiregular = Copyable<T> && is_default_constructible<T> && is_destructible<T>;
+concept UnsignedIntegral = Integral<T> && is_unsigned<T>;
 
 template<typename T>
-concept Destructible = is_destructible<T>;
+concept FloatingPoint = is_floating_point<T>;
+
+template<typename T>
+concept Scalar = is_scalar<T>;
+
+template<typename Left, typename Right>
+concept AssignableFrom = is_lvalue_reference<Left> && is_assignable<Left, Right> && requires(Left lhs, Right&& rhs) {
+    { lhs = forward<Right>(rhs) } -> SameAs<Left>;
+};
+
+template<typename T>
+concept Destructible = is_nothrow_destructible<T>;
+
+template<typename T, typename... Args>
+concept ConstructibleFrom = Destructible<T> && is_constructible<T, Args...>;
+
+template<typename T>
+concept DefaultInitializable = ConstructibleFrom<T> && requires {
+    T {};
+    ::new (static_cast<void*>(nullptr)) T;
+};
+
+template<typename T>
+concept MoveConstructible = ConstructibleFrom<T, T> && ConvertibleTo<T, T>;
+
+template<class T>
 
 /* clang-format off */
+
+concept CopyConstructible = 
+    MoveConstructible<T> && 
+    ConstructibleFrom<T, T&> && ConvertibleTo<T&, T> && 
+    ConstructibleFrom<T, const T&> && ConvertibleTo<const T&, T> && 
+    ConstructibleFrom<T, const T> && ConvertibleTo<const T, T>;
+
+
+template<typename T>
+concept Movable = is_object<T> && MoveConstructible<T> && AssignableFrom<T&, T>;
+
+template<typename T>
+concept Copyable = 
+    Movable<T> && 
+    CopyConstructible<T> && 
+    AssignableFrom<T&, T&> && 
+    AssignableFrom<T&, const T&> && 
+    AssignableFrom<T&, const T>;
+
+
 template<typename T, typename U>
-concept EqualityCompareableWith = requires(const remove_reference<T>& a, const remove_reference<U>& b)
-{
+concept EqualityCompareableWith = requires(const remove_reference<T>& a, const remove_reference<U>& b) {
     { a == b } -> ConvertibleTo<bool>;
     { a != b } -> ConvertibleTo<bool>;
     { b == a } -> ConvertibleTo<bool>;
     { b != a } -> ConvertibleTo<bool>;
 };
 
-template<typename T>
-concept EqualityCompareable = EqualityCompareableWith<T, T>;
 
 template<typename T, typename U>
-concept CompareableWith = requires(const remove_reference<T>& a, const remove_reference<U>& b)
-{
-    { a == b } -> ConvertibleTo<bool>;
-    { a != b } -> ConvertibleTo<bool>;
-    { b == a } -> ConvertibleTo<bool>;
-    { b != a } -> ConvertibleTo<bool>;
+concept CompareableWith = EqualityCompareableWith<T, U> && requires(const remove_reference<T>& a, const remove_reference<U>& b) {
     { a <= b } -> ConvertibleTo<bool>;
     { a >= b } -> ConvertibleTo<bool>;
     { a < b } -> ConvertibleTo<bool>;
@@ -86,55 +118,56 @@ concept CompareableWith = requires(const remove_reference<T>& a, const remove_re
     { b < a } -> ConvertibleTo<bool>;
     { b > a } -> ConvertibleTo<bool>;
 };
+
 /* clang-format on */
 
 template<typename T>
-concept Void = is_void<T>;
-
-template<typename T>
-concept Bool = is_same<T, bool>;
-
-template<typename T>
-concept NonFinal = !is_final<T>;
+concept EqualityCompareable = EqualityCompareableWith<T, T>;
 
 template<typename T>
 concept Compareable = CompareableWith<T, T>;
 
 template<typename T>
-concept ArithmeticType = is_arithmetic<T>;
+concept Semiregular = DefaultInitializable<T> && Copyable<T>;
 
 template<typename T>
-concept FloatingPointType = is_floating_point<T>;
+concept Regular = Semiregular<T> && EqualityCompareable<T>;
 
-template<typename T>
-concept IntegralType = is_integral<T>;
+template<typename F, typename Ret, typename... Args>
+concept Function = requires(F&& f, Args&&... args) {
+    { f(forward<Args>(args)...) } -> SameAs<Ret>;
+};
 
-template<typename T>
-concept ScalarType = is_scalar<T>;
+template<typename P, typename... Args>
+concept Predicate = Function<P, bool, Args...>;
 
-template<typename T>
-concept PointerType = is_pointer<T>;
+template<typename F, typename... Args>
+concept VoidCallback = Function<F, void, Args...>;
 
-} /* namespace YT */
+} /* namespace yt */
 
-using YT::ArithmeticType;
-using YT::AssignableFrom;
-using YT::Bool;
-using YT::Compareable;
-using YT::CompareableWith;
-using YT::ConstructibleFrom;
-using YT::ConvertibleTo;
-using YT::Copyable;
-using YT::DerivedFrom;
-using YT::Destructible;
-using YT::EqualityCompareable;
-using YT::EqualityCompareableWith;
-using YT::FloatingPointType;
-using YT::IntegralType;
-using YT::Movable;
-using YT::NonFinal;
-using YT::PointerType;
-using YT::SameAs;
-using YT::ScalarType;
-using YT::Semiregular;
-using YT::Void;
+using yt::AssignableFrom;
+using yt::Compareable;
+using yt::CompareableWith;
+using yt::ConstructibleFrom;
+using yt::ConvertibleTo;
+using yt::Copyable;
+using yt::CopyConstructible;
+using yt::DefaultInitializable;
+using yt::DerivedFrom;
+using yt::Destructible;
+using yt::EqualityCompareable;
+using yt::EqualityCompareableWith;
+using yt::FloatingPoint;
+using yt::Function;
+using yt::Integral;
+using yt::Movable;
+using yt::MoveConstructible;
+using yt::Predicate;
+using yt::Regular;
+using yt::SameAs;
+using yt::Scalar;
+using yt::Semiregular;
+using yt::SignedIntegral;
+using yt::UnsignedIntegral;
+using yt::VoidCallback;

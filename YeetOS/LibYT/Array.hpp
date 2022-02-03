@@ -30,7 +30,7 @@
 #include <Verify.hpp>
 #include <TypeMagic.hpp>
 
-namespace YT {
+namespace yt {
 
 /**
  * A container with a fixed amount of elements.
@@ -45,10 +45,6 @@ class Array {
 
 public:
     using ValueType = T;
-    using ValueReference = T&;
-    using ValuePointer = T*;
-    using ConstValueReference = const T&;
-    using ConstValuePointer = const T*;
 
     using Iterator = T*;
     using ConstIterator = const T*;
@@ -56,7 +52,7 @@ public:
     /**
      * Returns the number of elements.
      */
-    constexpr usize count() const noexcept {
+    constexpr usize size() const noexcept {
         return N;
     }
 
@@ -70,113 +66,113 @@ public:
     /**
      * Returns a pointer to the underlying data.
      */
-    constexpr ConstValuePointer data() const noexcept {
+    constexpr const T* data() const noexcept {
         return m_data;
     }
 
     /**
      * Returns a pointer to the underlying data.
      */
-    constexpr ValuePointer data() noexcept {
+    constexpr T* data() noexcept {
         return m_data;
     }
 
     /**
-     * Returns an iterator to the begin of the Array.
+     * Returns an iterator to the begin of the array.
      */
     constexpr Iterator begin() noexcept {
         return Iterator { m_data };
     }
 
     /**
-     * Returns an iterator to the begin of the Array.
+     * Returns an iterator to the begin of the array.
      */
     constexpr ConstIterator begin() const noexcept {
         return ConstIterator { m_data };
     }
 
     /**
-     * Returns an iterator to the end of the Array.
+     * Returns an iterator to the end of the array.
      */
     constexpr Iterator end() noexcept {
         return begin() + N;
     }
 
     /**
-     * Returns an iterator to the end of the Array.
+     * Returns an iterator to the end of the array.
      */
     constexpr ConstIterator end() const noexcept {
         return begin() + N;
     }
 
     /**
-     * Returns the element at index.
+     * Returns the element at `index`.
      *
-     * UB if the index is out of bounds.
+     * UB if `index` is out of bounds.
      */
-    constexpr ConstValueReference operator[](usize index) const noexcept {
-        VERIFY(index < count());
+    constexpr const T& operator[](usize index) const noexcept {
+        VERIFY(index < size());
         return m_data[index];
     }
 
     /**
-     * Returns the element at index.
+     * Returns the element at `index`.
      *
-     * UB if the index is out of bounds.
+     * UB if the `index` is out of bounds.
      */
-    constexpr ValueReference operator[](usize index) noexcept {
-        VERIFY(index < count());
+    constexpr T& operator[](usize index) noexcept {
+        VERIFY(index < size());
         return m_data[index];
     }
 
     /**
      * Returns the first element.
      *
-     * UB if the Array is empty.
+     * UB if the array is empty.
      */
-    constexpr ConstValueReference front() const noexcept {
+    constexpr const T& front() const noexcept {
         return operator[](0);
     }
 
     /**
      * Returns the first element.
      *
-     * UB if the Array is empty.
+     * UB if the array is empty.
      */
-    constexpr ValueReference front() noexcept {
+    constexpr T& front() noexcept {
         return operator[](0);
     }
 
     /**
      * Returns the last element.
      *
-     * UB if the Array is empty.
+     * UB if the array is empty.
      */
-    constexpr ConstValueReference back() const noexcept {
-        return operator[](count() - 1);
+    constexpr const T& back() const noexcept {
+        return operator[](size() - 1);
     }
 
     /**
      * Returns the last element.
      *
-     * UB if the Array is empty.
+     * UB if the array is empty.
      */
-    constexpr ValueReference back() noexcept {
-        return operator[](count() - 1);
+    constexpr T& back() noexcept {
+        return operator[](size() - 1);
     }
 
     /**
      * Returns a mutable slice over the whole array.
      */
     constexpr Slice<T> slice() noexcept {
-        return Slice<T>(data(), count());
+        return Slice<T>(data(), size());
     }
 
     /**
      * Returns a const slice over the whole array.
      */
-    constexpr Slice<const T> slice() const noexcept {
-        return Slice<T>(data(), count());
+    constexpr const Slice<T> slice() const noexcept {
+        return Slice<T>(data(), size());
     }
 
     T m_data[N];
@@ -185,6 +181,6 @@ public:
 template<typename T, typename... U>
 Array(T, U...) -> Array<enable_if<(is_same<T, U> && ...), T>, 1 + sizeof...(U)>;
 
-} /* namespace YT */
+} /* namespace yt */
 
-using YT::Array;
+using yt::Array;

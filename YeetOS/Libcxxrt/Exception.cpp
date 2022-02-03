@@ -641,11 +641,11 @@ static void report_failure(_Unwind_Reason_Code err, __cxa_exception* thrown_exce
         std::terminate();
         fprintf(stderr, "Terminating due to uncaught exception %p", static_cast<void*>(thrown_exception));
         thrown_exception = realExceptionFromException(thrown_exception);
-        static const __class_type_info* e_ti = static_cast<const __class_type_info*>(&typeid(YT::Exception));
+        static const __class_type_info* e_ti = static_cast<const __class_type_info*>(&typeid(yt::Exception));
         const __class_type_info* throw_ti = dynamic_cast<const __class_type_info*>(thrown_exception->exceptionType);
         if (throw_ti) {
-            YT::Exception* e
-                = static_cast<YT::Exception*>(e_ti->cast_to(static_cast<void*>(thrown_exception + 1), throw_ti));
+            yt::Exception* e
+                = static_cast<yt::Exception*>(e_ti->cast_to(static_cast<void*>(thrown_exception + 1), throw_ti));
             if (e) {
                 fprintf(stderr, " '%s'", e->what());
             }

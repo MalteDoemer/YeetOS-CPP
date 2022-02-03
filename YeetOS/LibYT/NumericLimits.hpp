@@ -28,7 +28,7 @@
 #include <Types.hpp>
 #include <TypeMagic.hpp>
 
-namespace YT {
+namespace yt {
 
 namespace Detail {
 
@@ -239,13 +239,13 @@ template<typename T>
 struct NumericLimits : public Detail::NumericLimitsHelper<remove_cvref<T>> {
 
     static constexpr bool is_signed() noexcept {
-        return YT::is_signed<remove_cvref<T>>;
+        return yt::is_signed<remove_cvref<T>>;
     }
     static constexpr bool is_unsigned() noexcept {
-        return YT::is_unsigned<remove_cvref<T>>;
+        return yt::is_unsigned<remove_cvref<T>>;
     }
 };
 
-} /* namespace YT */
+} /* namespace yt */
 
-using YT::NumericLimits;
+using yt::NumericLimits;

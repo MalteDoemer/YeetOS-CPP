@@ -27,7 +27,7 @@
 
 #include <CxxAbi.hpp>
 
-namespace YT {
+namespace yt {
 
 /**
  * Base class of all exceptions.
@@ -46,28 +46,16 @@ public:
     }
 };
 
-} /* namespace YT */
+} /* namespace yt */
 
 namespace std {
 
 using abi::terminate_handler;
-using abi::unexpected_handler;
-
-/**
- * Sets the function that will be called when an exception specification is
- * violated.
- */
-unexpected_handler set_unexpected(unexpected_handler f) noexcept;
 
 /**
  * Sets the function that is called to terminate the program.
  */
 terminate_handler set_terminate(terminate_handler f) noexcept;
-
-/**
- * Returns the current unexpected handler.
- */
-unexpected_handler get_unexpected() noexcept;
 
 /**
  * Returns the current terminate handler.
@@ -79,13 +67,6 @@ terminate_handler get_terminate() noexcept;
  * required.
  */
 void terminate() noexcept;
-
-/**
- * Called when an unexpected exception is encountered (i.e. an exception
- * violates an exception specification).  This calls abort() unless a
- * custom handler has been set..
- */
-void unexpected() noexcept;
 
 /**
  * Returns whether there are any exceptions currently being thrown that
@@ -101,7 +82,7 @@ int uncaught_exceptions() noexcept;
 
 } /* namespace std */
 
-namespace YT {
+namespace yt {
 
 using TerminateHandler = abi::terminate_handler;
 
@@ -111,12 +92,7 @@ using std::terminate;
 using std::uncaught_exception;
 using std::uncaught_exceptions;
 
-} /* namespace YT */
+} /* namespace yt */
 
-using YT::Exception;
-using YT::get_terminate;
-using YT::set_terminate;
-using YT::terminate;
-using YT::TerminateHandler;
-using YT::uncaught_exception;
-using YT::uncaught_exceptions;
+using yt::Exception;
+using yt::TerminateHandler;

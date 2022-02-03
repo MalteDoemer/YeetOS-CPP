@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Malte Dömer
+ * Copyright 2021, 2022 Malte Dömer
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
