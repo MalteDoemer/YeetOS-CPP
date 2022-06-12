@@ -44,13 +44,13 @@ void* operator new[](size_t size, nothrow_t) noexcept {
     return ::operator new(size, nothrow_t());
 }
 
-void operator delete(void* ptr) noexcept {
-    free(ptr);
-}
+// void operator delete(void* ptr) noexcept {
+//     free(ptr);
+// }
 
-void operator delete[](void* ptr) noexcept {
-    free(ptr);
-}
+// void operator delete[](void* ptr) noexcept {
+//     free(ptr);
+// }
 
 void operator delete(void* ptr, size_t size) noexcept {
     free(ptr);

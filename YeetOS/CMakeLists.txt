@@ -74,6 +74,7 @@ set(KERNEL_COMPILE_OPTIONS
     --target=${KERNEL_TARGET}
     -Wall
     -ffreestanding
+    -fsized-deallocation
     -O2
     ${KERNEL_ARCH_COMPILE_OPTIONS}
 )

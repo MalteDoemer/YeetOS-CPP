@@ -30,33 +30,6 @@
 
 #ifdef __cplusplus
 
-#undef ALWAYS_INLINE
-#define ALWAYS_INLINE [[__gnu__::__always_inline__]] inline
-
-#undef NEVER_INLINE
-#define NEVER_INLINE [[__gnu__::__noinline__]]
-
-#undef FLATTEN
-#define FLATTEN [[__gnu__::__flatten__]]
-
-#undef PACKED
-#define PACKED [[__gnu__::__packed__]]
-
-#undef ALGINED
-#define ALIGNED(x) [[__gnu__::__aligned__(x)]]
-
-#undef SECTION
-#define SECTION(x) [[__gnu__::__section__(x)]]
-
-#undef NODISCARD
-#define NODISCARD [[__nodiscard__]]
-
-#undef UNUSED
-#define UNUSED [[__maybe_unused__]]
-
-#undef NORETURN
-#define NORETURN [[__noreturn__]]
-
 #define NOT_COPYABLE(cls)                                                                                              \
 private:                                                                                                               \
     cls(const cls&) = delete;                                                                                          \
@@ -72,7 +45,7 @@ inline constexpr bool is_big_endian = __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__;
 
 inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
 
-#else /* __cplusplus */
+#endif /* __cplusplus */
 
 #undef ALWAYS_INLINE
 #define ALWAYS_INLINE __attribute__((__always_inline__)) inline
@@ -93,7 +66,7 @@ inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
 #define SECTION(x) __attribute__((__section__(x)))
 
 #undef NODISCARD
-#define NODISCARD /* nodiscard */
+#define NODISCARD __attribute__((__warn_unused_result__))
 
 #undef UNUSED
 #define UNUSED __attribute__((__unused__))
@@ -101,7 +74,8 @@ inline constexpr decltype(sizeof(char)) char_bits = __CHAR_BIT__;
 #undef NORETURN
 #define NORETURN __attribute__((__noreturn__))
 
-#endif /* __cplusplus */
+#undef RETURNS_NONNULL
+#define RETURNS_NONNULL __attribute__((returns_nonnull))
 
 #undef DISALLOW
 #ifdef __clang__

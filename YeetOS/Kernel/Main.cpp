@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Malte Dömer
+ * Copyright 2021, 2022 Malte Dömer
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,6 +36,8 @@
 #include <Platform.hpp>
 #include <Exception.hpp>
 #include <ScopeGuards.hpp>
+
+#include <OwnPtr.hpp>
 
 #include <Kernel/Kernel.hpp>
 #include <Kernel/DebugLog.hpp>
@@ -77,15 +79,23 @@ public:
     }
 };
 
-Option<Test> func(bool b) {
+Option<OnwPtr<Test>> func(bool b) {
     if (b) {
-        return 5;
+        return make_owned<Test>(5);
     } else {
         return {};
     }
 }
 
 void kernel_main() {
+
+    if (auto res = func(true)) {
+        DebugLog::println("yey");
+    } else {
+        DebugLog::println("ney");
+    }
+
+
 
 
     DebugLog::println("Done with kernel_main() ...");

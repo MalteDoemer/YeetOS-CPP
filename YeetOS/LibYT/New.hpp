@@ -35,8 +35,8 @@ void* operator new[](size_t size);
 void* operator new(size_t size, nothrow_t) noexcept;
 void* operator new[](size_t size, nothrow_t) noexcept;
 
-void operator delete(void* ptr) noexcept;
-void operator delete[](void* ptr) noexcept;
+DISALLOW("operator delete with fixed size should be used") void operator delete(void* ptr) noexcept;
+DISALLOW("operator delete[] with fixed size should be used") void operator delete[](void* ptr) noexcept;
 
 void operator delete(void* ptr, size_t size) noexcept;
 void operator delete[](void* ptr, size_t size) noexcept;
